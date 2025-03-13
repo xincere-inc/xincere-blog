@@ -1,5 +1,12 @@
-import { NextResponse } from "next/server";
-
+/**
+ * @swagger
+ * /api/hello:
+ *   get:
+ *     description: Returns a greeting message.
+ *     responses:
+ *       200:
+ *         description: A successful response.
+ */
 export async function GET() {
-  return NextResponse.json({ message: "Hello, world!" });
+  return new Response("Hello, world!", { status: 200 });
 }
