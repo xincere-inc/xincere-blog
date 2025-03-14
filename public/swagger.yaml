@@ -1,0 +1,91 @@
+openapi: 3.0.0
+info:
+  title: Next.js API
+  description: API documentation for Next.js 15 application
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local server
+paths:
+  /api/hello:
+    get:
+      summary: Greet the user
+      operationId: greetUser
+      responses:
+        "200":
+          description: A greeting message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Hello, world!"
+  /api/login:
+    post:
+      summary: Login a user with email and password
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: Invalid email or password
+        "401":
+          description: Unauthorized access
+  /api/register:
+    post:
+      summary: Register a new user with email and password
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: Invalid email or password
+        "409":
+          description: Email already registered
+components:
+  schemas:
+    LoginInput:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          format: password
+          example: "password123"
+    TokenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Login successful"
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
