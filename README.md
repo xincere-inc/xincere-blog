@@ -45,8 +45,8 @@ Ensure the following are installed on your system:
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/JoySarkarBD/next-app-with-nextauth-and-internationalization.git
-   cd next-app-with-nextauth-and-internationalization
+   git clone https://github.com/xincere-inc/nextjs-fullstack-base
+   cd nextjs-fullstack-base
    ```
 
 2. **Install Dependencies:**
