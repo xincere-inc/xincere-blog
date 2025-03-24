@@ -1,5 +1,6 @@
 "use client";
 
+import BackButton from "@/components/buttons/BackButton";
 import { signUpSchema } from "@/lib/zod/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -31,19 +32,23 @@ export default function SignupPage() {
       headers: { "Content-Type": "application/json" },
     });
 
+    const data = await res.json(); // Parse the response body
+
+    // Handle success or error based on the response
     if (res.ok) {
-      setSuccess("Signup successful! Redirecting...");
+      setSuccess(data.message || "Signup successful! Redirecting...");
       setTimeout(() => {
-        router.push("/sign-in");
+        router.push("/sign-in"); // Redirect after success
       }, 1500);
     } else {
-      setError("Signup failed. Please try again.");
+      setError(data.error || "Signup failed. Please try again.");
     }
   };
 
   return (
     <div className='flex items-center justify-center h-screen'>
       <form onSubmit={handleSubmit} className='p-6 bg-white shadow-md rounded'>
+        <BackButton />
         <h2 className='text-xl font-bold mb-4'>Sign up</h2>
 
         {error && <p className='text-red-500 mb-2'>{error}</p>}

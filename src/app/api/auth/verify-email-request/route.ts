@@ -1,22 +1,22 @@
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
-import { signUpSchema } from "@/lib/zod/auth";
+import { emailSchema } from "@/lib/zod/auth";
 import { operations } from "@/types/api";
-import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req: Request): Promise<NextResponse> {
   try {
-    // Parse and validate request body using Zod
-    const body: operations["registerUser"]["requestBody"]["content"]["application/json"] =
+    // Parse the incoming request JSON body
+    const data: operations["verifyEmailRequest"]["requestBody"]["content"]["application/json"] =
       await req.json();
 
-    const parsedBody = signUpSchema.safeParse(body);
+    // Validate the request body using the emailSchema
+    const parsedBody = emailSchema.safeParse(data);
 
     // If validation fails, return a 400 error with validation errors
     if (!parsedBody.success) {
-      const errorResponse: operations["registerUser"]["responses"][400]["content"]["application/json"] =
+      const errorResponse: operations["verifyEmailRequest"]["responses"][400]["content"]["application/json"] =
         {
           error: "Validation error",
           details: parsedBody.error.errors,
@@ -24,23 +24,30 @@ export async function POST(req: Request): Promise<NextResponse> {
       return NextResponse.json(errorResponse, { status: 400 });
     }
 
-    const { email, password, name } = parsedBody.data;
+    // Extract the email from the request data
+    const { email } = data;
 
-    // Check if the user already exists
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      const errorResponse: operations["registerUser"]["responses"][400]["content"]["application/json"] =
+    // If no email is provided, return a 400 error
+    if (!email) {
+      const errorResponse: operations["verifyEmailRequest"]["responses"][400]["content"]["application/json"] =
         {
-          error: "User already exists",
+          error: "Email is required",
         };
       return NextResponse.json(errorResponse, { status: 400 });
     }
 
-    // Hash password and create user
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: { email, password: hashedPassword, name },
+    // Find the user by the provided email
+    const user = await prisma.user.findUnique({
+      where: { email },
     });
+
+    if (!user) {
+      const errorResponse: operations["verifyEmailRequest"]["responses"][404]["content"]["application/json"] =
+        {
+          error: "Email not found. ",
+        };
+      return NextResponse.json(errorResponse, { status: 404 });
+    }
 
     // Generate a verification token (UUID) and save it to the user record
     const verificationToken = uuidv4();
@@ -69,26 +76,24 @@ export async function POST(req: Request): Promise<NextResponse> {
     const emailResponse = await sendEmail(emailOptions);
 
     if (!emailResponse.success) {
-      const errorResponse: operations["registerUser"]["responses"][500]["content"]["application/json"] =
+      const errorResponse: operations["verifyEmailRequest"]["responses"][500]["content"]["application/json"] =
         {
           error: "Error sending verification email",
         };
       return NextResponse.json(errorResponse, { status: 500 });
     }
 
-    // Construct response body with correct type
-    const responseBody: operations["registerUser"]["responses"][201]["content"]["application/json"] =
+    // Return a success message
+    const successResponse: operations["verifyEmailRequest"]["responses"][200]["content"]["application/json"] =
       {
-        message:
-          "User created successfully. A verification email has been sent.",
-        user: { id: user.id, email: user.email, name: user.name },
+        message: "Verification email sent successfully",
       };
-
-    return NextResponse.json(responseBody, { status: 201 });
+    return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
-    console.error("Error:", error);
+    console.error("Error during email verification request:", error);
 
-    const errorResponse: operations["registerUser"]["responses"][500]["content"]["application/json"] =
+    // Handle server error
+    const errorResponse: operations["verifyEmailRequest"]["responses"][500]["content"]["application/json"] =
       {
         error: "Server error",
       };

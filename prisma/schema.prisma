@@ -8,10 +8,15 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  name     String?
-  email    String @unique
-  password String
-  createdAt DateTime @default(now())
+  id                      String   @id @default(uuid())
+  name                    String
+  email                   String   @unique
+  password                String
+  emailVerified           Boolean  @default(false) // Email verification status
+  emailVerificationToken  String?  @unique         // Email verification token
+  resetPasswordToken      String?  @unique         // Reset password token
+  resetPasswordMailCount  Int      @default(0)     // Reset password mail count in one hour only three mail can be sent 
+  resetPasswordMailTime   DateTime?                // Reset password mail time                
+  createdAt               DateTime @default(now())
 }
 

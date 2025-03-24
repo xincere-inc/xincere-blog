@@ -1,11 +1,12 @@
 "use client";
 
-import { signIn } from "@/auth";
+import BackButton from "@/components/buttons/BackButton";
 import { signInSchema } from "@/lib/zod/auth";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function LoginPage() {
+export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -33,19 +34,23 @@ export default function LoginPage() {
       password,
       redirect: false,
     });
-
+    console.log(res);
     if (res?.error) {
       console.log(res?.error);
       setError("Invalid email or password");
       return;
     }
     setSuccess("Sign In successful! Redirecting...");
-    router.push("/dashboard"); // Redirect to protected page
+
+    setTimeout(() => {
+      router.push("/dashboard"); // Redirect to protected page
+    }, 1500);
   };
 
   return (
     <div className='flex items-center justify-center h-screen'>
       <form onSubmit={handleSubmit} className='p-6 bg-white shadow-md rounded'>
+        <BackButton />
         <h2 className='text-xl font-bold mb-4'>Sign In</h2>
         {error && <p className='text-red-500'>{error}</p>}
         {success && <p className='text-green-500 mb-2'>{success}</p>}

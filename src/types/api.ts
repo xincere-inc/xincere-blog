@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/api/hello": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Greet the user */
+        get: operations["greetUser"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/signup": {
         parameters: {
             query?: never;
@@ -15,6 +32,98 @@ export interface paths {
         put?: never;
         /** Register a new user */
         post: operations["registerUser"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/verify-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Verify user email using the verification token */
+        get: operations["verifyEmail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/verify-email-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify if the email exists and send a verification email */
+        post: operations["verifyEmailRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/change-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Change user password */
+        post: operations["changePassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/forgot-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sends a password reset email to the user.
+         * @description This API sends a password reset email to the user, allowing them to reset their password.
+         *
+         */
+        post: operations["sendPasswordResetEmail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reset password
+         * @description Resets the user's password using a valid reset token.
+         */
+        post: operations["resetPassword"];
         delete?: never;
         options?: never;
         head?: never;
@@ -47,7 +156,7 @@ export interface components {
         SignupResponse: {
             /**
              * @description Success message indicating user creation.
-             * @example User created successfully
+             * @example User created successfully. A verification email has been sent.
              */
             message?: string;
             user?: {
@@ -70,10 +179,68 @@ export interface components {
                 name?: string;
             };
         };
+        VerifyEmailRequestInput: {
+            /**
+             * Format: email
+             * @description The email address to verify.
+             * @example user@example.com
+             */
+            email: string;
+        };
+        ChangePasswordInput: {
+            /**
+             * Format: password
+             * @description The user's current password.
+             * @example OldPassword123!
+             */
+            oldPassword: string;
+            /**
+             * Format: password
+             * @description The new password for the user. Must be at least 8 characters long.
+             * @example NewPassword123!
+             */
+            newPassword: string;
+        };
+        ResetPasswordInput: {
+            /**
+             * @description Reset token received via email
+             * @example abc123xyz
+             */
+            token: string;
+            /**
+             * Format: password
+             * @description New password for the user
+             * @example NewSecurePassword123!
+             */
+            newPassword: string;
+        };
+        ForgotPasswordRequestInput: {
+            /**
+             * Format: email
+             * @description The email address of the user requesting the password reset.
+             */
+            email: string;
+        };
+        ResetPasswordRequestInput: {
+            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+            token: string;
+            /**
+             * Format: password
+             * @example NewSecurePassword123!
+             */
+            newPassword: string;
+        };
+        SuccessResponse: {
+            /**
+             * @description Success message.
+             * @example Operation completed successfully.
+             */
+            message?: string;
+        };
         ErrorResponse: {
             /**
              * @description Description of the error encountered.
-             * @example User already exists
+             * @example Invalid input provided
              */
             error?: string;
             details?: {
@@ -89,6 +256,7 @@ export interface components {
                 field?: string;
             }[];
         };
+        bearerAuth: Record<string, never>;
     };
     responses: never;
     parameters: never;
@@ -98,6 +266,29 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    greetUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A greeting message */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example Hello, world! */
+                        message?: string;
+                    };
+                };
+            };
+        };
+    };
     registerUser: {
         parameters: {
             query?: never;
@@ -130,6 +321,275 @@ export interface operations {
                 };
             };
             /** @description Server error, e.g., database failure or internal issue */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    verifyEmail: {
+        parameters: {
+            query: {
+                /** @description The email verification token received in the verification email. */
+                token: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Email successfully verified */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Invalid or expired token */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    verifyEmailRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyEmailRequestInput"];
+            };
+        };
+        responses: {
+            /** @description Verification email sent successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example Verification email sent successfully. */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Email is required. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Email not found. Redirecting to sign-up. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example Email not found. Redirecting to sign-up. */
+                        error?: string;
+                    };
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    changePassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangePasswordInput"];
+            };
+        };
+        responses: {
+            /** @description Password changed successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example Password has been changed successfully. */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Invalid old password or weak new password */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized (User not logged in) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    sendPasswordResetEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForgotPasswordRequestInput"];
+            };
+        };
+        responses: {
+            /** @description Password reset email sent successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Bad request, possibly email not found or error in sending the email. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Email not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Too many requests. Please try again later (1 hr). */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example Too many requests. Please try again later (1 hr). */
+                        error?: string;
+                    };
+                };
+            };
+            /** @description Internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    resetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordRequestInput"];
+            };
+        };
+        responses: {
+            /** @description Password reset successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example Password reset successfully */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Invalid or expired token */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
             500: {
                 headers: {
                     [name: string]: unknown;

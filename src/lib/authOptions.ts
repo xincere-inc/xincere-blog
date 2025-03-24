@@ -33,14 +33,16 @@ export const authOptions = {
           throw new Error(JSON.stringify(errorResponse));
         }
 
+        // Find the user by email
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: credentials.email as string },
         });
 
         if (!user) {
           throw new Error("User not found");
         }
 
+        // Validate the password
         const isValidPassword = await bcrypt.compare(
           credentials.password as string,
           user.password
@@ -49,6 +51,7 @@ export const authOptions = {
           throw new Error("Invalid password");
         }
 
+        // Return user object if authentication is successful
         return { id: user.id, email: user.email, name: user.name };
       },
     }),
@@ -73,6 +76,6 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/sing-in",
+    signIn: "/sign-in", // Corrected typo in path
   },
 };

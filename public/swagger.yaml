@@ -23,6 +23,7 @@ paths:
                   message:
                     type: string
                     example: "Hello, world!"
+
   /api/auth/signup:
     post:
       summary: Register a new user
@@ -53,6 +54,218 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+
+  /api/auth/verify-email:
+    get:
+      summary: Verify user email using the verification token
+      tags: [Auth]
+      operationId: verifyEmail
+      parameters:
+        - name: token
+          in: query
+          required: true
+          description: The email verification token received in the verification email.
+          schema:
+            type: string
+            example: "abc123xyz"
+      responses:
+        "200":
+          description: Email successfully verified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/auth/verify-email-request:
+    post:
+      summary: Verify if the email exists and send a verification email
+      tags: [Auth]
+      operationId: verifyEmailRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyEmailRequestInput"
+      responses:
+        "200":
+          description: Verification email sent successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Verification email sent successfully."
+        "400":
+          description: Email is required.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Email not found. Redirecting to sign-up.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Email not found. Redirecting to sign-up."
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/auth/change-password:
+    post:
+      summary: Change user password
+      tags: [Auth]
+      operationId: changePassword
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordInput"
+      responses:
+        "200":
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password has been changed successfully."
+        "400":
+          description: Invalid old password or weak new password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized (User not logged in)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/auth/forgot-password:
+    post:
+      summary: Sends a password reset email to the user.
+      description: |
+        This API sends a password reset email to the user, allowing them to reset their password.
+      tags: [Auth]
+      operationId: sendPasswordResetEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForgotPasswordRequestInput"
+      responses:
+        "200":
+          description: Password reset email sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          description: Bad request, possibly email not found or error in sending the email.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Email not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Too many requests. Please try again later (1 hr).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Too many requests. Please try again later (1 hr)."
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/reset-password:
+    post:
+      summary: Reset password
+      description: Resets the user's password using a valid reset token.
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordRequestInput"
+      responses:
+        "200":
+          description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password reset successfully"
+        "400":
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     SignupInput:
@@ -78,13 +291,14 @@ components:
           minLength: 3
           description: "The name of the user. Must be at least 3 characters long."
           example: "John Doe"
+
     SignupResponse:
       type: object
       properties:
         message:
           type: string
           description: "Success message indicating user creation."
-          example: "User created successfully"
+          example: "User created successfully. A verification email has been sent."
         user:
           type: object
           properties:
@@ -102,13 +316,92 @@ components:
               type: string
               description: "The name of the newly created user."
               example: "John Doe"
+
+    VerifyEmailRequestInput:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: "The email address to verify."
+          example: "user@example.com"
+
+    ChangePasswordInput:
+      type: object
+      required:
+        - oldPassword
+        - newPassword
+      properties:
+        oldPassword:
+          type: string
+          format: password
+          description: "The user's current password."
+          example: "OldPassword123!"
+        newPassword:
+          type: string
+          format: password
+          minLength: 8
+          description: "The new password for the user. Must be at least 8 characters long."
+          example: "NewPassword123!"
+
+    ResetPasswordInput:
+      type: object
+      required:
+        - token
+        - newPassword
+      properties:
+        token:
+          type: string
+          description: "Reset token received via email"
+          example: "abc123xyz"
+        newPassword:
+          type: string
+          format: password
+          minLength: 8
+          description: "New password for the user"
+          example: "NewSecurePassword123!"
+
+    ForgotPasswordRequestInput:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: "The email address of the user requesting the password reset."
+
+    ResetPasswordRequestInput:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        newPassword:
+          type: string
+          format: password
+          example: "NewSecurePassword123!"
+      required:
+        - token
+        - newPassword
+
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: "Success message."
+          example: "Operation completed successfully."
+
     ErrorResponse:
       type: object
       properties:
         error:
           type: string
           description: "Description of the error encountered."
-          example: "Provide valid password"
+          example: "Invalid input provided"
         details:
           type: array
           items:
@@ -122,3 +415,8 @@ components:
                 type: string
                 description: "The field that failed validation."
                 example: "password"
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
