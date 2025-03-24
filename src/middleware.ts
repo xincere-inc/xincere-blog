@@ -1,7 +1,12 @@
 import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "./lib/authOptions";
-import { DEFAULT_REDIRECT, PUBLIC_ROUTES, ROOT } from "./lib/routes";
+import {
+  ACCESS_ALL,
+  DEFAULT_REDIRECT,
+  PUBLIC_ROUTES,
+  ROOT,
+} from "./lib/routes";
 
 const { auth } = NextAuth(authOptions);
 
@@ -12,13 +17,8 @@ export default auth((req) => {
   const isAuthenticated = !!req.auth;
   const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname);
 
-  // Check if the route is /api-docs or /verify-email or /verify-email-request  (open routes) and allow access
-  const isApiDocsRoute =
-    nextUrl.pathname === "/api-docs" ||
-    nextUrl.pathname === "/verify-email" ||
-    nextUrl.pathname === "/verify-email-request" ||
-    nextUrl.pathname === "/forget-password" ||
-    nextUrl.pathname === "/reset-password";
+  // Check if the route is allow access with and without authentication
+  const isApiDocsRoute = ACCESS_ALL.includes(nextUrl.pathname);
 
   // Allow free access to /api-docs and /verify-email routes
   if (isApiDocsRoute) {
