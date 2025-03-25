@@ -1,16 +1,18 @@
 import NextAuth from "next-auth";
+import { signOut } from "next-auth/react";
 import { NextResponse } from "next/server";
-import { authOptions } from "./lib/authOptions";
+import { authOptions } from "./lib/auth/authOptions";
+import getSession from "./lib/auth/getSession";
 import {
   ACCESS_ALL,
   DEFAULT_REDIRECT,
   PUBLIC_ROUTES,
   ROOT,
-} from "./lib/routes";
+} from "./lib/auth/routes";
 
 const { auth } = NextAuth(authOptions);
 
-export default auth((req) => {
+export default auth(async (req) => {
   const { nextUrl } = req;
 
   // Check if the user is authenticated (req.auth will be populated after NextAuth is invoked)
@@ -20,7 +22,14 @@ export default auth((req) => {
   // Check if the route is allow access with and without authentication
   const isApiDocsRoute = ACCESS_ALL.includes(nextUrl.pathname);
 
-  // Allow free access to /api-docs and /verify-email routes
+  const session = await getSession();
+
+  if (session?.expires && Date.now() > new Date(session.expires).getTime()) {
+    await signOut();
+    return NextResponse.redirect(new URL("/", nextUrl)); // Redirect to / after sign-out
+  }
+
+  // Allow free access to
   if (isApiDocsRoute) {
     return NextResponse.next(); // Continue without redirect
   }

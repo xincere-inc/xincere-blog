@@ -83,9 +83,7 @@ export default function ChangePasswordPage() {
             setForm({ ...form, confirmPassword: e.target.value })
           }
         />
-        <button
-          className='bg-blue-500 text-white p-2 rounded w-full'
-          type='submit'>
+        <button className='p-2 rounded w-full' type='submit'>
           Change Password
         </button>
       </form>

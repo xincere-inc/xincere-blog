@@ -1,4 +1,4 @@
-import getSession from "@/lib/getSession";
+import getSession from "@/lib/auth/getSession";
 import { prisma } from "@/lib/prisma";
 import { changePasswordSchema } from "@/lib/zod/auth";
 import { operations } from "@/types/api";

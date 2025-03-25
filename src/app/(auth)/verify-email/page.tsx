@@ -33,7 +33,7 @@ export default function VerifyEmailPage() {
             data.message || "Email successfully verified! Redirecting..."
           );
           setTimeout(() => {
-            router.push("/sign-in"); // Redirect to sign-in after verification
+            router.push("/"); // Redirect to sign-in after verification
           }, 1500);
         } else {
           setError(data.error || "Something went wrong.");

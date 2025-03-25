@@ -2,6 +2,7 @@
 
 import BackButton from "@/components/buttons/BackButton";
 import { signUpSchema } from "@/lib/zod/auth";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -38,7 +39,7 @@ export default function SignupPage() {
     if (res.ok) {
       setSuccess(data.message || "Signup successful! Redirecting...");
       setTimeout(() => {
-        router.push("/sign-in"); // Redirect after success
+        router.push("/"); // Redirect after success
       }, 1500);
     } else {
       setError(data.error || "Signup failed. Please try again.");
@@ -72,11 +73,16 @@ export default function SignupPage() {
           className='border p-2 w-full mb-4'
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
-        <button
-          className='bg-blue-500 text-white p-2 rounded w-full'
-          type='submit'>
+        <button className='p-2 rounded w-full' type='submit'>
           Signup
         </button>
+
+        <div className='flex'>
+          Already have an account?
+          <Link href='/' className='text-blue-500 hover:underline'>
+            Sign In
+          </Link>
+        </div>
       </form>
     </div>
   );

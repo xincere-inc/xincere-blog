@@ -41,7 +41,7 @@ export default function ResetPasswordPage() {
       if (response.ok) {
         setSuccess(data?.message || "Password reset successfully!");
         setTimeout(() => {
-          router.push("/sign-in");
+          router.push("/");
         }, 1500);
       } else {
         setError(data?.error || "Failed to reset password.");
@@ -75,9 +75,7 @@ export default function ResetPasswordPage() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          <button
-            className='bg-blue-500 text-white p-2 rounded w-full'
-            type='submit'>
+          <button className='p-2 rounded w-full' type='submit'>
             Reset Password
           </button>
         </form>
