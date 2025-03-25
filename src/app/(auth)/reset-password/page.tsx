@@ -75,7 +75,9 @@ export default function ResetPasswordPage() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          <button className='p-2 rounded w-full' type='submit'>
+          <button
+            className='bg-gray-500 text-white p-2 rounded-md mt-4 w-full'
+            type='submit'>
             Reset Password
           </button>
         </form>

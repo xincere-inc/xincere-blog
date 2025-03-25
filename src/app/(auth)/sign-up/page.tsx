@@ -1,6 +1,5 @@
 "use client";
 
-import BackButton from "@/components/buttons/BackButton";
 import { signUpSchema } from "@/lib/zod/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -49,7 +48,6 @@ export default function SignupPage() {
   return (
     <div className='flex items-center justify-center h-screen'>
       <form onSubmit={handleSubmit} className='p-6 bg-white shadow-md rounded'>
-        <BackButton />
         <h2 className='text-xl font-bold mb-4'>Sign up</h2>
 
         {error && <p className='text-red-500 mb-2'>{error}</p>}
@@ -73,7 +71,9 @@ export default function SignupPage() {
           className='border p-2 w-full mb-4'
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
-        <button className='p-2 rounded w-full' type='submit'>
+        <button
+          className='bg-gray-500 text-white p-2 rounded-md mt-4 w-full'
+          type='submit'>
           Signup
         </button>
 

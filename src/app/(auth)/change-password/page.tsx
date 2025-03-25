@@ -1,6 +1,5 @@
 "use client";
 
-import BackButton from "@/components/buttons/BackButton";
 import { changePasswordSchema } from "@/lib/zod/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -57,7 +56,6 @@ export default function ChangePasswordPage() {
   return (
     <div className='flex items-center justify-center h-screen'>
       <form onSubmit={handleSubmit} className='p-6 bg-white shadow-md rounded'>
-        <BackButton />
         <h2 className='text-xl font-bold mb-4'>Change Password</h2>
 
         {error && <p className='text-red-500 mb-2'>{error}</p>}
@@ -83,7 +81,9 @@ export default function ChangePasswordPage() {
             setForm({ ...form, confirmPassword: e.target.value })
           }
         />
-        <button className='p-2 rounded w-full' type='submit'>
+        <button
+          className='bg-gray-500 text-white p-2 rounded-md mt-4 w-full'
+          type='submit'>
           Change Password
         </button>
       </form>

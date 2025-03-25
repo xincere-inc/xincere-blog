@@ -1,6 +1,5 @@
 "use client";
 
-import BackButton from "@/components/buttons/BackButton";
 import { emailSchema } from "@/lib/zod/auth";
 import { useState } from "react";
 
@@ -51,7 +50,6 @@ export default function ForgotPasswordPage() {
   return (
     <div className='flex items-center justify-center h-screen'>
       <div className='p-6 bg-white shadow-md rounded w-96'>
-        <BackButton />
         <h2 className='text-xl font-bold mb-4'>Forgot Password</h2>
 
         {error && <p className='text-red-500'>{error}</p>}
@@ -65,7 +63,9 @@ export default function ForgotPasswordPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <button className='p-2 rounded w-full' type='submit'>
+          <button
+            className='bg-gray-500 text-white p-2 rounded-md mt-4 w-full'
+            type='submit'>
             Send Password Reset Email
           </button>
         </form>

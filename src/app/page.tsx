@@ -75,7 +75,9 @@ export default function SignInPage() {
             Forgot password?
           </Link>
         </div>
-        <button className='p-2 rounded w-full' type='submit'>
+        <button
+          className='bg-gray-500 text-white p-2 rounded-md mt-4 w-full'
+          type='submit'>
           Login
         </button>
         <div className='flex'>
