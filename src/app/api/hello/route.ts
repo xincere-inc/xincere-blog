@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
-
 export async function GET() {
-  return NextResponse.json({ message: "Hello, world!" });
+  return new Response(JSON.stringify({ message: "Hello, world!" }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 }
