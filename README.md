@@ -57,7 +57,7 @@ Ensure the following are installed on your system:
 
 3. **Set Up Environment Variables:**
 
-   Create a `.env` file in the root directory with the following content:
+   Create a `.env.local` file in the root directory with the following content:
 
    ```env
    DATABASE_URL=postgresql://postgres:password@db:5432/mydatabase
