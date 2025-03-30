@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:migrate:docker": "prisma migrate deploy",
-    "generate:types": "openapi-typescript ./public/swagger.json -o ./src/types/api.ts"
+    "generate-client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.json -o ./src/api/client"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@openapitools/openapi-generator-cli": "^2.13.4",
     "@tailwindcss/postcss": "^4.0.13",
     "@types/node": "^20",
     "@types/react": "^19",

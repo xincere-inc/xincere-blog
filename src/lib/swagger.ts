@@ -26,7 +26,7 @@ const swaggerOptions = {
 // Function to regenerate and write Swagger spec to file
 const writeSwaggerSpecToFile = (): void => {
   const swaggerSpec = swaggerJSDoc(swaggerOptions);
-  const swaggerFilePath = path.join(process.cwd(), "public/swagger.json");
+  const swaggerFilePath = path.join(process.cwd(), "src/api/specs/swagger.json");
   fs.writeFileSync(swaggerFilePath, JSON.stringify(swaggerSpec, null, 2));
 };
 
