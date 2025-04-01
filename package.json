@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:types": "openapi-typescript ./public/swagger.yaml -o ./src/types/api.ts"
+    "db:migrate:docker": "prisma migrate deploy",
+    "generate-client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.json -o ./src/api/client"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
@@ -15,21 +16,25 @@
     "@types/swagger-ui-react": "^5.18.0",
     "autoprefixer": "^10.4.21",
     "bcrypt": "^5.1.1",
+    "chokidar": "^4.0.3",
     "next": "15.2.2",
     "next-auth": "^4.24.11",
     "openapi-typescript": "^7.6.1",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui": "^5.20.1",
-    "swagger-ui-react": "^5.20.1"
+    "swagger-ui-react": "^5.20.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@openapitools/openapi-generator-cli": "^2.13.4",
     "@tailwindcss/postcss": "^4.0.13",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/swagger-jsdoc": "^6.0.4",
     "eslint": "^9",
     "eslint-config-next": "15.2.2",
     "prisma": "^6.5.0",

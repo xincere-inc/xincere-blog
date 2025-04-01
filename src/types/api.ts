@@ -11,44 +11,34 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Greet the user */
-        get: operations["greetUser"];
+        /**
+         * Returns a greeting message
+         * @description A simple example API route
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successful response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message?: string;
+                        };
+                    };
+                };
+            };
+        };
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Login a user with email and password */
-        post: operations["loginUser"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/register": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Register a new user with email and password */
-        post: operations["registerUser"];
         delete?: never;
         options?: never;
         head?: never;
@@ -58,26 +48,7 @@ export interface paths {
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        LoginInput: {
-            /**
-             * Format: email
-             * @example user@example.com
-             */
-            email: string;
-            /**
-             * Format: password
-             * @example password123
-             */
-            password: string;
-        };
-        TokenResponse: {
-            /** @example Login successful */
-            message?: string;
-            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-            token?: string;
-        };
-    };
+    schemas: never;
     responses: never;
     parameters: never;
     requestBodies: never;
@@ -85,104 +56,4 @@ export interface components {
     pathItems: never;
 }
 export type $defs = Record<string, never>;
-export interface operations {
-    greetUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A greeting message */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example Hello, world! */
-                        message?: string;
-                    };
-                };
-            };
-        };
-    };
-    loginUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LoginInput"];
-            };
-        };
-        responses: {
-            /** @description Successful login */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TokenResponse"];
-                };
-            };
-            /** @description Invalid email or password */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unauthorized access */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    registerUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LoginInput"];
-            };
-        };
-        responses: {
-            /** @description User registered successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TokenResponse"];
-                };
-            };
-            /** @description Invalid email or password */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Email already registered */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-}
+export type operations = Record<string, never>;
