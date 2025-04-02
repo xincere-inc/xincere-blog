@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:types": "openapi-typescript ./public/swagger.yaml -o ./src/types/api.ts"
+    "db:migrate:docker": "prisma migrate deploy",
+    "generate-client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.json -o ./src/api/client"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
@@ -19,6 +20,7 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
+    "chokidar": "^4.0.3",
     "next": "15.2.2",
     "next-auth": "^5.0.0-beta.25",
     "nodemailer": "^6.10.0",
@@ -28,16 +30,19 @@
     "react-dom": "^19.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "swagger-ui-react": "^5.20.1",
     "uuid": "^11.1.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "swagger-ui": "^5.20.1",
+    "swagger-ui-react": "^5.20.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@openapitools/openapi-generator-cli": "^2.13.4",
     "@tailwindcss/postcss": "^4.0.13",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/swagger-jsdoc": "^6.0.4",
     "eslint": "^9",
     "eslint-config-next": "15.2.2",
     "prisma": "^6.5.0",
