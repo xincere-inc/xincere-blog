@@ -106,6 +106,12 @@ export async function POST(
 
     const { email, password, name } = parsedBody.data;
 
+    // Check if there's any user in the database
+    const existingUsersCount = await prisma.user.count();
+
+    // Determine the role for the new user
+    const role = existingUsersCount === 0 ? "ADMIN" : "USER";
+
     const existingUser = await prisma.user.findUnique({ where: { email } });
 
     if (existingUser) {
@@ -122,6 +128,7 @@ export async function POST(
         email,
         password: hashedPassword,
         name,
+        role,
       },
     });
 
