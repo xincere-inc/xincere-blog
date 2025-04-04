@@ -6,7 +6,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 
 // Swagger options for generating API documentation
 const swaggerOptions = {
-  definition: {
+  swaggerDefinition: {
     openapi: "3.0.0",
     info: {
       title: "Next.js API",
@@ -19,9 +19,121 @@ const swaggerOptions = {
         description: "Local server",
       },
     ],
+    components: {
+      securitySchemes: {
+        jwt: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+      schemas: {
+        UnAuthorizedError: {
+          type: "object",
+          properties: {
+            error: {
+              type: "string",
+              example: "Unauthorized",
+            },
+            message: {
+              type: "string",
+              example: "Please log in.",
+            },
+          },
+        },
+        ForbiddenError: {
+          type: "object",
+          properties: {
+            error: {
+              type: "string",
+              example: "Forbidden",
+            },
+            message: {
+              type: "string",
+              example: "You do not have permission.",
+            },
+          },
+        },
+        NotFoundError: {
+          type: "object",
+          properties: {
+            error: {
+              type: "string",
+              example: "NotFound",
+            },
+            message: {
+              type: "string",
+              example: "The target data does not exist.",
+            },
+          },
+        },
+        UnprocessableEntity: {
+          type: "object",
+          properties: {
+            error: {
+              type: "string",
+              example: "UnprocessableEntity",
+            },
+            message: {
+              type: "string",
+              example: "The submission content is not appropriate.",
+            },
+          },
+        },
+        InternalServerError: {
+          type: "object",
+          properties: {
+            error: {
+              type: "string",
+              example: "InternalServerError",
+            },
+            message: {
+              type: "string",
+              example: "Server error.",
+            },
+          },
+        },
+        Success: {
+          type: "object",
+          required: ["message"],
+          properties: {
+            message: {
+              type: "string",
+              example: "Success",
+            },
+          },
+        },
+        Created: {
+          type: "object",
+          required: ["message"],
+          properties: {
+            message: {
+              type: "string",
+              example: "Created",
+            },
+          },
+        },
+        CreatedWithId: {
+          type: "object",
+          required: ["message", "id"],
+          properties: {
+            message: {
+              type: "string",
+              example: "Created",
+            },
+            id: {
+              type: "number",
+              example: 1,
+            },
+          },
+        },
+      },
+    },
+
   },
-  apis: ["src/app/api/**/*.js", "src/app/api/**/*.ts"], // Watch all your API files
+  apis: ["src/app/api/**/*.js", "src/app/api/**/*.ts"],
 };
+
 
 // Function to regenerate and write Swagger spec to file
 const writeSwaggerSpecToFile = (): void => {

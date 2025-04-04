@@ -1,14 +1,93 @@
+import { ApiForgePasswordPost400Response, ApiForgePasswordPost429Response, ApiForgetPasswordPost200Response, ApiForgetPasswordPostRequest } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
 import { emailSchema } from "@/lib/zod/auth";
-import { operations } from "@/types/api";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
-export async function POST(req: Request): Promise<NextResponse> {
+/**
+ * @swagger
+ * /api/forget-password:
+ *   post:
+ *     summary: Send a password reset email
+ *     description: Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: Password reset email sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Password reset email sent successfully"
+ *       400:
+ *         description: Validation error or missing email
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Email is required"
+ *                 details:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       path:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                       message:
+ *                         type: string
+ *       404:
+ *         description: Email not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Email not found."
+ *       429:
+ *         description: Too many requests within a short period
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Too many requests. Please try again later (1 hr)."
+ *       500:
+ *        $ref: "#/components/responses/ServerError"
+ */
+export async function POST(req: Request): Promise<
+  NextResponse<| ApiForgetPasswordPost200Response | ApiForgePasswordPost400Response | ApiForgePasswordPost429Response
+  >
+> {
   try {
     // Parse the incoming request JSON body
-    const data: operations["sendPasswordResetEmail"]["requestBody"]["content"]["application/json"] =
+    const data: ApiForgetPasswordPostRequest =
       await req.json();
 
     // Validate the request body using the emailSchema
@@ -16,11 +95,11 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     // If validation fails, return a 400 error with validation errors
     if (!parsedBody.success) {
-      const errorResponse: operations["sendPasswordResetEmail"]["responses"][400]["content"]["application/json"] =
-        {
-          error: "Validation error",
-          details: parsedBody.error.errors,
-        };
+      const errorResponse =
+      {
+        error: "Validation error",
+        details: parsedBody.error.errors,
+      };
       return NextResponse.json(errorResponse, { status: 400 });
     }
 
@@ -29,10 +108,10 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     // If no email is provided, return a 400 error
     if (!email) {
-      const errorResponse: operations["sendPasswordResetEmail"]["responses"][400]["content"]["application/json"] =
-        {
-          error: "Email is required",
-        };
+      const errorResponse =
+      {
+        error: "Email is required",
+      };
       return NextResponse.json(errorResponse, { status: 400 });
     }
 
@@ -42,10 +121,10 @@ export async function POST(req: Request): Promise<NextResponse> {
     });
 
     if (!user) {
-      const errorResponse: operations["sendPasswordResetEmail"]["responses"][404]["content"]["application/json"] =
-        {
-          error: "Email not found.",
-        };
+      const errorResponse =
+      {
+        error: "Email not found.",
+      };
       return NextResponse.json(errorResponse, { status: 404 });
     }
 
@@ -63,10 +142,10 @@ export async function POST(req: Request): Promise<NextResponse> {
       user.resetPasswordMailCount >= 3 &&
       timeDifference < oneHourInMilliseconds
     ) {
-      const errorResponse: operations["sendPasswordResetEmail"]["responses"][429]["content"]["application/json"] =
-        {
-          error: "Too many requests. Please try again later (1 hr).",
-        };
+      const errorResponse =
+      {
+        error: "Too many requests. Please try again later (1 hr).",
+      };
       return NextResponse.json(errorResponse, { status: 429 });
     } else {
       newMailCount += 1;
@@ -103,27 +182,27 @@ export async function POST(req: Request): Promise<NextResponse> {
     const emailResponse = await sendEmail(emailOptions);
 
     if (!emailResponse.success) {
-      const errorResponse: operations["sendPasswordResetEmail"]["responses"][500]["content"]["application/json"] =
-        {
-          error: "Error sending password reset email.",
-        };
+      const errorResponse =
+      {
+        error: "Error sending password reset email.",
+      };
       return NextResponse.json(errorResponse, { status: 500 });
     }
 
     // Return a success message
-    const successResponse: operations["sendPasswordResetEmail"]["responses"][200]["content"]["application/json"] =
-      {
-        message: "Password reset email sent successfully",
-      };
+    const successResponse =
+    {
+      message: "Password reset email sent successfully",
+    };
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
     console.error("Error during forgot password request:", error);
 
     // Handle server error
-    const errorResponse: operations["sendPasswordResetEmail"]["responses"][500]["content"]["application/json"] =
-      {
-        error: "Server error",
-      };
+    const errorResponse =
+    {
+      error: "Server error",
+    };
     return NextResponse.json(errorResponse, { status: 500 });
   }
 }

@@ -1,8 +1,7 @@
 import {
   ApiResetPasswordPost200Response,
   ApiResetPasswordPost400Response,
-  ApiResetPasswordPost500Response,
-  ApiResetPasswordPostRequest,
+  ApiResetPasswordPostRequest
 } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { resetPasswordSchema } from "@/lib/zod/auth";
@@ -56,15 +55,7 @@ import { NextResponse } from "next/server";
  *                   type: string
  *                   example: "Token and new password are required"
  *       500:
- *         description: Server error during password reset process
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Server error"
+ *        $ref: "#/components/responses/ServerError"
  */
 export async function POST(
   req: Request
@@ -72,7 +63,6 @@ export async function POST(
   NextResponse<
     | ApiResetPasswordPost200Response
     | ApiResetPasswordPost400Response
-    | ApiResetPasswordPost500Response
   >
 > {
   try {
@@ -82,13 +72,17 @@ export async function POST(
     // Validate the request body using the resetPasswordSchema
     const parsedBody = resetPasswordSchema.safeParse(data);
 
-    // If validation fails, return a 422 error with validation errors
+    // If validation fails, return a 400 error with validation errors
     if (!parsedBody.success) {
-      const errorResponse = {
-        error: "Validation error",
-        details: parsedBody.error.errors,
-      };
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(
+        {
+          error: "Validation error",
+          details: parsedBody.error.errors.map((error) => ({
+            path: error.path.map(String), // Convert path elements to strings
+            message: error.message,
+          })),
+        },
+        { status: 400 })
     }
 
     // Extract token and newPassword from the request data

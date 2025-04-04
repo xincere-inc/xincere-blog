@@ -1,9 +1,4 @@
-import {
-  ApiAuthVerifyEmailPost200Response,
-  ApiAuthVerifyEmailPost400Response,
-  ApiAuthVerifyEmailPost404Response,
-  ApiAuthVerifyEmailPostRequest,
-} from "@/api/client";
+import { ApiAuthVerifyEmailRequestPost200Response } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
 import { emailSchema } from "@/lib/zod/auth";
@@ -73,27 +68,18 @@ import { v4 as uuidv4 } from "uuid";
  *                   type: string
  *                   example: Email not found.
  *       500:
- *         description: Server error or email sending failure
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Server error
+ *        $ref: "#/components/responses/ServerError"
  */
 export async function POST(
   req: Request
 ): Promise<
   NextResponse<
-    | ApiAuthVerifyEmailPost200Response
-    | ApiAuthVerifyEmailPost400Response
-    | ApiAuthVerifyEmailPost404Response
+    | ApiAuthVerifyEmailRequestPost200Response
+    | ApiAuthVerifyEmailRequestPost400Response
   >
 > {
   try {
-    const data: ApiAuthVerifyEmailPostRequest = await req.json();
+    const data: ApiAuthVerifyEmailRequestPostRequest = await req.json();
 
     const parsedBody = emailSchema.safeParse(data);
 
@@ -101,7 +87,10 @@ export async function POST(
       return NextResponse.json(
         {
           error: "Validation error",
-          details: parsedBody.error.errors,
+          details: parsedBody.error.errors.map((error) => ({
+            ...error,
+            path: error.path.map(String), // Ensure path is string[]
+          })),
         },
         { status: 400 }
       );

@@ -39,45 +39,154 @@ export interface ApiAuthVerifyEmailRequestPost200Response {
 /**
  * 
  * @export
- * @interface ApiAuthVerifyEmailRequestPost400Response
+ * @interface ApiChangePasswordPost200Response
  */
-export interface ApiAuthVerifyEmailRequestPost400Response {
+export interface ApiChangePasswordPost200Response {
     /**
      * 
      * @type {string}
-     * @memberof ApiAuthVerifyEmailRequestPost400Response
+     * @memberof ApiChangePasswordPost200Response
      */
-    'error'?: string;
-    /**
-     * 
-     * @type {Array<ApiSignupPost400ResponseDetailsInner>}
-     * @memberof ApiAuthVerifyEmailRequestPost400Response
-     */
-    'details'?: Array<ApiSignupPost400ResponseDetailsInner>;
+    'message'?: string;
 }
 /**
  * 
  * @export
- * @interface ApiAuthVerifyEmailRequestPost404Response
+ * @interface ApiChangePasswordPost400Response
  */
-export interface ApiAuthVerifyEmailRequestPost404Response {
+export interface ApiChangePasswordPost400Response {
     /**
      * 
      * @type {string}
-     * @memberof ApiAuthVerifyEmailRequestPost404Response
+     * @memberof ApiChangePasswordPost400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<ApiChangePasswordPost400ResponseDetailsInner>}
+     * @memberof ApiChangePasswordPost400Response
+     */
+    'details'?: Array<ApiChangePasswordPost400ResponseDetailsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface ApiChangePasswordPost400ResponseDetailsInner
+ */
+export interface ApiChangePasswordPost400ResponseDetailsInner {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ApiChangePasswordPost400ResponseDetailsInner
+     */
+    'path'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiChangePasswordPost400ResponseDetailsInner
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiChangePasswordPost401Response
+ */
+export interface ApiChangePasswordPost401Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiChangePasswordPost401Response
      */
     'error'?: string;
 }
 /**
  * 
  * @export
- * @interface ApiAuthVerifyEmailRequestPostRequest
+ * @interface ApiChangePasswordPostRequest
  */
-export interface ApiAuthVerifyEmailRequestPostRequest {
+export interface ApiChangePasswordPostRequest {
     /**
      * 
      * @type {string}
-     * @memberof ApiAuthVerifyEmailRequestPostRequest
+     * @memberof ApiChangePasswordPostRequest
+     */
+    'oldPassword': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiChangePasswordPostRequest
+     */
+    'newPassword': string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiForgetPasswordPost200Response
+ */
+export interface ApiForgetPasswordPost200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiForgetPasswordPost200Response
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiForgetPasswordPost400Response
+ */
+export interface ApiForgetPasswordPost400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiForgetPasswordPost400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<ApiChangePasswordPost400ResponseDetailsInner>}
+     * @memberof ApiForgetPasswordPost400Response
+     */
+    'details'?: Array<ApiChangePasswordPost400ResponseDetailsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface ApiForgetPasswordPost404Response
+ */
+export interface ApiForgetPasswordPost404Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiForgetPasswordPost404Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiForgetPasswordPost429Response
+ */
+export interface ApiForgetPasswordPost429Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiForgetPasswordPost429Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiForgetPasswordPostRequest
+ */
+export interface ApiForgetPasswordPostRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiForgetPasswordPostRequest
      */
     'email': string;
 }
@@ -104,19 +213,6 @@ export interface ApiResetPasswordPost400Response {
      * 
      * @type {string}
      * @memberof ApiResetPasswordPost400Response
-     */
-    'error'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiResetPasswordPost500Response
- */
-export interface ApiResetPasswordPost500Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiResetPasswordPost500Response
      */
     'error'?: string;
 }
@@ -197,29 +293,10 @@ export interface ApiSignupPost400Response {
     'error'?: string;
     /**
      * 
-     * @type {Array<ApiSignupPost400ResponseDetailsInner>}
+     * @type {Array<ApiChangePasswordPost400ResponseDetailsInner>}
      * @memberof ApiSignupPost400Response
      */
-    'details'?: Array<ApiSignupPost400ResponseDetailsInner>;
-}
-/**
- * 
- * @export
- * @interface ApiSignupPost400ResponseDetailsInner
- */
-export interface ApiSignupPost400ResponseDetailsInner {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ApiSignupPost400ResponseDetailsInner
-     */
-    'path'?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPost400ResponseDetailsInner
-     */
-    'message'?: string;
+    'details'?: Array<ApiChangePasswordPost400ResponseDetailsInner>;
 }
 /**
  * 
@@ -278,6 +355,146 @@ export interface ApiVerifyEmailGet400Response {
      */
     'message'?: string;
 }
+/**
+ * 
+ * @export
+ * @interface Created
+ */
+export interface Created {
+    /**
+     * 
+     * @type {string}
+     * @memberof Created
+     */
+    'message': string;
+}
+/**
+ * 
+ * @export
+ * @interface CreatedWithId
+ */
+export interface CreatedWithId {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatedWithId
+     */
+    'message': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreatedWithId
+     */
+    'id': number;
+}
+/**
+ * 
+ * @export
+ * @interface ForbiddenError
+ */
+export interface ForbiddenError {
+    /**
+     * 
+     * @type {string}
+     * @memberof ForbiddenError
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ForbiddenError
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface InternalServerError
+ */
+export interface InternalServerError {
+    /**
+     * 
+     * @type {string}
+     * @memberof InternalServerError
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InternalServerError
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface NotFoundError
+ */
+export interface NotFoundError {
+    /**
+     * 
+     * @type {string}
+     * @memberof NotFoundError
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NotFoundError
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface Success
+ */
+export interface Success {
+    /**
+     * 
+     * @type {string}
+     * @memberof Success
+     */
+    'message': string;
+}
+/**
+ * 
+ * @export
+ * @interface UnAuthorizedError
+ */
+export interface UnAuthorizedError {
+    /**
+     * 
+     * @type {string}
+     * @memberof UnAuthorizedError
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnAuthorizedError
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface UnprocessableEntity
+ */
+export interface UnprocessableEntity {
+    /**
+     * 
+     * @type {string}
+     * @memberof UnprocessableEntity
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnprocessableEntity
+     */
+    'message'?: string;
+}
 
 /**
  * AuthApi - axios parameter creator
@@ -288,13 +505,13 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Send verification email to a registered user
-         * @param {ApiAuthVerifyEmailRequestPostRequest} apiAuthVerifyEmailRequestPostRequest 
+         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAuthVerifyEmailRequestPost: async (apiAuthVerifyEmailRequestPostRequest: ApiAuthVerifyEmailRequestPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'apiAuthVerifyEmailRequestPostRequest' is not null or undefined
-            assertParamExists('apiAuthVerifyEmailRequestPost', 'apiAuthVerifyEmailRequestPostRequest', apiAuthVerifyEmailRequestPostRequest)
+        apiAuthVerifyEmailRequestPost: async (apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'apiForgetPasswordPostRequest' is not null or undefined
+            assertParamExists('apiAuthVerifyEmailRequestPost', 'apiForgetPasswordPostRequest', apiForgetPasswordPostRequest)
             const localVarPath = `/api/auth/verify-email-request`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -314,7 +531,79 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(apiAuthVerifyEmailRequestPostRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(apiForgetPasswordPostRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows an authenticated user to change their password by providing the old and new password.
+         * @summary Change user password
+         * @param {ApiChangePasswordPostRequest} apiChangePasswordPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiChangePasswordPost: async (apiChangePasswordPostRequest: ApiChangePasswordPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'apiChangePasswordPostRequest' is not null or undefined
+            assertParamExists('apiChangePasswordPost', 'apiChangePasswordPostRequest', apiChangePasswordPostRequest)
+            const localVarPath = `/api/change-password`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(apiChangePasswordPostRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
+         * @summary Send a password reset email
+         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiForgetPasswordPost: async (apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'apiForgetPasswordPostRequest' is not null or undefined
+            assertParamExists('apiForgetPasswordPost', 'apiForgetPasswordPostRequest', apiForgetPasswordPostRequest)
+            const localVarPath = `/api/forget-password`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(apiForgetPasswordPostRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -443,14 +732,40 @@ export const AuthApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Send verification email to a registered user
-         * @param {ApiAuthVerifyEmailRequestPostRequest} apiAuthVerifyEmailRequestPostRequest 
+         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest: ApiAuthVerifyEmailRequestPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiAuthVerifyEmailRequestPost200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest, options);
+        async apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiAuthVerifyEmailRequestPost200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuthApi.apiAuthVerifyEmailRequestPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows an authenticated user to change their password by providing the old and new password.
+         * @summary Change user password
+         * @param {ApiChangePasswordPostRequest} apiChangePasswordPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiChangePasswordPost(apiChangePasswordPostRequest: ApiChangePasswordPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiChangePasswordPost200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiChangePasswordPost(apiChangePasswordPostRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiChangePasswordPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
+         * @summary Send a password reset email
+         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiForgetPasswordPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiForgetPasswordPost200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiForgetPasswordPost(apiForgetPasswordPostRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiForgetPasswordPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -505,12 +820,32 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Send verification email to a registered user
-         * @param {ApiAuthVerifyEmailRequestPostRequest} apiAuthVerifyEmailRequestPostRequest 
+         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest: ApiAuthVerifyEmailRequestPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiAuthVerifyEmailRequestPost200Response> {
-            return localVarFp.apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest, options).then((request) => request(axios, basePath));
+        apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiAuthVerifyEmailRequestPost200Response> {
+            return localVarFp.apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows an authenticated user to change their password by providing the old and new password.
+         * @summary Change user password
+         * @param {ApiChangePasswordPostRequest} apiChangePasswordPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiChangePasswordPost(apiChangePasswordPostRequest: ApiChangePasswordPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiChangePasswordPost200Response> {
+            return localVarFp.apiChangePasswordPost(apiChangePasswordPostRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
+         * @summary Send a password reset email
+         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiForgetPasswordPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiForgetPasswordPost200Response> {
+            return localVarFp.apiForgetPasswordPost(apiForgetPasswordPostRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
@@ -555,13 +890,37 @@ export class AuthApi extends BaseAPI {
     /**
      * 
      * @summary Send verification email to a registered user
-     * @param {ApiAuthVerifyEmailRequestPostRequest} apiAuthVerifyEmailRequestPostRequest 
+     * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest: ApiAuthVerifyEmailRequestPostRequest, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest, options).then((request) => request(this.axios, this.basePath));
+    public apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows an authenticated user to change their password by providing the old and new password.
+     * @summary Change user password
+     * @param {ApiChangePasswordPostRequest} apiChangePasswordPostRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public apiChangePasswordPost(apiChangePasswordPostRequest: ApiChangePasswordPostRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).apiChangePasswordPost(apiChangePasswordPostRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
+     * @summary Send a password reset email
+     * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public apiForgetPasswordPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).apiForgetPasswordPost(apiForgetPasswordPostRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

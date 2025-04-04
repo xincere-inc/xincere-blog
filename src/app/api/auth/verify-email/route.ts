@@ -46,15 +46,7 @@ import { NextResponse } from "next/server";
  *                   type: string
  *                   example: "The provided token is invalid or has expired"
  *       500:
- *         description: Server error during email verification process
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Server error"
+ *        $ref: "#/components/responses/ServerError"
  */
 export async function GET(
   req: Request
@@ -77,8 +69,6 @@ export async function GET(
     const user = await prisma.user.findUnique({
       where: { emailVerificationToken: token },
     });
-
-    console.log(user);
 
     if (!user) {
       const errorResponse = {

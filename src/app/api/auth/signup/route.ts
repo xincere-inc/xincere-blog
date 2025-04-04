@@ -1,7 +1,7 @@
 import {
   ApiSignupPost201Response,
   ApiSignupPost400Response,
-  ApiSignupPostRequest,
+  ApiSignupPostRequest
 } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
@@ -9,7 +9,6 @@ import { signUpSchema } from "@/lib/zod/auth";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import { ApiSignupPost500Response } from "./../../../../api/client/api";
 
 /**
  * @swagger
@@ -86,15 +85,11 @@ import { ApiSignupPost500Response } from "./../../../../api/client/api";
  *                       message:
  *                         type: string
  *       500:
- *         description: Server error or email sending failure
+ *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Server error
+ *               $ref: "#/components/schemas/InternalServerError"
  */
 export async function POST(
   req: Request
@@ -102,7 +97,6 @@ export async function POST(
   NextResponse<
     | ApiSignupPost201Response
     | ApiSignupPost400Response
-    | ApiSignupPost500Response
   >
 > {
   try {
@@ -113,7 +107,10 @@ export async function POST(
       return NextResponse.json(
         {
           error: "Validation error",
-          details: parsedBody.error.errors,
+          details: parsedBody.error.errors.map((error) => ({
+            path: error.path.map(String), // Convert path elements to strings
+            message: error.message,
+          })),
         },
         { status: 400 }
       );
