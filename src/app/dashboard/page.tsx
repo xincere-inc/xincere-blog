@@ -1,7 +1,18 @@
-export default async function Dashboard() {
+import SingOut from "@/components/buttons/Singout";
+import getSession from "@/lib/auth/getSession";
+import Link from "next/link";
+
+export default async function DashboardPage() {
+  const session = await getSession();
+  const user = session?.user;
   return (
-    <div>
-      <h1>Welcome to dashboard</h1>
-    </div>
+    <>
+      <div>Welcome to dashboard - {user?.name} </div>
+      <br />
+      <Link href='/change-password'>Change-password</Link>
+      <br />
+
+      <SingOut />
+    </>
   );
 }

@@ -213,8 +213,6 @@ Builds and starts the production server.
   npx prisma studio
   ```
 
-<<<<<<< HEAD
-
 ### Generate TypeScript Types from Swagger
 
 ```bash
@@ -222,10 +220,6 @@ npm run generate:types
 ```
 
 # Generates TypeScript types from the Swagger/OpenAPI documentation (`swagger.yaml`) and saves them to `src/types/api.ts`.
-
----
-
-> > > > > > > main
 
 ## Docker Compose Overview
 
