@@ -1,7 +1,11 @@
+import {
+  ApiSignupPost201Response,
+  ApiSignupPost400Response,
+  ApiSignupPostRequest,
+} from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
 import { signUpSchema } from "@/lib/zod/auth";
-import { operations } from "@/types/api";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -20,21 +24,25 @@ import { v4 as uuidv4 } from "uuid";
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - name
  *             properties:
  *               email:
  *                 type: string
  *                 format: email
- *                 example: "user@example.com"
+ *                 example: user@example.com
  *               password:
  *                 type: string
  *                 format: password
- *                 example: "SecureP@ssw0rd"
+ *                 example: SecureP@ssw0rd
  *               name:
  *                 type: string
- *                 example: "John Doe"
+ *                 example: John Doe
  *     responses:
  *       201:
- *         description: User created successfully.
+ *         description: User created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -42,18 +50,21 @@ import { v4 as uuidv4 } from "uuid";
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "User created successfully. A verification email has been sent."
+ *                   example: User created successfully. A verification email has been sent.
  *                 user:
  *                   type: object
  *                   properties:
  *                     id:
  *                       type: string
+ *                       example: clvhgclxy0000zkw9d74mj2mu
  *                     email:
  *                       type: string
+ *                       example: user@example.com
  *                     name:
  *                       type: string
+ *                       example: John Doe
  *       400:
- *         description: Validation error or user already exists.
+ *         description: Validation error or user already exists
  *         content:
  *           application/json:
  *             schema:
@@ -61,12 +72,20 @@ import { v4 as uuidv4 } from "uuid";
  *               properties:
  *                 error:
  *                   type: string
+ *                   example: User already exists
  *                 details:
  *                   type: array
  *                   items:
  *                     type: object
+ *                     properties:
+ *                       path:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                       message:
+ *                         type: string
  *       500:
- *         description: Server error or email sending failure.
+ *         description: Server error or email sending failure
  *         content:
  *           application/json:
  *             schema:
@@ -74,45 +93,92 @@ import { v4 as uuidv4 } from "uuid";
  *               properties:
  *                 error:
  *                   type: string
+ *                   example: Server error
  */
-export async function POST(req: Request): Promise<NextResponse> {
+export async function POST(
+  req: Request
+): Promise<
+  NextResponse<
+    | ApiSignupPost201Response
+    | ApiSignupPost400Response
+    | ApiSignupPost500Response
+  >
+> {
   try {
-    const body: operations["registerUser"]["requestBody"]["content"]["application/json"] = await req.json();
+    const body: ApiSignupPostRequest = await req.json();
     const parsedBody = signUpSchema.safeParse(body);
 
     if (!parsedBody.success) {
-      return NextResponse.json({ error: "Validation error", details: parsedBody.error.errors }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: "Validation error",
+          details: parsedBody.error.errors,
+        },
+        { status: 400 }
+      );
     }
 
     const { email, password, name } = parsedBody.data;
+
     const existingUser = await prisma.user.findUnique({ where: { email } });
+
     if (existingUser) {
-      return NextResponse.json({ error: "User already exists" }, { status: 400 });
+      return NextResponse.json(
+        { error: "User already exists" },
+        { status: 400 }
+      );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({ data: { email, password: hashedPassword, name } });
+
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name,
+      },
+    });
+
     const verificationToken = uuidv4();
 
-    await prisma.user.update({ where: { id: user.id }, data: { emailVerificationToken: verificationToken } });
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { emailVerificationToken: verificationToken },
+    });
+
     const verificationUrl = `${process.env.NEXTAUTH_URL}/auth/verify-email?token=${verificationToken}`;
+
     const emailResponse = await sendEmail({
       from: process.env.SMTP_USERNAME,
       to: email,
       subject: "Email Verification",
-      html: `<p>Thank you for registering!</p><p>Click <a href="${verificationUrl}">here</a> to verify your email.</p>`
+      html: `
+        <p>Thank you for registering!</p>
+        <p>Click <a href="${verificationUrl}">here</a> to verify your email address.</p>
+      `,
     });
 
     if (!emailResponse.success) {
-      return NextResponse.json({ error: "Error sending verification email" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Error sending verification email" },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({
-      message: "User created successfully. A verification email has been sent.",
-      user: { id: user.id, email: user.email, name: user.name }
-    }, { status: 201 });
+    return NextResponse.json(
+      {
+        message:
+          "User created successfully. A verification email has been sent.",
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        },
+      },
+      { status: 201 }
+    );
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error during signup:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

@@ -12,6 +12,90 @@
     }
   ],
   "paths": {
+    "/api/reset-password": {
+      "post": {
+        "summary": "Reset password for a user",
+        "description": "Resets the user's password using a provided reset token and new password. The reset token is invalidated after the reset.",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "token",
+                  "newPassword"
+                ],
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "example": "d4c79ab8-b6b7-48b4-b5a4-56e8d41be26f"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "NewSecureP@ssw0rd"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Password reset successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or expired token, or missing fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Token and new password are required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error during password reset process",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/signup": {
       "post": {
         "summary": "Register a new user",
@@ -25,6 +109,11 @@
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "email",
+                  "password",
+                  "name"
+                ],
                 "properties": {
                   "email": {
                     "type": "string",
@@ -47,7 +136,7 @@
         },
         "responses": {
           "201": {
-            "description": "User created successfully.",
+            "description": "User created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -61,13 +150,16 @@
                       "type": "object",
                       "properties": {
                         "id": {
-                          "type": "string"
+                          "type": "string",
+                          "example": "clvhgclxy0000zkw9d74mj2mu"
                         },
                         "email": {
-                          "type": "string"
+                          "type": "string",
+                          "example": "user@example.com"
                         },
                         "name": {
-                          "type": "string"
+                          "type": "string",
+                          "example": "John Doe"
                         }
                       }
                     }
@@ -77,19 +169,31 @@
             }
           },
           "400": {
-            "description": "Validation error or user already exists.",
+            "description": "Validation error or user already exists",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "error": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "User already exists"
                     },
                     "details": {
                       "type": "array",
                       "items": {
-                        "type": "object"
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        }
                       }
                     }
                   }
@@ -98,14 +202,201 @@
             }
           },
           "500": {
-            "description": "Server error or email sending failure.",
+            "description": "Server error or email sending failure",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "error": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/verify-email-request": {
+      "post": {
+        "summary": "Send verification email to a registered user",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "user@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification email sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Verification email sent successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or missing email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Validation error"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Email not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Email not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error or email sending failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/verify-email": {
+      "get": {
+        "summary": "Verify user email",
+        "description": "Verifies the user's email address using a provided verification token. Marks the user's email as verified in the database.",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "token",
+            "required": true,
+            "description": "The email verification token sent to the user's email address.",
+            "schema": {
+              "type": "string",
+              "example": "d4c79ab8-b6b7-48b4-b5a4-56e8d41be26g"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email successfully verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Email successfully verified"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or expired token, or token not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Token is required"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "The provided token is invalid or has expired"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error during email verification process",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Server error"
                     }
                   }
                 }

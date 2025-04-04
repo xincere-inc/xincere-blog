@@ -26,6 +26,122 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface ApiAuthVerifyEmailRequestPost200Response
+ */
+export interface ApiAuthVerifyEmailRequestPost200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAuthVerifyEmailRequestPost200Response
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiAuthVerifyEmailRequestPost400Response
+ */
+export interface ApiAuthVerifyEmailRequestPost400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAuthVerifyEmailRequestPost400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<ApiSignupPost400ResponseDetailsInner>}
+     * @memberof ApiAuthVerifyEmailRequestPost400Response
+     */
+    'details'?: Array<ApiSignupPost400ResponseDetailsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface ApiAuthVerifyEmailRequestPost404Response
+ */
+export interface ApiAuthVerifyEmailRequestPost404Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAuthVerifyEmailRequestPost404Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiAuthVerifyEmailRequestPostRequest
+ */
+export interface ApiAuthVerifyEmailRequestPostRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAuthVerifyEmailRequestPostRequest
+     */
+    'email': string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiResetPasswordPost200Response
+ */
+export interface ApiResetPasswordPost200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiResetPasswordPost200Response
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiResetPasswordPost400Response
+ */
+export interface ApiResetPasswordPost400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiResetPasswordPost400Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiResetPasswordPost500Response
+ */
+export interface ApiResetPasswordPost500Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiResetPasswordPost500Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiResetPasswordPostRequest
+ */
+export interface ApiResetPasswordPostRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiResetPasswordPostRequest
+     */
+    'token': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiResetPasswordPostRequest
+     */
+    'newPassword': string;
+}
+/**
+ * 
+ * @export
  * @interface ApiSignupPost201Response
  */
 export interface ApiSignupPost201Response {
@@ -81,23 +197,29 @@ export interface ApiSignupPost400Response {
     'error'?: string;
     /**
      * 
-     * @type {Array<object>}
+     * @type {Array<ApiSignupPost400ResponseDetailsInner>}
      * @memberof ApiSignupPost400Response
      */
-    'details'?: Array<object>;
+    'details'?: Array<ApiSignupPost400ResponseDetailsInner>;
 }
 /**
  * 
  * @export
- * @interface ApiSignupPost500Response
+ * @interface ApiSignupPost400ResponseDetailsInner
  */
-export interface ApiSignupPost500Response {
+export interface ApiSignupPost400ResponseDetailsInner {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ApiSignupPost400ResponseDetailsInner
+     */
+    'path'?: Array<string>;
     /**
      * 
      * @type {string}
-     * @memberof ApiSignupPost500Response
+     * @memberof ApiSignupPost400ResponseDetailsInner
      */
-    'error'?: string;
+    'message'?: string;
 }
 /**
  * 
@@ -110,19 +232,51 @@ export interface ApiSignupPostRequest {
      * @type {string}
      * @memberof ApiSignupPostRequest
      */
-    'email'?: string;
+    'email': string;
     /**
      * 
      * @type {string}
      * @memberof ApiSignupPostRequest
      */
-    'password'?: string;
+    'password': string;
     /**
      * 
      * @type {string}
      * @memberof ApiSignupPostRequest
      */
-    'name'?: string;
+    'name': string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiVerifyEmailGet200Response
+ */
+export interface ApiVerifyEmailGet200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiVerifyEmailGet200Response
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiVerifyEmailGet400Response
+ */
+export interface ApiVerifyEmailGet400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiVerifyEmailGet400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiVerifyEmailGet400Response
+     */
+    'message'?: string;
 }
 
 /**
@@ -131,6 +285,78 @@ export interface ApiSignupPostRequest {
  */
 export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @summary Send verification email to a registered user
+         * @param {ApiAuthVerifyEmailRequestPostRequest} apiAuthVerifyEmailRequestPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAuthVerifyEmailRequestPost: async (apiAuthVerifyEmailRequestPostRequest: ApiAuthVerifyEmailRequestPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'apiAuthVerifyEmailRequestPostRequest' is not null or undefined
+            assertParamExists('apiAuthVerifyEmailRequestPost', 'apiAuthVerifyEmailRequestPostRequest', apiAuthVerifyEmailRequestPostRequest)
+            const localVarPath = `/api/auth/verify-email-request`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(apiAuthVerifyEmailRequestPostRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
+         * @summary Reset password for a user
+         * @param {ApiResetPasswordPostRequest} apiResetPasswordPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiResetPasswordPost: async (apiResetPasswordPostRequest: ApiResetPasswordPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'apiResetPasswordPostRequest' is not null or undefined
+            assertParamExists('apiResetPasswordPost', 'apiResetPasswordPostRequest', apiResetPasswordPostRequest)
+            const localVarPath = `/api/reset-password`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(apiResetPasswordPostRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
          * @summary Register a new user
@@ -167,6 +393,43 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Verifies the user\'s email address using a provided verification token. Marks the user\'s email as verified in the database.
+         * @summary Verify user email
+         * @param {string} token The email verification token sent to the user\&#39;s email address.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiVerifyEmailGet: async (token: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'token' is not null or undefined
+            assertParamExists('apiVerifyEmailGet', 'token', token)
+            const localVarPath = `/api/verify-email`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (token !== undefined) {
+                localVarQueryParameter['token'] = token;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -177,6 +440,32 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
 export const AuthApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
     return {
+        /**
+         * 
+         * @summary Send verification email to a registered user
+         * @param {ApiAuthVerifyEmailRequestPostRequest} apiAuthVerifyEmailRequestPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest: ApiAuthVerifyEmailRequestPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiAuthVerifyEmailRequestPost200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiAuthVerifyEmailRequestPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
+         * @summary Reset password for a user
+         * @param {ApiResetPasswordPostRequest} apiResetPasswordPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiResetPasswordPost(apiResetPasswordPostRequest: ApiResetPasswordPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResetPasswordPost200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiResetPasswordPost(apiResetPasswordPostRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiResetPasswordPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
         /**
          * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
          * @summary Register a new user
@@ -190,6 +479,19 @@ export const AuthApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['AuthApi.apiSignupPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * Verifies the user\'s email address using a provided verification token. Marks the user\'s email as verified in the database.
+         * @summary Verify user email
+         * @param {string} token The email verification token sent to the user\&#39;s email address.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiVerifyEmailGet(token: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiVerifyEmailGet200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiVerifyEmailGet(token, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiVerifyEmailGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -201,6 +503,26 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = AuthApiFp(configuration)
     return {
         /**
+         * 
+         * @summary Send verification email to a registered user
+         * @param {ApiAuthVerifyEmailRequestPostRequest} apiAuthVerifyEmailRequestPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest: ApiAuthVerifyEmailRequestPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiAuthVerifyEmailRequestPost200Response> {
+            return localVarFp.apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
+         * @summary Reset password for a user
+         * @param {ApiResetPasswordPostRequest} apiResetPasswordPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiResetPasswordPost(apiResetPasswordPostRequest: ApiResetPasswordPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResetPasswordPost200Response> {
+            return localVarFp.apiResetPasswordPost(apiResetPasswordPostRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
          * @summary Register a new user
          * @param {ApiSignupPostRequest} apiSignupPostRequest 
@@ -209,6 +531,16 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          */
         apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiSignupPost201Response> {
             return localVarFp.apiSignupPost(apiSignupPostRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Verifies the user\'s email address using a provided verification token. Marks the user\'s email as verified in the database.
+         * @summary Verify user email
+         * @param {string} token The email verification token sent to the user\&#39;s email address.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiVerifyEmailGet(token: string, options?: RawAxiosRequestConfig): AxiosPromise<ApiVerifyEmailGet200Response> {
+            return localVarFp.apiVerifyEmailGet(token, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -221,6 +553,30 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
  */
 export class AuthApi extends BaseAPI {
     /**
+     * 
+     * @summary Send verification email to a registered user
+     * @param {ApiAuthVerifyEmailRequestPostRequest} apiAuthVerifyEmailRequestPostRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest: ApiAuthVerifyEmailRequestPostRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).apiAuthVerifyEmailRequestPost(apiAuthVerifyEmailRequestPostRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
+     * @summary Reset password for a user
+     * @param {ApiResetPasswordPostRequest} apiResetPasswordPostRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public apiResetPasswordPost(apiResetPasswordPostRequest: ApiResetPasswordPostRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).apiResetPasswordPost(apiResetPasswordPostRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
      * @summary Register a new user
      * @param {ApiSignupPostRequest} apiSignupPostRequest 
@@ -230,6 +586,18 @@ export class AuthApi extends BaseAPI {
      */
     public apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig) {
         return AuthApiFp(this.configuration).apiSignupPost(apiSignupPostRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Verifies the user\'s email address using a provided verification token. Marks the user\'s email as verified in the database.
+     * @summary Verify user email
+     * @param {string} token The email verification token sent to the user\&#39;s email address.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public apiVerifyEmailGet(token: string, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).apiVerifyEmailGet(token, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
