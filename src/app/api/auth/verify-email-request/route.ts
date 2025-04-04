@@ -1,7 +1,8 @@
 import { ApiAuthVerifyEmailRequestPost200Response } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
-import { emailSchema } from "@/lib/zod/auth";
+import { emailSchema } from "@/lib/zod/auth/auth";
+import { handleValidationError } from "@/lib/zod/validation-error";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
@@ -83,17 +84,9 @@ export async function POST(
 
     const parsedBody = emailSchema.safeParse(data);
 
+    // Handle validation errors
     if (!parsedBody.success) {
-      return NextResponse.json(
-        {
-          error: "Validation error",
-          details: parsedBody.error.errors.map((error) => ({
-            ...error,
-            path: error.path.map(String), // Ensure path is string[]
-          })),
-        },
-        { status: 400 }
-      );
+      return handleValidationError(parsedBody.error); // Use reusable validation handler
     }
 
     const { email } = data;

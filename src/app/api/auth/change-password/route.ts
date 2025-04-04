@@ -1,7 +1,13 @@
-import { ApiChangePasswordPost200Response, ApiChangePasswordPost400Response, ApiChangePasswordPost401Response, ApiChangePasswordPostRequest } from "@/api/client";
+import {
+  ApiChangePasswordPost200Response,
+  ApiChangePasswordPost400Response,
+  ApiChangePasswordPost401Response,
+  ApiChangePasswordPostRequest,
+} from "@/api/client";
 import getSession from "@/lib/auth/getSession";
 import { prisma } from "@/lib/prisma";
-import { changePasswordSchema } from "@/lib/zod/auth";
+import { changePasswordSchema } from "@/lib/zod/auth/auth";
+import { handleValidationError } from "@/lib/zod/validation-error";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
@@ -74,25 +80,24 @@ import { NextResponse } from "next/server";
  *       500:
  *        $ref: "#/components/responses/ServerError"
  */
-export async function POST(req: Request): Promise<NextResponse<
-  | ApiChangePasswordPost200Response | ApiChangePasswordPost400Response | ApiChangePasswordPost401Response>> {
+export async function POST(
+  req: Request
+): Promise<
+  NextResponse<
+    | ApiChangePasswordPost200Response
+    | ApiChangePasswordPost400Response
+    | ApiChangePasswordPost401Response
+  >
+> {
   try {
     // Parse and validate request body using Zod
-    const body: ApiChangePasswordPostRequest =
-      await req.json();
+    const body: ApiChangePasswordPostRequest = await req.json();
 
     const parsedBody = changePasswordSchema.safeParse(body);
 
+    // Handle validation errors
     if (!parsedBody.success) {
-      return NextResponse.json(
-        {
-          error: "Validation error",
-          details: parsedBody.error.errors.map((error) => ({
-            path: error.path.map(String), // Convert path elements to strings
-            message: error.message,
-          })),
-        },
-        { status: 400 })
+      return handleValidationError(parsedBody.error); // Use reusable validation handler
     }
 
     const { oldPassword, newPassword } = parsedBody.data;
@@ -103,8 +108,7 @@ export async function POST(req: Request): Promise<NextResponse<
       session?.expires && new Date(session.expires).getTime() < Date.now();
 
     if (!session || sessionExpired) {
-      const errorResponse =
-      {
+      const errorResponse = {
         error: "Unauthorized",
       };
       return NextResponse.json(errorResponse, { status: 401 });
@@ -115,8 +119,7 @@ export async function POST(req: Request): Promise<NextResponse<
     });
 
     if (!user) {
-      const errorResponse =
-      {
+      const errorResponse = {
         error: "Unauthorized",
       };
       return NextResponse.json(errorResponse, { status: 401 });
@@ -124,8 +127,7 @@ export async function POST(req: Request): Promise<NextResponse<
 
     // Check if the old password and new password are the same
     if (oldPassword === newPassword) {
-      const errorResponse =
-      {
+      const errorResponse = {
         error: "New password cannot be the same as the old password",
       };
       return NextResponse.json(errorResponse, { status: 400 });
@@ -134,8 +136,7 @@ export async function POST(req: Request): Promise<NextResponse<
     // Verify old password
     const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
     if (!isPasswordValid) {
-      const errorResponse =
-      {
+      const errorResponse = {
         error: "Invalid old password",
       };
       return NextResponse.json(errorResponse, { status: 400 });
@@ -148,8 +149,7 @@ export async function POST(req: Request): Promise<NextResponse<
       data: { password: hashedPassword },
     });
 
-    const responseBody =
-    {
+    const responseBody = {
       message: "Password has been changed successfully.",
     };
 
@@ -157,8 +157,7 @@ export async function POST(req: Request): Promise<NextResponse<
   } catch (error: unknown) {
     console.error("Error:", error);
 
-    const errorResponse =
-    {
+    const errorResponse = {
       error: "Server error",
     };
     return NextResponse.json(errorResponse, { status: 500 });

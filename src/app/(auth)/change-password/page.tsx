@@ -1,6 +1,6 @@
 "use client";
 
-import { changePasswordSchema } from "@/lib/zod/auth";
+import { changePasswordSchema } from "@/lib/zod/auth/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

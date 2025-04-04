@@ -26,6 +26,128 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface ApiAdminUserCreateUserPost201Response
+ */
+export interface ApiAdminUserCreateUserPost201Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAdminUserCreateUserPost201Response
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {ApiAdminUserCreateUserPost201ResponseUser}
+     * @memberof ApiAdminUserCreateUserPost201Response
+     */
+    'user'?: ApiAdminUserCreateUserPost201ResponseUser;
+}
+/**
+ * 
+ * @export
+ * @interface ApiAdminUserCreateUserPost201ResponseUser
+ */
+export interface ApiAdminUserCreateUserPost201ResponseUser {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAdminUserCreateUserPost201ResponseUser
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAdminUserCreateUserPost201ResponseUser
+     */
+    'email'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAdminUserCreateUserPost201ResponseUser
+     */
+    'name'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiAdminUserCreateUserPost400Response
+ */
+export interface ApiAdminUserCreateUserPost400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAdminUserCreateUserPost400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>}
+     * @memberof ApiAdminUserCreateUserPost400Response
+     */
+    'details'?: Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface ApiAdminUserCreateUserPost400ResponseDetailsInner
+ */
+export interface ApiAdminUserCreateUserPost400ResponseDetailsInner {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ApiAdminUserCreateUserPost400ResponseDetailsInner
+     */
+    'path'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAdminUserCreateUserPost400ResponseDetailsInner
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiAdminUserCreateUserPostRequest
+ */
+export interface ApiAdminUserCreateUserPostRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAdminUserCreateUserPostRequest
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAdminUserCreateUserPostRequest
+     */
+    'password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAdminUserCreateUserPostRequest
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAdminUserCreateUserPostRequest
+     */
+    'role': ApiAdminUserCreateUserPostRequestRoleEnum;
+}
+
+export const ApiAdminUserCreateUserPostRequestRoleEnum = {
+    User: 'USER',
+    Admin: 'ADMIN',
+    Customer: 'CUSTOMER'
+} as const;
+
+export type ApiAdminUserCreateUserPostRequestRoleEnum = typeof ApiAdminUserCreateUserPostRequestRoleEnum[keyof typeof ApiAdminUserCreateUserPostRequestRoleEnum];
+
+/**
+ * 
+ * @export
  * @interface ApiAuthVerifyEmailRequestPost200Response
  */
 export interface ApiAuthVerifyEmailRequestPost200Response {
@@ -63,29 +185,10 @@ export interface ApiChangePasswordPost400Response {
     'error'?: string;
     /**
      * 
-     * @type {Array<ApiChangePasswordPost400ResponseDetailsInner>}
+     * @type {Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>}
      * @memberof ApiChangePasswordPost400Response
      */
-    'details'?: Array<ApiChangePasswordPost400ResponseDetailsInner>;
-}
-/**
- * 
- * @export
- * @interface ApiChangePasswordPost400ResponseDetailsInner
- */
-export interface ApiChangePasswordPost400ResponseDetailsInner {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ApiChangePasswordPost400ResponseDetailsInner
-     */
-    'path'?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiChangePasswordPost400ResponseDetailsInner
-     */
-    'message'?: string;
+    'details'?: Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>;
 }
 /**
  * 
@@ -146,10 +249,10 @@ export interface ApiForgetPasswordPost400Response {
     'error'?: string;
     /**
      * 
-     * @type {Array<ApiChangePasswordPost400ResponseDetailsInner>}
+     * @type {Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>}
      * @memberof ApiForgetPasswordPost400Response
      */
-    'details'?: Array<ApiChangePasswordPost400ResponseDetailsInner>;
+    'details'?: Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>;
 }
 /**
  * 
@@ -234,69 +337,6 @@ export interface ApiResetPasswordPostRequest {
      * @memberof ApiResetPasswordPostRequest
      */
     'newPassword': string;
-}
-/**
- * 
- * @export
- * @interface ApiSignupPost201Response
- */
-export interface ApiSignupPost201Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPost201Response
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {ApiSignupPost201ResponseUser}
-     * @memberof ApiSignupPost201Response
-     */
-    'user'?: ApiSignupPost201ResponseUser;
-}
-/**
- * 
- * @export
- * @interface ApiSignupPost201ResponseUser
- */
-export interface ApiSignupPost201ResponseUser {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPost201ResponseUser
-     */
-    'id'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPost201ResponseUser
-     */
-    'email'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPost201ResponseUser
-     */
-    'name'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiSignupPost400Response
- */
-export interface ApiSignupPost400Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPost400Response
-     */
-    'error'?: string;
-    /**
-     * 
-     * @type {Array<ApiChangePasswordPost400ResponseDetailsInner>}
-     * @memberof ApiSignupPost400Response
-     */
-    'details'?: Array<ApiChangePasswordPost400ResponseDetailsInner>;
 }
 /**
  * 
@@ -495,6 +535,116 @@ export interface UnprocessableEntity {
      */
     'message'?: string;
 }
+
+/**
+ * AdminApi - axios parameter creator
+ * @export
+ */
+export const AdminApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Admin can create a new user, hash their password, generate an email verification token, and send a verification email.
+         * @summary Admin creates a new user
+         * @param {ApiAdminUserCreateUserPostRequest} apiAdminUserCreateUserPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAdminUserCreateUserPost: async (apiAdminUserCreateUserPostRequest: ApiAdminUserCreateUserPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'apiAdminUserCreateUserPostRequest' is not null or undefined
+            assertParamExists('apiAdminUserCreateUserPost', 'apiAdminUserCreateUserPostRequest', apiAdminUserCreateUserPostRequest)
+            const localVarPath = `/api/admin/user/create-user`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(apiAdminUserCreateUserPostRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AdminApi - functional programming interface
+ * @export
+ */
+export const AdminApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AdminApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Admin can create a new user, hash their password, generate an email verification token, and send a verification email.
+         * @summary Admin creates a new user
+         * @param {ApiAdminUserCreateUserPostRequest} apiAdminUserCreateUserPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest: ApiAdminUserCreateUserPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiAdminUserCreateUserPost201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.apiAdminUserCreateUserPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * AdminApi - factory interface
+ * @export
+ */
+export const AdminApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AdminApiFp(configuration)
+    return {
+        /**
+         * Admin can create a new user, hash their password, generate an email verification token, and send a verification email.
+         * @summary Admin creates a new user
+         * @param {ApiAdminUserCreateUserPostRequest} apiAdminUserCreateUserPostRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest: ApiAdminUserCreateUserPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiAdminUserCreateUserPost201Response> {
+            return localVarFp.apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * AdminApi - object-oriented interface
+ * @export
+ * @class AdminApi
+ * @extends {BaseAPI}
+ */
+export class AdminApi extends BaseAPI {
+    /**
+     * Admin can create a new user, hash their password, generate an email verification token, and send a verification email.
+     * @summary Admin creates a new user
+     * @param {ApiAdminUserCreateUserPostRequest} apiAdminUserCreateUserPostRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest: ApiAdminUserCreateUserPostRequest, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
 
 /**
  * AuthApi - axios parameter creator
@@ -788,7 +938,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiSignupPost201Response>> {
+        async apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiAdminUserCreateUserPost201Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiSignupPost(apiSignupPostRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuthApi.apiSignupPost']?.[localVarOperationServerIndex]?.url;
@@ -864,7 +1014,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiSignupPost201Response> {
+        apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiAdminUserCreateUserPost201Response> {
             return localVarFp.apiSignupPost(apiSignupPostRequest, options).then((request) => request(axios, basePath));
         },
         /**

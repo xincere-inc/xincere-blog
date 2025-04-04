@@ -1,10 +1,11 @@
 import {
   ApiResetPasswordPost200Response,
   ApiResetPasswordPost400Response,
-  ApiResetPasswordPostRequest
+  ApiResetPasswordPostRequest,
 } from "@/api/client";
 import { prisma } from "@/lib/prisma";
-import { resetPasswordSchema } from "@/lib/zod/auth";
+import { resetPasswordSchema } from "@/lib/zod/auth/auth";
+import { handleValidationError } from "@/lib/zod/validation-error";
 import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 
@@ -61,8 +62,7 @@ export async function POST(
   req: Request
 ): Promise<
   NextResponse<
-    | ApiResetPasswordPost200Response
-    | ApiResetPasswordPost400Response
+    ApiResetPasswordPost200Response | ApiResetPasswordPost400Response
   >
 > {
   try {
@@ -72,18 +72,10 @@ export async function POST(
     // Validate the request body using the resetPasswordSchema
     const parsedBody = resetPasswordSchema.safeParse(data);
 
-    // If validation fails, return a 400 error with validation errors
+    // Handle validation errors
     if (!parsedBody.success) {
-      return NextResponse.json(
-        {
-          error: "Validation error",
-          details: parsedBody.error.errors.map((error) => ({
-            path: error.path.map(String), // Convert path elements to strings
-            message: error.message,
-          })),
-        },
-        { status: 400 })
-    }
+      return handleValidationError(parsedBody.error); // Use reusable validation handler
+    } // If validation fails, return a 400 error with validation errors
 
     // Extract token and newPassword from the request data
     const { token, newPassword } = data;

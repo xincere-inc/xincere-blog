@@ -1,6 +1,6 @@
 "use client";
 
-import { signUpSchema } from "@/lib/zod/auth";
+import { signUpSchema } from "@/lib/zod/auth/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

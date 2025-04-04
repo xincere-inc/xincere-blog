@@ -1,11 +1,12 @@
 import {
   ApiSignupPost201Response,
   ApiSignupPost400Response,
-  ApiSignupPostRequest
+  ApiSignupPostRequest,
 } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
-import { signUpSchema } from "@/lib/zod/auth";
+import { signUpSchema } from "@/lib/zod/auth/auth";
+import { handleValidationError } from "@/lib/zod/validation-error";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -93,27 +94,14 @@ import { v4 as uuidv4 } from "uuid";
  */
 export async function POST(
   req: Request
-): Promise<
-  NextResponse<
-    | ApiSignupPost201Response
-    | ApiSignupPost400Response
-  >
-> {
+): Promise<NextResponse<ApiSignupPost201Response | ApiSignupPost400Response>> {
   try {
     const body: ApiSignupPostRequest = await req.json();
     const parsedBody = signUpSchema.safeParse(body);
 
+    // Handle validation errors
     if (!parsedBody.success) {
-      return NextResponse.json(
-        {
-          error: "Validation error",
-          details: parsedBody.error.errors.map((error) => ({
-            path: error.path.map(String), // Convert path elements to strings
-            message: error.message,
-          })),
-        },
-        { status: 400 }
-      );
+      return handleValidationError(parsedBody.error); // Use reusable validation handler
     }
 
     const { email, password, name } = parsedBody.data;

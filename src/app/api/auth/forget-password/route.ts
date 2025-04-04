@@ -1,7 +1,13 @@
-import { ApiForgePasswordPost400Response, ApiForgePasswordPost429Response, ApiForgetPasswordPost200Response, ApiForgetPasswordPostRequest } from "@/api/client";
+import {
+  ApiForgePasswordPost400Response,
+  ApiForgePasswordPost429Response,
+  ApiForgetPasswordPost200Response,
+  ApiForgetPasswordPostRequest,
+} from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
-import { emailSchema } from "@/lib/zod/auth";
+import { emailSchema } from "@/lib/zod/auth/auth";
+import { handleValidationError } from "@/lib/zod/validation-error";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
@@ -81,26 +87,25 @@ import { v4 as uuidv4 } from "uuid";
  *       500:
  *        $ref: "#/components/responses/ServerError"
  */
-export async function POST(req: Request): Promise<
-  NextResponse<| ApiForgetPasswordPost200Response | ApiForgePasswordPost400Response | ApiForgePasswordPost429Response
+export async function POST(
+  req: Request
+): Promise<
+  NextResponse<
+    | ApiForgetPasswordPost200Response
+    | ApiForgePasswordPost400Response
+    | ApiForgePasswordPost429Response
   >
 > {
   try {
     // Parse the incoming request JSON body
-    const data: ApiForgetPasswordPostRequest =
-      await req.json();
+    const data: ApiForgetPasswordPostRequest = await req.json();
 
     // Validate the request body using the emailSchema
     const parsedBody = emailSchema.safeParse(data);
 
-    // If validation fails, return a 400 error with validation errors
+    // Handle validation errors
     if (!parsedBody.success) {
-      const errorResponse =
-      {
-        error: "Validation error",
-        details: parsedBody.error.errors,
-      };
-      return NextResponse.json(errorResponse, { status: 400 });
+      return handleValidationError(parsedBody.error); // Use reusable validation handler
     }
 
     // Extract the email from the request data
@@ -108,8 +113,7 @@ export async function POST(req: Request): Promise<
 
     // If no email is provided, return a 400 error
     if (!email) {
-      const errorResponse =
-      {
+      const errorResponse = {
         error: "Email is required",
       };
       return NextResponse.json(errorResponse, { status: 400 });
@@ -121,8 +125,7 @@ export async function POST(req: Request): Promise<
     });
 
     if (!user) {
-      const errorResponse =
-      {
+      const errorResponse = {
         error: "Email not found.",
       };
       return NextResponse.json(errorResponse, { status: 404 });
@@ -142,8 +145,7 @@ export async function POST(req: Request): Promise<
       user.resetPasswordMailCount >= 3 &&
       timeDifference < oneHourInMilliseconds
     ) {
-      const errorResponse =
-      {
+      const errorResponse = {
         error: "Too many requests. Please try again later (1 hr).",
       };
       return NextResponse.json(errorResponse, { status: 429 });
@@ -182,16 +184,14 @@ export async function POST(req: Request): Promise<
     const emailResponse = await sendEmail(emailOptions);
 
     if (!emailResponse.success) {
-      const errorResponse =
-      {
+      const errorResponse = {
         error: "Error sending password reset email.",
       };
       return NextResponse.json(errorResponse, { status: 500 });
     }
 
     // Return a success message
-    const successResponse =
-    {
+    const successResponse = {
       message: "Password reset email sent successfully",
     };
     return NextResponse.json(successResponse, { status: 200 });
@@ -199,8 +199,7 @@ export async function POST(req: Request): Promise<
     console.error("Error during forgot password request:", error);
 
     // Handle server error
-    const errorResponse =
-    {
+    const errorResponse = {
       error: "Server error",
     };
     return NextResponse.json(errorResponse, { status: 500 });
