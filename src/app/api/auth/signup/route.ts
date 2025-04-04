@@ -9,6 +9,7 @@ import { signUpSchema } from "@/lib/zod/auth";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+import { ApiSignupPost500Response } from "./../../../../api/client/api";
 
 /**
  * @swagger
