@@ -26,31 +26,122 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
- * @interface ApiHelloGet200Response
+ * @interface ApiSignupPost201Response
  */
-export interface ApiHelloGet200Response {
+export interface ApiSignupPost201Response {
     /**
      * 
      * @type {string}
-     * @memberof ApiHelloGet200Response
+     * @memberof ApiSignupPost201Response
      */
     'message'?: string;
+    /**
+     * 
+     * @type {ApiSignupPost201ResponseUser}
+     * @memberof ApiSignupPost201Response
+     */
+    'user'?: ApiSignupPost201ResponseUser;
+}
+/**
+ * 
+ * @export
+ * @interface ApiSignupPost201ResponseUser
+ */
+export interface ApiSignupPost201ResponseUser {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPost201ResponseUser
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPost201ResponseUser
+     */
+    'email'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPost201ResponseUser
+     */
+    'name'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiSignupPost400Response
+ */
+export interface ApiSignupPost400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPost400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<object>}
+     * @memberof ApiSignupPost400Response
+     */
+    'details'?: Array<object>;
+}
+/**
+ * 
+ * @export
+ * @interface ApiSignupPost500Response
+ */
+export interface ApiSignupPost500Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPost500Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ApiSignupPostRequest
+ */
+export interface ApiSignupPostRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPostRequest
+     */
+    'email'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPostRequest
+     */
+    'password'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPostRequest
+     */
+    'name'?: string;
 }
 
 /**
- * ExampleApi - axios parameter creator
+ * AuthApi - axios parameter creator
  * @export
  */
-export const ExampleApiAxiosParamCreator = function (configuration?: Configuration) {
+export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * A simple example API route
-         * @summary Returns a greeting message
+         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+         * @summary Register a new user
+         * @param {ApiSignupPostRequest} apiSignupPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiHelloGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/hello`;
+        apiSignupPost: async (apiSignupPostRequest: ApiSignupPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'apiSignupPostRequest' is not null or undefined
+            assertParamExists('apiSignupPost', 'apiSignupPostRequest', apiSignupPostRequest)
+            const localVarPath = `/api/signup`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -58,15 +149,18 @@ export const ExampleApiAxiosParamCreator = function (configuration?: Configurati
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(apiSignupPostRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -77,62 +171,65 @@ export const ExampleApiAxiosParamCreator = function (configuration?: Configurati
 };
 
 /**
- * ExampleApi - functional programming interface
+ * AuthApi - functional programming interface
  * @export
  */
-export const ExampleApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = ExampleApiAxiosParamCreator(configuration)
+export const AuthApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
     return {
         /**
-         * A simple example API route
-         * @summary Returns a greeting message
+         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+         * @summary Register a new user
+         * @param {ApiSignupPostRequest} apiSignupPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiHelloGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiHelloGet200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiHelloGet(options);
+        async apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiSignupPost201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSignupPost(apiSignupPostRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ExampleApi.apiHelloGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiSignupPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * ExampleApi - factory interface
+ * AuthApi - factory interface
  * @export
  */
-export const ExampleApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = ExampleApiFp(configuration)
+export const AuthApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AuthApiFp(configuration)
     return {
         /**
-         * A simple example API route
-         * @summary Returns a greeting message
+         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+         * @summary Register a new user
+         * @param {ApiSignupPostRequest} apiSignupPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiHelloGet(options?: any): AxiosPromise<ApiHelloGet200Response> {
-            return localVarFp.apiHelloGet(options).then((request) => request(axios, basePath));
+        apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiSignupPost201Response> {
+            return localVarFp.apiSignupPost(apiSignupPostRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * ExampleApi - object-oriented interface
+ * AuthApi - object-oriented interface
  * @export
- * @class ExampleApi
+ * @class AuthApi
  * @extends {BaseAPI}
  */
-export class ExampleApi extends BaseAPI {
+export class AuthApi extends BaseAPI {
     /**
-     * A simple example API route
-     * @summary Returns a greeting message
+     * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+     * @summary Register a new user
+     * @param {ApiSignupPostRequest} apiSignupPostRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ExampleApi
+     * @memberof AuthApi
      */
-    public apiHelloGet(options?: RawAxiosRequestConfig) {
-        return ExampleApiFp(this.configuration).apiHelloGet(options).then((request) => request(this.axios, this.basePath));
+    public apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).apiSignupPost(apiSignupPostRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
