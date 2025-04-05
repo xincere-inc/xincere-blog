@@ -25,6 +25,13 @@ export const registerSchemaBase: z.ZodType<RegisterRequest> = z.object({
     .string({ required_error: "Email is required" })
     .email({ message: "Invalid email address" }),
 
+  gender: z
+    .enum(['male', 'female', 'other'], { required_error: "Gender is required" }),
+
+  country: z
+    .string({ required_error: "Country is required" })
+    .min(1, "Please select a country"),
+
   password: z
     .string()
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, { message: "Password must be 8 characters, include 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character" }),
@@ -47,7 +54,7 @@ export const registerSchema = registerSchemaBase.refine(async ({ email }) => {
   const isUnique = !(await prisma.user.findUnique({ where: { username } }));
   return isUnique;
 }, {
-  message: "username is already taken",
+  message: "Username is already taken",
   path: ['username']
 });
 
@@ -55,12 +62,10 @@ export const registerSchema = registerSchemaBase.refine(async ({ email }) => {
 
 // Define the Zod schema for the sign-in
 export const signInSchema = z.object({
-  email: z
-    .string({ required_error: "Email is required" })
-    .email({ message: "Invalid email address" }),
+  username: z
+    .string({ required_error: "Username is required" }),
   password: z
     .string({ required_error: "Password is required" })
-    .min(8, { message: "Password must be at least 8 characters" }),
 });
 
 // Define the Zod schema for the email

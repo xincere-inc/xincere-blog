@@ -1,6 +1,6 @@
 "use client";
 
-import { emailSchema } from "@/lib/zod/auth";
+import { emailSchema } from "@/lib/zod/validate";
 import { useState } from "react";
 
 export default function ForgotPasswordPage() {

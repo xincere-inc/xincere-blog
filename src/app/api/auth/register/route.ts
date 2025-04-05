@@ -1,7 +1,7 @@
 import { Created, InternalServerError, RegisterRequest, ValidationError } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
-import { registerSchema } from "@/lib/zod/auth";
+import { registerSchema } from "@/lib/zod/validate";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -28,6 +28,8 @@ import { z } from "zod";
  *               - username
  *               - password
  *               - confirmPassword
+ *               - gender
+ * 
  *             properties:
  *               firstName:
  *                 type: string
@@ -38,6 +40,13 @@ import { z } from "zod";
  *               username:
  *                 type: string
  *                 example: johndoe
+ *               country:
+ *                 type: string
+ *                 example: Bangladesh
+ *               gender:
+ *                 type: string
+ *                 enum: [male, female, other]
+ *                 example: male
  *               email:
  *                 type: string
  *                 format: email
@@ -84,7 +93,7 @@ export async function POST(
     const body: RegisterRequest = await req.json();
     const parsedBody = await registerSchema.parseAsync(body);
 
-    const { firstName, lastName, username, email, password } = parsedBody;
+    const { firstName, lastName, username, email, password, country, gender } = parsedBody;
 
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -95,6 +104,8 @@ export async function POST(
         firstName,
         lastName,
         email,
+        country,
+        gender,
         username,
         password: hashedPassword,
         emailVerificationToken: verificationToken,
@@ -126,7 +137,7 @@ export async function POST(
 
     return NextResponse.json(
       {
-        message: "User created successfully. A verification email has been sent.",
+        message: "Register successfully, check your email for verification",
       },
       { status: 201 }
     );

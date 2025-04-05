@@ -1,7 +1,7 @@
 import { ApiChangePasswordPost200Response, ApiChangePasswordPost400Response, ApiChangePasswordPost401Response, ApiChangePasswordPostRequest } from "@/api/client";
 import getSession from "@/lib/auth/getSession";
 import { prisma } from "@/lib/prisma";
-import { changePasswordSchema } from "@/lib/zod/auth";
+import { changePasswordSchema } from "@/lib/zod/validate";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 

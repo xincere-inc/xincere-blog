@@ -4,7 +4,7 @@ import {
   ApiResetPasswordPostRequest
 } from "@/api/client";
 import { prisma } from "@/lib/prisma";
-import { resetPasswordSchema } from "@/lib/zod/auth";
+import { resetPasswordSchema } from "@/lib/zod/validate";
 import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 

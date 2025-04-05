@@ -1,7 +1,7 @@
 import { ApiForgetPasswordPost200Response, ApiForgetPasswordPost400Response, ApiForgetPasswordPost429Response, ApiForgetPasswordPostRequest } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
-import { emailSchema } from "@/lib/zod/auth";
+import { emailSchema } from "@/lib/zod/validate";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 

@@ -128,6 +128,7 @@ paths:
                 - username
                 - password
                 - confirmPassword
+                - gender
               properties:
                 firstName:
                   type: string
@@ -138,6 +139,16 @@ paths:
                 username:
                   type: string
                   example: johndoe
+                country:
+                  type: string
+                  example: Bangladesh
+                gender:
+                  type: string
+                  enum:
+                    - male
+                    - female
+                    - other
+                  example: male
                 email:
                   type: string
                   format: email

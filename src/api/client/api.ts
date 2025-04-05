@@ -141,6 +141,18 @@ export interface RegisterRequest {
      * @type {string}
      * @memberof RegisterRequest
      */
+    'country'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterRequest
+     */
+    'gender': RegisterRequestGenderEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterRequest
+     */
     'email': string;
     /**
      * 
@@ -155,6 +167,15 @@ export interface RegisterRequest {
      */
     'confirmPassword': string;
 }
+
+export const RegisterRequestGenderEnum = {
+    Male: 'male',
+    Female: 'female',
+    Other: 'other'
+} as const;
+
+export type RegisterRequestGenderEnum = typeof RegisterRequestGenderEnum[keyof typeof RegisterRequestGenderEnum];
+
 /**
  * 
  * @export

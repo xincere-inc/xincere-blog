@@ -7,6 +7,14 @@ writeSwaggerSpecToFile();
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'flagcdn.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

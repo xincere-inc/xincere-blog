@@ -9,7 +9,10 @@ export const authOptions = {
       if (user) {
         token.id = user.id as string;
         token.email = user.email as string;
-        token.name = user.name as string;
+        token.username = user.username as string;
+        token.firstName = user.firstName as string;
+        token.lastName = user.lastName as string;
+        token.role = user.role as string;
       }
       return token;
     },
@@ -17,7 +20,10 @@ export const authOptions = {
       if (token) {
         session.user.id = token.id;
         session.user.email = token.email;
-        session.user.name = token.name;
+        session.user.username = token.username;
+        session.user.firstName = token.firstName;
+        session.user.lastName = token.lastName;
+        session.user.role = token.role;
       }
       return session;
     },
