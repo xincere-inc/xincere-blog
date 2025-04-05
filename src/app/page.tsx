@@ -82,8 +82,8 @@ export default function SignInPage() {
         </button>
         <div className='flex'>
           Already have an account?
-          <Link href='/sign-up' className='text-blue-500 hover:underline'>
-            Sign Up
+          <Link href='/register' className='text-blue-500 hover:underline'>
+            Register
           </Link>
         </div>
       </form>

@@ -1,17 +1,57 @@
+import { RegisterRequest } from '@/api/client';
 import { z } from "zod";
+import { prisma } from '../prisma';
 
-// Define the Zod schema for the sign-up
-export const signUpSchema = z.object({
+
+export const registerSchemaBase: z.ZodType<RegisterRequest> = z.object({
+  firstName: z
+    .string({ required_error: "Firstname is required" })
+    .max(50, { message: "Firstname must be at most 50 characters" })
+    .regex(/^[a-zA-Z ]*$/, { message: "Firstname must contain only letters and spaces" }),
+
+  lastName: z
+    .string()
+    .max(50, { message: "Lastname must be at most 50 characters" })
+    .regex(/^[a-zA-Z ]*$/, { message: "Lastname must contain only letters and spaces" })
+    .optional(),
+
+  username: z
+    .string({ required_error: "Username is required" })
+    .min(3, { message: "Username must be at least 3 characters" })
+    .max(50, { message: "Username must be at most 50 characters" })
+    .regex(/^[a-zA-Z0-9_]*$/, { message: "Username must contain only letters, numbers, and underscores" }),
+
   email: z
     .string({ required_error: "Email is required" })
     .email({ message: "Invalid email address" }),
+
   password: z
-    .string({ required_error: "Password is required" })
-    .min(8, { message: "Password must be at least 8 characters" }),
-  name: z
-    .string({ required_error: "name is required" })
-    .min(3, { message: "Name must be at least 3 characters" }),
+    .string()
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, { message: "Password must be 8 characters, include 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character" }),
+
+  confirmPassword: z
+    .string({ required_error: "Confirm password is required" })
+
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ['confirmPassword'],
+})
+
+export const registerSchema = registerSchemaBase.refine(async ({ email }) => {
+  const isUnique = !(await prisma.user.findUnique({ where: { email } }));
+  return isUnique;
+}, {
+  message: "Email is already in use",
+  path: ['email']
+}).refine(async ({ username }) => {
+  const isUnique = !(await prisma.user.findUnique({ where: { username } }));
+  return isUnique;
+}, {
+  message: "username is already taken",
+  path: ['username']
 });
+
+
 
 // Define the Zod schema for the sign-in
 export const signInSchema = z.object({

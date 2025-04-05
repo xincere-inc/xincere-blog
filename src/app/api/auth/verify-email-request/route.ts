@@ -119,7 +119,7 @@ export async function POST(
       },
     });
 
-    const verificationUrl = `${process.env.NEXTAUTH_URL}/auth/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-email?token=${verificationToken}`;
 
     const emailOptions = {
       from: process.env.SMTP_USERNAME,

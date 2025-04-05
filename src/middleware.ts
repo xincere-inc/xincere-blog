@@ -17,10 +17,10 @@ export default auth(async (req) => {
 
   // Check if the user is authenticated (req.auth will be populated after NextAuth is invoked)
   const isAuthenticated = !!req.auth;
-  const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname);
+  const isPublicRoute = PUBLIC_ROUTES.some((route => nextUrl.pathname.includes(route)));
 
   // Check if the route is allow access with and without authentication
-  const isApiDocsRoute = ACCESS_ALL.includes(nextUrl.pathname);
+  const isApiDocsRoute = ACCESS_ALL.some((route => nextUrl.pathname.includes(route)));
 
   const session = await getSession();
 

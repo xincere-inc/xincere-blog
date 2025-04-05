@@ -1,11 +1,8 @@
-import chokidar from 'chokidar';
-import fs from "fs";
 import { NextResponse } from "next/server";
-import path from "path";
 import swaggerJSDoc from "swagger-jsdoc";
 
 // Swagger options for generating API documentation
-const swaggerOptions = {
+export const swaggerOptions = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
@@ -15,7 +12,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:3000",
+        url: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
         description: "Local server",
       },
     ],
@@ -80,6 +77,31 @@ const swaggerOptions = {
             },
           },
         },
+        ValidationError: {
+          type: "object",
+          properties: {
+            error: {
+              type: "string",
+              example: "ValidationError",
+            },
+            errors: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  path: {
+                    type: "string",
+                    example: "email",
+                  },
+                  message: {
+                    type: "string",
+                    example: "Invalid email address", // Example error message
+                  },
+                },
+              },
+            },
+          },
+        },
         InternalServerError: {
           type: "object",
           properties: {
@@ -129,28 +151,18 @@ const swaggerOptions = {
         },
       },
     },
+    tags: [
+      {
+        name: "Auth",
+        description: "Endpoints related to authentication"
+      }
+    ]
 
   },
-  apis: ["src/app/api/**/*.js", "src/app/api/**/*.ts"],
+  // apis: ["src/app/api/**/*.js", "src/app/api/**/*.ts"],
+  apis: ["src/app/api/auth/register/route.ts"],
 };
 
-
-// Function to regenerate and write Swagger spec to file
-const writeSwaggerSpecToFile = (): void => {
-  const swaggerSpec = swaggerJSDoc(swaggerOptions);
-  const swaggerFilePath = path.join(process.cwd(), "src/api/specs/swagger.json");
-  fs.writeFileSync(swaggerFilePath, JSON.stringify(swaggerSpec, null, 2));
-};
-
-// Initialize Swagger spec file on startup (only run this in non-Next.js environments like build or background task)
-if (process.env.NODE_ENV !== "production") {
-  writeSwaggerSpecToFile();  // Only run this logic in non-production environments
-  // Watch for changes in the API routes and regenerate Swagger spec
-  chokidar.watch(path.resolve("src/app/api")).on("change", () => {
-    console.log("API route changed, regenerating swagger.json");
-    writeSwaggerSpecToFile();
-  });
-}
 
 // API route handler to serve Swagger spec
 const serveSwaggerDoc = () => {

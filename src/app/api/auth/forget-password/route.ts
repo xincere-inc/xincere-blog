@@ -1,4 +1,4 @@
-import { ApiForgePasswordPost400Response, ApiForgePasswordPost429Response, ApiForgetPasswordPost200Response, ApiForgetPasswordPostRequest } from "@/api/client";
+import { ApiForgetPasswordPost200Response, ApiForgetPasswordPost400Response, ApiForgetPasswordPost429Response, ApiForgetPasswordPostRequest } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
 import { emailSchema } from "@/lib/zod/auth";
@@ -82,7 +82,7 @@ import { v4 as uuidv4 } from "uuid";
  *        $ref: "#/components/responses/ServerError"
  */
 export async function POST(req: Request): Promise<
-  NextResponse<| ApiForgetPasswordPost200Response | ApiForgePasswordPost400Response | ApiForgePasswordPost429Response
+  NextResponse<| ApiForgetPasswordPost200Response | ApiForgetPasswordPost400Response | ApiForgetPasswordPost429Response
   >
 > {
   try {
@@ -165,7 +165,7 @@ export async function POST(req: Request): Promise<
     });
 
     // Construct the password reset URL
-    const resetPasswordUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetPasswordToken}`;
+    const resetPasswordUrl = `${process.env.NEXT_PUBLIC_API_URL}/reset-password?token=${resetPasswordToken}`;
 
     // Prepare the email options
     const emailOptions = {
