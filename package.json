@@ -3,14 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 3001",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "db:migrate:docker": "prisma migrate deploy",
-    "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client",
-    "generate:Swagger": "node ./src/lib/generateSwagger.js",
-    "generate:types": "openapi-typescript ./public/swagger.yaml -o ./src/types/api.ts"
+    "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",

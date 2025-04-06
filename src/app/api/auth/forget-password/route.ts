@@ -1,16 +1,18 @@
-import { ApiForgetPasswordPost200Response, ApiForgetPasswordPost400Response, ApiForgetPasswordPost429Response, ApiForgetPasswordPostRequest } from "@/api/client";
+import { ForgetPassword404Response, ForgetPassword429Response, ForgetPasswordRequest, InternalServerError, Success, ValidationError } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
-import { emailSchema } from "@/lib/zod/validate";
+import { emailSchema } from "@/lib/zod/auth";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+import { z } from "zod";
 
 /**
  * @swagger
- * /api/forget-password:
+ * /api/auth/forget-password:
  *   post:
  *     summary: Send a password reset email
  *     description: Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
+ *     operationId: ForgetPassword
  *     tags:
  *       - Auth
  *     requestBody:
@@ -82,26 +84,14 @@ import { v4 as uuidv4 } from "uuid";
  *        $ref: "#/components/responses/ServerError"
  */
 export async function POST(req: Request): Promise<
-  NextResponse<| ApiForgetPasswordPost200Response | ApiForgetPasswordPost400Response | ApiForgetPasswordPost429Response
-  >
+  NextResponse<Success | ValidationError | ValidationError | ForgetPassword404Response | ForgetPassword429Response | InternalServerError>
 > {
   try {
     // Parse the incoming request JSON body
-    const data: ApiForgetPasswordPostRequest =
-      await req.json();
+    const data: ForgetPasswordRequest = await req.json();
 
     // Validate the request body using the emailSchema
-    const parsedBody = emailSchema.safeParse(data);
-
-    // If validation fails, return a 400 error with validation errors
-    if (!parsedBody.success) {
-      const errorResponse =
-      {
-        error: "Validation error",
-        details: parsedBody.error.errors,
-      };
-      return NextResponse.json(errorResponse, { status: 400 });
-    }
+    const parsedBody = await emailSchema.safeParseAsync(data);
 
     // Extract the email from the request data
     const { email } = data;
@@ -196,13 +186,23 @@ export async function POST(req: Request): Promise<
     };
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
-    console.error("Error during forgot password request:", error);
-
-    // Handle server error
-    const errorResponse =
-    {
-      error: "Server error",
-    };
-    return NextResponse.json(errorResponse, { status: 500 });
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: "Validation error",
+          errors: error.errors.map((error) => ({
+            path: error.path[0],
+            message: error.message,
+          })),
+        },
+        { status: 400 }
+      );
+    } else {
+      console.error("Error during forget password:", error);
+      return NextResponse.json({
+        error: "Internal server error",
+        message: "Error during forget password",
+      }, { status: 500 });
+    }
   }
 }

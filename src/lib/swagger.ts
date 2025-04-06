@@ -159,8 +159,7 @@ export const swaggerOptions = {
     ]
 
   },
-  // apis: ["src/app/api/**/*.js", "src/app/api/**/*.ts"],
-  apis: ["src/app/api/auth/register/route.ts"],
+  apis: ["src/app/api/**/*.js", "src/app/api/**/*.ts"],
 };
 
 

@@ -1,7 +1,7 @@
 import { Created, InternalServerError, RegisterRequest, ValidationError } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
-import { registerSchema } from "@/lib/zod/validate";
+import { registerSchema } from "@/lib/zod/auth";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";

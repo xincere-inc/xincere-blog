@@ -1,12 +1,14 @@
 import {
-  ApiResetPasswordPost200Response,
-  ApiResetPasswordPost400Response,
-  ApiResetPasswordPostRequest
+  InternalServerError,
+  ResetPasswordRequest,
+  Success,
+  ValidationError
 } from "@/api/client";
 import { prisma } from "@/lib/prisma";
-import { resetPasswordSchema } from "@/lib/zod/validate";
+import { resetPasswordSchema } from "@/lib/zod/auth";
 import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
 /**
  * @swagger
@@ -14,6 +16,7 @@ import { NextResponse } from "next/server";
  *   post:
  *     summary: Reset password for a user
  *     description: Resets the user's password using a provided reset token and new password. The reset token is invalidated after the reset.
+ *     operationId: resetPassword 
  *     tags:
  *       - Auth
  *     requestBody:
@@ -39,11 +42,7 @@ import { NextResponse } from "next/server";
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Password reset successfully"
+ *               $ref: "#/components/schemas/Created"
  *       400:
  *         description: Invalid or expired token, or missing fields
  *         content:
@@ -61,32 +60,20 @@ export async function POST(
   req: Request
 ): Promise<
   NextResponse<
-    | ApiResetPasswordPost200Response
-    | ApiResetPasswordPost400Response
+    | Success
+    | ValidationError
+    | InternalServerError
   >
 > {
   try {
     // Parse the incoming request JSON body
-    const data: ApiResetPasswordPostRequest = await req.json();
+    const data: ResetPasswordRequest = await req.json();
 
     // Validate the request body using the resetPasswordSchema
-    const parsedBody = resetPasswordSchema.safeParse(data);
-
-    // If validation fails, return a 400 error with validation errors
-    if (!parsedBody.success) {
-      return NextResponse.json(
-        {
-          error: "Validation error",
-          details: parsedBody.error.errors.map((error) => ({
-            path: error.path.map(String), // Convert path elements to strings
-            message: error.message,
-          })),
-        },
-        { status: 400 })
-    }
+    const parsedBody = await resetPasswordSchema.parseAsync(data);
 
     // Extract token and newPassword from the request data
-    const { token, newPassword } = data;
+    const { token, newPassword } = parsedBody;
 
     // If no token or newPassword is provided, return a 400 error
     if (!token || !newPassword) {
@@ -128,12 +115,23 @@ export async function POST(
     };
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
-    console.error("Error during password reset:", error);
-
-    // Handle server error
-    const errorResponse = {
-      error: "Server error",
-    };
-    return NextResponse.json(errorResponse, { status: 500 });
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: "Validation error",
+          errors: error.errors.map((error) => ({
+            path: error.path[0],
+            message: error.message,
+          })),
+        },
+        { status: 400 }
+      );
+    } else {
+      console.error("Error during reset password:", error);
+      return NextResponse.json({
+        error: "Internal server error",
+        message: "Error during reset password",
+      }, { status: 500 });
+    }
   }
 }

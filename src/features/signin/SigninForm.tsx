@@ -66,7 +66,7 @@ const SigninForm = () => {
         error={errors.password}
         value={watch('password', '')}
       />
-      <Link href={'/reset_password'} className="inline-block cursor-pointer">
+      <Link href={'/forget-password'} className="inline-block cursor-pointer">
         <p className="text-center text-sm font-medium text-blue-500">Forgot Password?</p>
       </Link>
       <button type="submit" className="primary-button" disabled={loading}>
