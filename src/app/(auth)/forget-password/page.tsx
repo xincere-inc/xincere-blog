@@ -1,49 +1,89 @@
-"use client";
+'use client';
 
-import { emailSchema } from "@/lib/zod/auth";
-import { useState } from "react";
+import IdoAuth from '@/api/IdoAuth';
+import { emailSchema } from '@/lib/zod/auth';
+import { AxiosError } from 'axios';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+
+interface ForgotPasswordForm {
+  email: string;
+}
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<ForgotPasswordForm>({ mode: 'onChange' });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<ForgotPasswordForm> = async (data) => {
+    setLoading(true);
 
     // Validate email using the Zod schema
-    const parsedBody = emailSchema.safeParse({ email });
+    const parsedBody = emailSchema.safeParse({ email: data.email });
 
     // If validation fails, set the error message and return
     if (!parsedBody.success) {
-      setError(parsedBody.error.errors[0].message);
+      setError('email', {
+        type: 'manual',
+        message: parsedBody.error.errors[0].message,
+      });
+      setLoading(false);
       return;
     }
 
     // Call the API to send a password reset email
     try {
-      const response = await fetch(`/api/auth/forget-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsedBody.data),
+      const response = await IdoAuth.forgetPassword({
+        email: parsedBody.data.email,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200) {
         // If the email was sent successfully
-        setSuccess(
-          data?.message || "Password reset email sent! Check your inbox."
+        toast.success(
+          response.data.message || 'Password reset email sent! Check your inbox.',
+          {
+            position: 'bottom-right',
+          }
         );
       } else {
-        // If an error occurs (e.g., email not found)
-        setError(
-          data?.error || "Email not found or failed to send reset email."
+        toast.error(
+          response.data.message || 'Email not found or failed to send reset email.',
+          {
+            position: 'bottom-right',
+          }
         );
       }
-    } catch (err) {
-      console.error("Error sending password reset email:", err);
-      setError("An unexpected error occurred.");
+    } catch (err: any) {
+      if (err instanceof AxiosError) {
+        // Handle specific errors
+        if (err.response?.status === 400 && Array.isArray(err.response.data.errors)) {
+          err.response.data.errors.forEach((error: any) => {
+            if (error.path === 'email') {
+              setError('email', {
+                type: 'manual',
+                message: error.message,
+              });
+            }
+          });
+        } else {
+          toast.error(err.response?.data.message || 'Something went wrong.', {
+            position: 'bottom-right',
+            autoClose: 3000,
+          });
+        }
+      } else {
+        toast.error('Unexpected error occurred.', {
+          position: 'bottom-right',
+          autoClose: 3000,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,21 +92,25 @@ export default function ForgotPasswordPage() {
       <div className='p-6 bg-white shadow-md rounded w-96'>
         <h2 className='text-xl font-bold mb-4'>Forgot Password</h2>
 
-        {error && <p className='text-red-500'>{error}</p>}
-        {success && <p className='text-green-500'>{success}</p>}
+        {errors.email && (
+          <p className='text-red-500'>{errors.email.message}</p>
+        )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <input
             type='email'
             className='border p-2 w-full mb-2'
             placeholder='Enter your email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...register('email', {
+              required: 'Email is required',
+            })}
           />
           <button
             className='bg-gray-500 text-white p-2 rounded-md mt-4 w-full'
-            type='submit'>
-            Send Password Reset Email
+            type='submit'
+            disabled={loading}
+          >
+            {loading ? 'Sending...' : 'Send Password Reset Email'}
           </button>
         </form>
       </div>

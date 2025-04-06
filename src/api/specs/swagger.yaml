@@ -1,0 +1,489 @@
+openapi: 3.0.0
+info:
+  title: Next.js API
+  description: API documentation for Next.js 15 application
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local server
+components:
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UnAuthorizedError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Unauthorized
+        message:
+          type: string
+          example: Please log in.
+    ForbiddenError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Forbidden
+        message:
+          type: string
+          example: You do not have permission.
+    NotFoundError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: NotFound
+        message:
+          type: string
+          example: The target data does not exist.
+    UnprocessableEntity:
+      type: object
+      properties:
+        error:
+          type: string
+          example: UnprocessableEntity
+        message:
+          type: string
+          example: The submission content is not appropriate.
+    ValidationError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: ValidationError
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                example: email
+              message:
+                type: string
+                example: Invalid email address
+    InternalServerError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: InternalServerError
+        message:
+          type: string
+          example: Server error.
+    Success:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: Success
+    Created:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: Created
+    CreatedWithId:
+      type: object
+      required:
+        - message
+        - id
+      properties:
+        message:
+          type: string
+          example: Created
+        id:
+          type: number
+          example: 1
+tags:
+  - name: Auth
+    description: Endpoints related to authentication
+paths:
+  /api/auth/change-password:
+    post:
+      summary: Change user password
+      description: >-
+        Allows an authenticated user to change their password by providing the
+        old and new password.
+      operationId: changePassword
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - oldPassword
+                - newPassword
+              properties:
+                oldPassword:
+                  type: string
+                  example: oldPassword123
+                newPassword:
+                  type: string
+                  example: newSecurePassword456
+      responses:
+        '200':
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created'
+        '400':
+          description: Validation error, same old and new password, or invalid old password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Validation error
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: array
+                          items:
+                            type: string
+                        message:
+                          type: string
+        '401':
+          description: Unauthorized or session expired
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/auth/forget-password:
+    post:
+      summary: Send a password reset email
+      description: >-
+        Sends a reset password email with a secure token link. Each user is
+        allowed a maximum of 3 emails per hour.
+      operationId: ForgetPassword
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+      responses:
+        '200':
+          description: Password reset email sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password reset email sent successfully
+        '400':
+          description: Validation error or missing email
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Email is required
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: array
+                          items:
+                            type: string
+                        message:
+                          type: string
+        '404':
+          description: Email not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Email not found.
+        '429':
+          description: Too many requests within a short period
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Too many requests. Please try again later (1 hr).
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      description: >-
+        Creates a new user, hashes their password, generates an email
+        verification token, and sends a verification email.
+      operationId: Register
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - email
+                - username
+                - password
+                - confirmPassword
+                - gender
+              properties:
+                firstName:
+                  type: string
+                  example: John
+                lastName:
+                  type: string
+                  example: Doe
+                username:
+                  type: string
+                  example: johndoe
+                country:
+                  type: string
+                  example: Bangladesh
+                gender:
+                  type: string
+                  enum:
+                    - male
+                    - female
+                    - other
+                  example: male
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: SecureP@ssw0rd
+                confirmPassword:
+                  type: string
+                  format: password
+                  example: SecureP@ssw0rd
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created'
+        '400':
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/reset-password:
+    post:
+      summary: Reset password for a user
+      description: >-
+        Resets the user's password using a provided reset token and new
+        password. The reset token is invalidated after the reset.
+      operationId: resetPassword
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - newPassword
+              properties:
+                token:
+                  type: string
+                  example: d4c79ab8-b6b7-48b4-b5a4-56e8d41be26f
+                newPassword:
+                  type: string
+                  format: password
+                  example: NewSecureP@ssw0rd
+      responses:
+        '200':
+          description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created'
+        '400':
+          description: Invalid or expired token, or missing fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Token and new password are required
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/auth/verify-email-request:
+    post:
+      summary: Send verification email to a registered user
+      description: >-
+        This endpoint sends a verification email to the user with the provided
+        email address.
+      operationId: sendVerificationEmail
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+      responses:
+        '200':
+          description: Verification email sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created'
+        '400':
+          description: Validation error or missing email
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Validation error
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: array
+                          items:
+                            type: string
+                        message:
+                          type: string
+        '404':
+          description: Email not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Email not found.
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/auth/verify-email:
+    get:
+      summary: Verify user email
+      description: >-
+        Verifies the user's email address using a provided verification token.
+        Marks the user's email as verified in the database.
+      operationId: verifyEmail
+      tags:
+        - Auth
+      parameters:
+        - in: query
+          name: token
+          required: true
+          description: The email verification token sent to the user's email address.
+          schema:
+            type: string
+            example: d4c79ab8-b6b7-48b4-b5a4-56e8d41be26g
+      responses:
+        '200':
+          description: Email successfully verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created'
+        '400':
+          description: Invalid or expired token, or token not provided
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Token is required
+                  message:
+                    type: string
+                    example: The provided token is invalid or has expired
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'

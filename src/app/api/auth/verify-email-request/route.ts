@@ -1,56 +1,109 @@
+import { ForgetPasswordRequest, InternalServerError, Success, ValidationError } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
 import { emailSchema } from "@/lib/zod/auth";
-import { operations } from "@/types/api";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+import { z } from "zod";
 
-export async function POST(req: Request): Promise<NextResponse> {
+/**
+ * @swagger
+ * /api/auth/verify-email-request:
+ *   post:
+ *     summary: Send verification email to a registered user
+ *     description: This endpoint sends a verification email to the user with the provided email address.
+ *     operationId: sendVerificationEmail
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: Verification email sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/Created"
+ *       400:
+ *         description: Validation error or missing email
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Validation error"
+ *                 details:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       path:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                       message:
+ *                         type: string
+ *       404:
+ *         description: Email not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Email not found."
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/InternalServerError"
+ */
+
+export async function POST(
+  req: Request
+): Promise<
+  NextResponse<
+    | Success
+    | ValidationError
+    | InternalServerError
+  >
+> {
   try {
-    // Parse the incoming request JSON body
-    const data: operations["verifyEmailRequest"]["requestBody"]["content"]["application/json"] =
-      await req.json();
+    const body: ForgetPasswordRequest = await req.json();
 
-    // Validate the request body using the emailSchema
-    const parsedBody = emailSchema.safeParse(data);
+    const parsedBody = await emailSchema.parseAsync(body);
 
-    // If validation fails, return a 400 error with validation errors
-    if (!parsedBody.success) {
-      const errorResponse: operations["verifyEmailRequest"]["responses"][400]["content"]["application/json"] =
-        {
-          error: "Validation error",
-          details: parsedBody.error.errors,
-        };
-      return NextResponse.json(errorResponse, { status: 400 });
-    }
+    const { email } = parsedBody;
 
-    // Extract the email from the request data
-    const { email } = data;
-
-    // If no email is provided, return a 400 error
     if (!email) {
-      const errorResponse: operations["verifyEmailRequest"]["responses"][400]["content"]["application/json"] =
-        {
-          error: "Email is required",
-        };
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
-    // Find the user by the provided email
     const user = await prisma.user.findUnique({
       where: { email },
     });
 
     if (!user) {
-      const errorResponse: operations["verifyEmailRequest"]["responses"][404]["content"]["application/json"] =
-        {
-          error: "Email not found. ",
-        };
-      return NextResponse.json(errorResponse, { status: 404 });
+      return NextResponse.json({ error: "Email not found." }, { status: 404 });
     }
 
-    // Generate a verification token (UUID) and save it to the user record
     const verificationToken = uuidv4();
+
     await prisma.user.update({
       where: { id: user.id },
       data: {
@@ -58,45 +111,49 @@ export async function POST(req: Request): Promise<NextResponse> {
       },
     });
 
-    // Construct the verification URL
-    const verificationUrl = `${process.env.NEXTAUTH_URL}/auth/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-email?token=${verificationToken}`;
 
-    // Prepare the email options
     const emailOptions = {
-      from: process.env.SMTP_USERNAME, // Sender address
-      to: email, // Receiver address
-      subject: "Email Verification", // Email subject
+      from: process.env.SMTP_USERNAME,
+      to: email,
+      subject: "Email Verification",
       html: `
         <p>Thank you for registering!</p>
         <p>Click <a href="${verificationUrl}">here</a> to verify your email address.</p>
-      `, // HTML content with the verification link
+      `,
     };
 
-    // Send verification email to the user
     const emailResponse = await sendEmail(emailOptions);
 
     if (!emailResponse.success) {
-      const errorResponse: operations["verifyEmailRequest"]["responses"][500]["content"]["application/json"] =
-        {
-          error: "Error sending verification email",
-        };
-      return NextResponse.json(errorResponse, { status: 500 });
+      return NextResponse.json(
+        { error: "Error sending verification email" },
+        { status: 500 }
+      );
     }
 
-    // Return a success message
-    const successResponse: operations["verifyEmailRequest"]["responses"][200]["content"]["application/json"] =
-      {
-        message: "Verification email sent successfully",
-      };
-    return NextResponse.json(successResponse, { status: 200 });
-  } catch (error: unknown) {
-    console.error("Error during email verification request:", error);
-
-    // Handle server error
-    const errorResponse: operations["verifyEmailRequest"]["responses"][500]["content"]["application/json"] =
-      {
-        error: "Server error",
-      };
-    return NextResponse.json(errorResponse, { status: 500 });
+    return NextResponse.json(
+      { message: "Verification email sent successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: "Validation error",
+          errors: error.errors.map((error) => ({
+            path: error.path[0],
+            message: error.message,
+          })),
+        },
+        { status: 400 }
+      );
+    } else {
+      console.error("Error during verify email request:", error);
+      return NextResponse.json({
+        error: "Internal server error",
+        message: "Error during verify email request",
+      }, { status: 500 });
+    }
   }
 }
