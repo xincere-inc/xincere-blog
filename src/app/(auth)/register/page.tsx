@@ -7,7 +7,7 @@ import { ToastContainer } from 'react-toastify'
 
 const Register = () => {
   return (
-    <div className="min-h-screen bg-white bg-cover bg-center" style={{ backgroundImage: 'url(/images/bg.jpg)' }}>
+    <div className="min-h-screen bg-white bg-cover bg-center" style={{ backgroundImage: 'url("/images/bg.jpg")' }}>
       <ToastContainer />
       <div className="flex items-center justify-center self-center p-4 sm:p-14">
         <div className="flex w-full max-w-screen-lg rounded-lg bg-white shadow-lg shadow-cyan-300">
@@ -27,7 +27,7 @@ const Register = () => {
           </div>
           <div className="hidden flex-1 items-center justify-center bg-blue-600 md:flex">
             <Image
-              src="/images/signup-bgr.png"
+              src="/images/signin-bg.png"
               alt="Login"
               className="object-contain"
               height={600}

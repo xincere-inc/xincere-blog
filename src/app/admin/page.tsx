@@ -1,10 +1,39 @@
+"use client";
 
-const AdminPage = () => {
+import HeaderBar from "@/components/admin/HeaderBar";
+import Sidebar from "@/components/admin/Sidebar";
+import { Layout } from "antd";
+import { useState } from "react";
+
+const { Content } = Layout;
+
+export default function AdminDashboard() {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold mb-4">Admin Dashboard</h1>
-    </div>
-  );
-};
+    <Layout style={{ minHeight: "100vh" }}>
+      {/* Sidebar */}
+      <Sidebar collapsed={collapsed} />
 
-export default AdminPage;
+      {/* Main Layout */}
+      <Layout
+        style={{
+          marginLeft: collapsed ? 80 : 200, // Shift content when sidebar expands
+          transition: "margin-left 0.3s ease-in-out",
+        }}>
+        {/* Header */}
+        <HeaderBar
+          collapsed={collapsed}
+          toggleSidebar={() => setCollapsed(!collapsed)}
+        />
+
+        {/* Content */}
+        <Content style={{ margin: "16px" }}>
+          <div className='p-6 bg-white min-h-[87vh]'>
+            Welcome to the Admin Panel!
+          </div>
+        </Content>
+      </Layout>
+    </Layout>
+  );
+}
