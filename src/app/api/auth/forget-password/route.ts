@@ -81,10 +81,14 @@ import { z } from "zod";
  *                   type: string
  *                   example: "Too many requests. Please try again later (1 hr)."
  *       500:
- *        $ref: "#/components/responses/ServerError"
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/InternalServerError"
  */
 export async function POST(req: Request): Promise<
-  NextResponse<Success | ValidationError | ValidationError | ForgetPassword404Response | ForgetPassword429Response | InternalServerError>
+  NextResponse<Success | ValidationError | ForgetPassword404Response | ForgetPassword429Response | InternalServerError>
 > {
   try {
     // Parse the incoming request JSON body
@@ -174,7 +178,8 @@ export async function POST(req: Request): Promise<
     if (!emailResponse.success) {
       const errorResponse =
       {
-        error: "Error sending password reset email.",
+        error: "Internal server error",
+        message: "Error sending password reset email"
       };
       return NextResponse.json(errorResponse, { status: 500 });
     }

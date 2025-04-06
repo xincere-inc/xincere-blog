@@ -49,7 +49,6 @@ const credentialsProvider = CredentialsProvider({
       credentials.password as string,
       user.password
     );
-
     if (!isValidPassword) {
       throw new Error("Invalid password");
     }

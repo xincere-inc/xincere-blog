@@ -171,7 +171,11 @@ paths:
                     type: string
                     example: Unauthorized
         '500':
-          $ref: '#/components/responses/ServerError'
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/forget-password:
     post:
       summary: Send a password reset email
@@ -247,7 +251,11 @@ paths:
                     type: string
                     example: Too many requests. Please try again later (1 hr).
         '500':
-          $ref: '#/components/responses/ServerError'
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/register:
     post:
       summary: Register a new user
@@ -365,7 +373,11 @@ paths:
                     type: string
                     example: Token and new password are required
         '500':
-          $ref: '#/components/responses/ServerError'
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/verify-email-request:
     post:
       summary: Send verification email to a registered user
@@ -427,7 +439,11 @@ paths:
                     type: string
                     example: Email not found.
         '500':
-          $ref: '#/components/responses/ServerError'
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/verify-email:
     get:
       summary: Verify user email
@@ -466,4 +482,8 @@ paths:
                     type: string
                     example: The provided token is invalid or has expired
         '500':
-          $ref: '#/components/responses/ServerError'
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'

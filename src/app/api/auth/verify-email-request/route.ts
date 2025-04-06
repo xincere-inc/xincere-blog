@@ -67,7 +67,11 @@ import { z } from "zod";
  *                   type: string
  *                   example: "Email not found."
  *       500:
- *         $ref: "#/components/responses/ServerError"
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/InternalServerError"
  */
 
 export async function POST(

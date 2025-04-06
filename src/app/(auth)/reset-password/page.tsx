@@ -22,6 +22,7 @@ export default function ResetPasswordPage() {
     register,
     handleSubmit,
     setError,
+    clearErrors,
     formState: { errors },
   } = useForm<ResetPasswordForm>({
     mode: 'onChange',
@@ -29,9 +30,11 @@ export default function ResetPasswordPage() {
 
   const onSubmit: SubmitHandler<ResetPasswordForm> = async (data) => {
     setLoading(true);
-    setError('password', { type: '', message: '' });
-    setError('confirmPassword', { type: '', message: '' });
 
+    // Clear previous errors
+    clearErrors();
+
+    // Token validation
     if (!token) {
       setError('password', {
         type: 'manual',
@@ -41,6 +44,7 @@ export default function ResetPasswordPage() {
       return;
     }
 
+    // Check if passwords match
     if (data.password !== data.confirmPassword) {
       setError('confirmPassword', {
         type: 'manual',
@@ -61,7 +65,6 @@ export default function ResetPasswordPage() {
         toast.success(response.data.message || 'Password reset successfully.', {
           position: 'bottom-right',
         });
-        // Optionally, redirect to login or another page
         router.push('/signin');
       } else {
         // Handle failure response
@@ -71,7 +74,6 @@ export default function ResetPasswordPage() {
       }
     } catch (err: any) {
       if (err instanceof AxiosError) {
-        // Handle API errors (e.g., invalid token)
         toast.error(
           err.response?.data.message || 'An unexpected error occurred.',
           {

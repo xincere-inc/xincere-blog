@@ -93,6 +93,37 @@ export async function POST(
     const body: RegisterRequest = await req.json();
     const parsedBody = await registerSchema.parseAsync(body);
 
+    // Check if the user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email: parsedBody.email,
+      },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        {
+          error: "User already exists",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check if the username already exists
+    const existingUsername = await prisma.user.findUnique({
+      where: {
+        username: parsedBody.username,
+      },
+    });
+    if (existingUsername) {
+      return NextResponse.json(
+        {
+          error: "Username already exists",
+        },
+        { status: 400 }
+      );
+    }
+
     const { firstName, lastName, username, email, password, country, gender } = parsedBody;
 
 
@@ -129,7 +160,7 @@ export async function POST(
       return NextResponse.json(
         {
           error: "Internal server error",
-          message: "Error sending verification email"
+          message: "Error sending verification email",
         },
         { status: 500 }
       );

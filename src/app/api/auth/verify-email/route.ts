@@ -44,8 +44,12 @@ import { z } from "zod";
  *                 message:
  *                   type: string
  *                   example: "The provided token is invalid or has expired"
- *       500: 
- *        $ref: "#/components/responses/ServerError"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/InternalServerError"
  */
 export async function GET(
   req: Request

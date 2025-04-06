@@ -37,7 +37,6 @@ export default auth(async (req) => {
 
   if (nextUrl.pathname === "/") {
     return NextResponse.next();
-
   }
 
 
