@@ -1,16 +1,18 @@
-import { ApiAuthVerifyEmailRequestPost200Response } from "@/api/client";
+import { ForgetPasswordRequest, InternalServerError, Success, ValidationError } from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/utils/send-email";
 import { emailSchema } from "@/lib/zod/auth/auth";
-import { handleValidationError } from "@/lib/zod/validation-error";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+import { z } from "zod";
 
 /**
  * @swagger
  * /api/auth/verify-email-request:
  *   post:
  *     summary: Send verification email to a registered user
+ *     description: This endpoint sends a verification email to the user with the provided email address.
+ *     operationId: sendVerificationEmail
  *     tags:
  *       - Auth
  *     requestBody:
@@ -25,18 +27,14 @@ import { v4 as uuidv4 } from "uuid";
  *               email:
  *                 type: string
  *                 format: email
- *                 example: user@example.com
+ *                 example: "user@example.com"
  *     responses:
  *       200:
  *         description: Verification email sent successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Verification email sent successfully
+ *               $ref: "#/components/schemas/Success"
  *       400:
  *         description: Validation error or missing email
  *         content:
@@ -46,7 +44,7 @@ import { v4 as uuidv4 } from "uuid";
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Validation error
+ *                   example: "Validation error"
  *                 details:
  *                   type: array
  *                   items:
@@ -67,29 +65,30 @@ import { v4 as uuidv4 } from "uuid";
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Email not found.
+ *                   example: "Email not found."
  *       500:
- *        $ref: "#/components/responses/ServerError"
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/InternalServerError"
  */
+
 export async function POST(
   req: Request
 ): Promise<
   NextResponse<
-    | ApiAuthVerifyEmailRequestPost200Response
-    | ApiAuthVerifyEmailRequestPost400Response
+    | Success
+    | ValidationError
+    | InternalServerError
   >
 > {
   try {
-    const data: ApiAuthVerifyEmailRequestPostRequest = await req.json();
+    const body: ForgetPasswordRequest = await req.json();
 
-    const parsedBody = emailSchema.safeParse(data);
+    const parsedBody = await emailSchema.parseAsync(body);
 
-    // Handle validation errors
-    if (!parsedBody.success) {
-      return handleValidationError(parsedBody.error); // Use reusable validation handler
-    }
-
-    const { email } = data;
+    const { email } = parsedBody;
 
     if (!email) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
@@ -112,7 +111,7 @@ export async function POST(
       },
     });
 
-    const verificationUrl = `${process.env.NEXTAUTH_URL}/auth/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-email?token=${verificationToken}`;
 
     const emailOptions = {
       from: process.env.SMTP_USERNAME,
@@ -138,7 +137,23 @@ export async function POST(
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error during email verification request:", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: "Validation error",
+          errors: error.errors.map((error) => ({
+            path: error.path[0],
+            message: error.message,
+          })),
+        },
+        { status: 400 }
+      );
+    } else {
+      console.error("Error during verify email request:", error);
+      return NextResponse.json({
+        error: "Internal server error",
+        message: "Error during verify email request",
+      }, { status: 500 });
+    }
   }
 }

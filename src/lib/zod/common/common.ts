@@ -10,18 +10,17 @@ export const validateUUIDSSchema = z.object({
 // Zod schema for validation pagination with search
 export const paginationWithSearchSchema = z.object({
   page: z
-    .string()
+    .number()
     .optional()
-    .refine((val) => !val || (!isNaN(Number(val)) && Number(val) > 0), {
+    .refine(async (val) => !val || (!isNaN(Number(val)) && Number(val) > 0), {
       message: "Page must be a positive number",
-    })
-    .transform((val) => (val ? Number(val) : 1)), // Default to 1 if not provided
+    }),
   limit: z
-    .string()
+    .number()
     .optional()
-    .refine((val) => !val || (!isNaN(Number(val)) && Number(val) > 0), {
+    .refine(async (val) => !val || (!isNaN(Number(val)) && Number(val) > 0), {
       message: "Limit must be a positive number",
     })
-    .transform((val) => (val ? Number(val) : 10)), // Default to 10 if not provided
+  ,
   search: z.string().optional(), // Optional search keyword field
 });

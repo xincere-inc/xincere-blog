@@ -26,317 +26,600 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
- * @interface ApiAdminUserCreateUserPost201Response
+ * @interface AdminCreateUser400Response
  */
-export interface ApiAdminUserCreateUserPost201Response {
+export interface AdminCreateUser400Response {
     /**
      * 
      * @type {string}
-     * @memberof ApiAdminUserCreateUserPost201Response
+     * @memberof AdminCreateUser400Response
      */
-    'message'?: string;
-    /**
-     * 
-     * @type {ApiAdminUserCreateUserPost201ResponseUser}
-     * @memberof ApiAdminUserCreateUserPost201Response
-     */
-    'user'?: ApiAdminUserCreateUserPost201ResponseUser;
+    'error'?: string;
 }
 /**
  * 
  * @export
- * @interface ApiAdminUserCreateUserPost201ResponseUser
+ * @interface AdminCreateUserRequest
  */
-export interface ApiAdminUserCreateUserPost201ResponseUser {
+export interface AdminCreateUserRequest {
     /**
      * 
      * @type {string}
-     * @memberof ApiAdminUserCreateUserPost201ResponseUser
+     * @memberof AdminCreateUserRequest
+     */
+    'firstName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateUserRequest
+     */
+    'lastName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateUserRequest
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateUserRequest
+     */
+    'country': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateUserRequest
+     */
+    'gender'?: AdminCreateUserRequestGenderEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateUserRequest
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateUserRequest
+     */
+    'password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateUserRequest
+     */
+    'phone'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateUserRequest
+     */
+    'address'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateUserRequest
+     */
+    'role'?: string;
+}
+
+export const AdminCreateUserRequestGenderEnum = {
+    Male: 'male',
+    Female: 'female',
+    Other: 'other'
+} as const;
+
+export type AdminCreateUserRequestGenderEnum = typeof AdminCreateUserRequestGenderEnum[keyof typeof AdminCreateUserRequestGenderEnum];
+
+/**
+ * 
+ * @export
+ * @interface AdminDeleteUsers400Response
+ */
+export interface AdminDeleteUsers400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminDeleteUsers400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<AdminDeleteUsers400ResponseErrorsInner>}
+     * @memberof AdminDeleteUsers400Response
+     */
+    'errors'?: Array<AdminDeleteUsers400ResponseErrorsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface AdminDeleteUsers400ResponseErrorsInner
+ */
+export interface AdminDeleteUsers400ResponseErrorsInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminDeleteUsers400ResponseErrorsInner
+     */
+    'path'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminDeleteUsers400ResponseErrorsInner
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminDeleteUsers404Response
+ */
+export interface AdminDeleteUsers404Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminDeleteUsers404Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminDeleteUsersRequest
+ */
+export interface AdminDeleteUsersRequest {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AdminDeleteUsersRequest
+     */
+    'ids': Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetUsers200Response
+ */
+export interface AdminGetUsers200Response {
+    /**
+     * 
+     * @type {Array<AdminGetUsers200ResponseDataInner>}
+     * @memberof AdminGetUsers200Response
+     */
+    'data'?: Array<AdminGetUsers200ResponseDataInner>;
+    /**
+     * 
+     * @type {AdminGetUsers200ResponsePagination}
+     * @memberof AdminGetUsers200Response
+     */
+    'pagination'?: AdminGetUsers200ResponsePagination;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetUsers200ResponseDataInner
+ */
+export interface AdminGetUsers200ResponseDataInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetUsers200ResponseDataInner
      */
     'id'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ApiAdminUserCreateUserPost201ResponseUser
+     * @memberof AdminGetUsers200ResponseDataInner
      */
     'email'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ApiAdminUserCreateUserPost201ResponseUser
+     * @memberof AdminGetUsers200ResponseDataInner
+     */
+    'firstName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetUsers200ResponseDataInner
+     */
+    'lastName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetUsers200ResponseDataInner
+     */
+    'country'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetUsers200ResponseDataInner
+     */
+    'username'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetUsers200ResponseDataInner
+     */
+    'address'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetUsers200ResponseDataInner
+     */
+    'phone'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetUsers200ResponseDataInner
+     */
+    'role'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetUsers200ResponsePagination
+ */
+export interface AdminGetUsers200ResponsePagination {
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetUsers200ResponsePagination
+     */
+    'page'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetUsers200ResponsePagination
+     */
+    'limit'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetUsers200ResponsePagination
+     */
+    'showPerPage'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetUsers200ResponsePagination
+     */
+    'totalUsers'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetUsers200ResponsePagination
+     */
+    'totalPages'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetUsers400Response
+ */
+export interface AdminGetUsers400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetUsers400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<AdminGetUsers400ResponseErrorsInner>}
+     * @memberof AdminGetUsers400Response
+     */
+    'errors'?: Array<AdminGetUsers400ResponseErrorsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetUsers400ResponseErrorsInner
+ */
+export interface AdminGetUsers400ResponseErrorsInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetUsers400ResponseErrorsInner
+     */
+    'path'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetUsers400ResponseErrorsInner
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminUpdateUser200Response
+ */
+export interface AdminUpdateUser200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser200Response
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {AdminUpdateUser200ResponseUser}
+     * @memberof AdminUpdateUser200Response
+     */
+    'user'?: AdminUpdateUser200ResponseUser;
+}
+/**
+ * 
+ * @export
+ * @interface AdminUpdateUser200ResponseUser
+ */
+export interface AdminUpdateUser200ResponseUser {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser200ResponseUser
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser200ResponseUser
+     */
+    'email'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser200ResponseUser
+     */
+    'firstName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser200ResponseUser
+     */
+    'lastName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser200ResponseUser
+     */
+    'username'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser200ResponseUser
+     */
+    'address'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser200ResponseUser
+     */
+    'phone'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser200ResponseUser
+     */
+    'role'?: AdminUpdateUser200ResponseUserRoleEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser200ResponseUser
+     */
+    'country'?: string;
+}
+
+export const AdminUpdateUser200ResponseUserRoleEnum = {
+    User: 'USER',
+    Admin: 'ADMIN'
+} as const;
+
+export type AdminUpdateUser200ResponseUserRoleEnum = typeof AdminUpdateUser200ResponseUserRoleEnum[keyof typeof AdminUpdateUser200ResponseUserRoleEnum];
+
+/**
+ * 
+ * @export
+ * @interface AdminUpdateUser400Response
+ */
+export interface AdminUpdateUser400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<AdminUpdateUser400ResponseErrorsInner>}
+     * @memberof AdminUpdateUser400Response
+     */
+    'errors'?: Array<AdminUpdateUser400ResponseErrorsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface AdminUpdateUser400ResponseErrorsInner
+ */
+export interface AdminUpdateUser400ResponseErrorsInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser400ResponseErrorsInner
+     */
+    'path'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser400ResponseErrorsInner
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminUpdateUser404Response
+ */
+export interface AdminUpdateUser404Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser404Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminUpdateUser500Response
+ */
+export interface AdminUpdateUser500Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser500Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateUser500Response
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminUpdateUserRequest
+ */
+export interface AdminUpdateUserRequest {
+    /**
+     * The ID of the user to update.
+     * @type {string}
+     * @memberof AdminUpdateUserRequest
+     */
+    'id': string;
+    /**
+     * The email address of the user.
+     * @type {string}
+     * @memberof AdminUpdateUserRequest
+     */
+    'email'?: string;
+    /**
+     * The first name of the user.
+     * @type {string}
+     * @memberof AdminUpdateUserRequest
+     */
+    'firstName'?: string;
+    /**
+     * The last name of the user.
+     * @type {string}
+     * @memberof AdminUpdateUserRequest
+     */
+    'lastName'?: string;
+    /**
+     * The username of the user.
+     * @type {string}
+     * @memberof AdminUpdateUserRequest
+     */
+    'username'?: string;
+    /**
+     * The address of the user.
+     * @type {string}
+     * @memberof AdminUpdateUserRequest
+     */
+    'address'?: string;
+    /**
+     * The phone number of the user.
+     * @type {string}
+     * @memberof AdminUpdateUserRequest
+     */
+    'phone'?: string;
+    /**
+     * The role of the user.
+     * @type {string}
+     * @memberof AdminUpdateUserRequest
+     */
+    'role'?: AdminUpdateUserRequestRoleEnum;
+    /**
+     * The country of the user.
+     * @type {string}
+     * @memberof AdminUpdateUserRequest
+     */
+    'country'?: string;
+}
+
+export const AdminUpdateUserRequestRoleEnum = {
+    User: 'user',
+    Admin: 'admin'
+} as const;
+
+export type AdminUpdateUserRequestRoleEnum = typeof AdminUpdateUserRequestRoleEnum[keyof typeof AdminUpdateUserRequestRoleEnum];
+
+/**
+ * 
+ * @export
+ * @interface ApiSignupPost201Response
+ */
+export interface ApiSignupPost201Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPost201Response
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {ApiSignupPost201ResponseUser}
+     * @memberof ApiSignupPost201Response
+     */
+    'user'?: ApiSignupPost201ResponseUser;
+}
+/**
+ * 
+ * @export
+ * @interface ApiSignupPost201ResponseUser
+ */
+export interface ApiSignupPost201ResponseUser {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPost201ResponseUser
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPost201ResponseUser
+     */
+    'email'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiSignupPost201ResponseUser
      */
     'name'?: string;
 }
 /**
  * 
  * @export
- * @interface ApiAdminUserCreateUserPost400Response
+ * @interface ApiSignupPost400Response
  */
-export interface ApiAdminUserCreateUserPost400Response {
+export interface ApiSignupPost400Response {
     /**
      * 
      * @type {string}
-     * @memberof ApiAdminUserCreateUserPost400Response
+     * @memberof ApiSignupPost400Response
      */
     'error'?: string;
     /**
      * 
-     * @type {Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>}
-     * @memberof ApiAdminUserCreateUserPost400Response
+     * @type {Array<ChangePassword400ResponseDetailsInner>}
+     * @memberof ApiSignupPost400Response
      */
-    'details'?: Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>;
-}
-/**
- * 
- * @export
- * @interface ApiAdminUserCreateUserPost400ResponseDetailsInner
- */
-export interface ApiAdminUserCreateUserPost400ResponseDetailsInner {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ApiAdminUserCreateUserPost400ResponseDetailsInner
-     */
-    'path'?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiAdminUserCreateUserPost400ResponseDetailsInner
-     */
-    'message'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiAdminUserCreateUserPostRequest
- */
-export interface ApiAdminUserCreateUserPostRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiAdminUserCreateUserPostRequest
-     */
-    'email': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiAdminUserCreateUserPostRequest
-     */
-    'password': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiAdminUserCreateUserPostRequest
-     */
-    'name': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiAdminUserCreateUserPostRequest
-     */
-    'role': ApiAdminUserCreateUserPostRequestRoleEnum;
-}
-
-export const ApiAdminUserCreateUserPostRequestRoleEnum = {
-    User: 'USER',
-    Admin: 'ADMIN',
-    Customer: 'CUSTOMER'
-} as const;
-
-export type ApiAdminUserCreateUserPostRequestRoleEnum = typeof ApiAdminUserCreateUserPostRequestRoleEnum[keyof typeof ApiAdminUserCreateUserPostRequestRoleEnum];
-
-/**
- * 
- * @export
- * @interface ApiAuthVerifyEmailRequestPost200Response
- */
-export interface ApiAuthVerifyEmailRequestPost200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiAuthVerifyEmailRequestPost200Response
-     */
-    'message'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiChangePasswordPost200Response
- */
-export interface ApiChangePasswordPost200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiChangePasswordPost200Response
-     */
-    'message'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiChangePasswordPost400Response
- */
-export interface ApiChangePasswordPost400Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiChangePasswordPost400Response
-     */
-    'error'?: string;
-    /**
-     * 
-     * @type {Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>}
-     * @memberof ApiChangePasswordPost400Response
-     */
-    'details'?: Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>;
-}
-/**
- * 
- * @export
- * @interface ApiChangePasswordPost401Response
- */
-export interface ApiChangePasswordPost401Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiChangePasswordPost401Response
-     */
-    'error'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiChangePasswordPostRequest
- */
-export interface ApiChangePasswordPostRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiChangePasswordPostRequest
-     */
-    'oldPassword': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiChangePasswordPostRequest
-     */
-    'newPassword': string;
-}
-/**
- * 
- * @export
- * @interface ApiForgetPasswordPost200Response
- */
-export interface ApiForgetPasswordPost200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiForgetPasswordPost200Response
-     */
-    'message'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiForgetPasswordPost400Response
- */
-export interface ApiForgetPasswordPost400Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiForgetPasswordPost400Response
-     */
-    'error'?: string;
-    /**
-     * 
-     * @type {Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>}
-     * @memberof ApiForgetPasswordPost400Response
-     */
-    'details'?: Array<ApiAdminUserCreateUserPost400ResponseDetailsInner>;
-}
-/**
- * 
- * @export
- * @interface ApiForgetPasswordPost404Response
- */
-export interface ApiForgetPasswordPost404Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiForgetPasswordPost404Response
-     */
-    'error'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiForgetPasswordPost429Response
- */
-export interface ApiForgetPasswordPost429Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiForgetPasswordPost429Response
-     */
-    'error'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiForgetPasswordPostRequest
- */
-export interface ApiForgetPasswordPostRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiForgetPasswordPostRequest
-     */
-    'email': string;
-}
-/**
- * 
- * @export
- * @interface ApiResetPasswordPost200Response
- */
-export interface ApiResetPasswordPost200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiResetPasswordPost200Response
-     */
-    'message'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiResetPasswordPost400Response
- */
-export interface ApiResetPasswordPost400Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiResetPasswordPost400Response
-     */
-    'error'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiResetPasswordPostRequest
- */
-export interface ApiResetPasswordPostRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiResetPasswordPostRequest
-     */
-    'token': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiResetPasswordPostRequest
-     */
-    'newPassword': string;
+    'details'?: Array<ChangePassword400ResponseDetailsInner>;
 }
 /**
  * 
@@ -366,34 +649,72 @@ export interface ApiSignupPostRequest {
 /**
  * 
  * @export
- * @interface ApiVerifyEmailGet200Response
+ * @interface ChangePassword400Response
  */
-export interface ApiVerifyEmailGet200Response {
+export interface ChangePassword400Response {
     /**
      * 
      * @type {string}
-     * @memberof ApiVerifyEmailGet200Response
+     * @memberof ChangePassword400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<ChangePassword400ResponseDetailsInner>}
+     * @memberof ChangePassword400Response
+     */
+    'details'?: Array<ChangePassword400ResponseDetailsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface ChangePassword400ResponseDetailsInner
+ */
+export interface ChangePassword400ResponseDetailsInner {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ChangePassword400ResponseDetailsInner
+     */
+    'path'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePassword400ResponseDetailsInner
      */
     'message'?: string;
 }
 /**
  * 
  * @export
- * @interface ApiVerifyEmailGet400Response
+ * @interface ChangePassword401Response
  */
-export interface ApiVerifyEmailGet400Response {
+export interface ChangePassword401Response {
     /**
      * 
      * @type {string}
-     * @memberof ApiVerifyEmailGet400Response
+     * @memberof ChangePassword401Response
      */
     'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ChangePasswordRequest
+ */
+export interface ChangePasswordRequest {
     /**
      * 
      * @type {string}
-     * @memberof ApiVerifyEmailGet400Response
+     * @memberof ChangePasswordRequest
      */
-    'message'?: string;
+    'oldPassword': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePasswordRequest
+     */
+    'newPassword': string;
 }
 /**
  * 
@@ -449,6 +770,64 @@ export interface ForbiddenError {
 /**
  * 
  * @export
+ * @interface ForgetPassword400Response
+ */
+export interface ForgetPassword400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ForgetPassword400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<ChangePassword400ResponseDetailsInner>}
+     * @memberof ForgetPassword400Response
+     */
+    'details'?: Array<ChangePassword400ResponseDetailsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface ForgetPassword404Response
+ */
+export interface ForgetPassword404Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ForgetPassword404Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ForgetPassword429Response
+ */
+export interface ForgetPassword429Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ForgetPassword429Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ForgetPasswordRequest
+ */
+export interface ForgetPasswordRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ForgetPasswordRequest
+     */
+    'email': string;
+}
+/**
+ * 
+ * @export
  * @interface InternalServerError
  */
 export interface InternalServerError {
@@ -483,6 +862,102 @@ export interface NotFoundError {
      * @memberof NotFoundError
      */
     'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface RegisterRequest
+ */
+export interface RegisterRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterRequest
+     */
+    'firstName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterRequest
+     */
+    'lastName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterRequest
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterRequest
+     */
+    'country'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterRequest
+     */
+    'gender': RegisterRequestGenderEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterRequest
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterRequest
+     */
+    'password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterRequest
+     */
+    'confirmPassword': string;
+}
+
+export const RegisterRequestGenderEnum = {
+    Male: 'male',
+    Female: 'female',
+    Other: 'other'
+} as const;
+
+export type RegisterRequestGenderEnum = typeof RegisterRequestGenderEnum[keyof typeof RegisterRequestGenderEnum];
+
+/**
+ * 
+ * @export
+ * @interface ResetPassword400Response
+ */
+export interface ResetPassword400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResetPassword400Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ResetPasswordRequest
+ */
+export interface ResetPasswordRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResetPasswordRequest
+     */
+    'token': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResetPasswordRequest
+     */
+    'newPassword': string;
 }
 /**
  * 
@@ -535,6 +1010,63 @@ export interface UnprocessableEntity {
      */
     'message'?: string;
 }
+/**
+ * 
+ * @export
+ * @interface ValidationError
+ */
+export interface ValidationError {
+    /**
+     * 
+     * @type {string}
+     * @memberof ValidationError
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<ValidationErrorErrorsInner>}
+     * @memberof ValidationError
+     */
+    'errors'?: Array<ValidationErrorErrorsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface ValidationErrorErrorsInner
+ */
+export interface ValidationErrorErrorsInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof ValidationErrorErrorsInner
+     */
+    'path'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ValidationErrorErrorsInner
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface VerifyEmail400Response
+ */
+export interface VerifyEmail400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof VerifyEmail400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof VerifyEmail400Response
+     */
+    'message'?: string;
+}
 
 /**
  * AdminApi - axios parameter creator
@@ -543,16 +1075,16 @@ export interface UnprocessableEntity {
 export const AdminApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Admin can create a new user, hash their password, generate an email verification token, and send a verification email.
-         * @summary Admin creates a new user
-         * @param {ApiAdminUserCreateUserPostRequest} apiAdminUserCreateUserPostRequest 
+         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+         * @summary Register a new user
+         * @param {AdminCreateUserRequest} adminCreateUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAdminUserCreateUserPost: async (apiAdminUserCreateUserPostRequest: ApiAdminUserCreateUserPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'apiAdminUserCreateUserPostRequest' is not null or undefined
-            assertParamExists('apiAdminUserCreateUserPost', 'apiAdminUserCreateUserPostRequest', apiAdminUserCreateUserPostRequest)
-            const localVarPath = `/api/admin/user/create-user`;
+        adminCreateUser: async (adminCreateUserRequest: AdminCreateUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminCreateUserRequest' is not null or undefined
+            assertParamExists('adminCreateUser', 'adminCreateUserRequest', adminCreateUserRequest)
+            const localVarPath = `/api/admin/users/create-user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -571,7 +1103,132 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(apiAdminUserCreateUserPostRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(adminCreateUserRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Deletes users from the database based on the provided IDs.
+         * @summary Delete users by IDs
+         * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteUsers: async (adminDeleteUsersRequest: AdminDeleteUsersRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminDeleteUsersRequest' is not null or undefined
+            assertParamExists('adminDeleteUsers', 'adminDeleteUsersRequest', adminDeleteUsersRequest)
+            const localVarPath = `/api/admin/users/delete-user`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminDeleteUsersRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retrieves users from the database with pagination and optional search.
+         * @summary Fetch users with pagination and search
+         * @param {number} page Page number for pagination
+         * @param {number} limit Number of users per page
+         * @param {string} [search] Optional search term to filter users by fields like email, first name, last name, etc.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetUsers: async (page: number, limit: number, search?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('adminGetUsers', 'page', page)
+            // verify required parameter 'limit' is not null or undefined
+            assertParamExists('adminGetUsers', 'limit', limit)
+            const localVarPath = `/api/admin/users/get-user`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update details of an existing user based on the provided user ID.
+         * @summary Update user details
+         * @param {string} id The ID of the user to update.
+         * @param {AdminUpdateUserRequest} adminUpdateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminUpdateUser: async (id: string, adminUpdateUserRequest: AdminUpdateUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('adminUpdateUser', 'id', id)
+            // verify required parameter 'adminUpdateUserRequest' is not null or undefined
+            assertParamExists('adminUpdateUser', 'adminUpdateUserRequest', adminUpdateUserRequest)
+            const localVarPath = `/api/admin/users/update-user`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminUpdateUserRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -589,16 +1246,58 @@ export const AdminApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AdminApiAxiosParamCreator(configuration)
     return {
         /**
-         * Admin can create a new user, hash their password, generate an email verification token, and send a verification email.
-         * @summary Admin creates a new user
-         * @param {ApiAdminUserCreateUserPostRequest} apiAdminUserCreateUserPostRequest 
+         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+         * @summary Register a new user
+         * @param {AdminCreateUserRequest} adminCreateUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest: ApiAdminUserCreateUserPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiAdminUserCreateUserPost201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest, options);
+        async adminCreateUser(adminCreateUserRequest: AdminCreateUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Created>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCreateUser(adminCreateUserRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.apiAdminUserCreateUserPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminCreateUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Deletes users from the database based on the provided IDs.
+         * @summary Delete users by IDs
+         * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDeleteUsers(adminDeleteUsersRequest: AdminDeleteUsersRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDeleteUsers(adminDeleteUsersRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminDeleteUsers']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Retrieves users from the database with pagination and optional search.
+         * @summary Fetch users with pagination and search
+         * @param {number} page Page number for pagination
+         * @param {number} limit Number of users per page
+         * @param {string} [search] Optional search term to filter users by fields like email, first name, last name, etc.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminGetUsers(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminGetUsers200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetUsers(page, limit, search, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminGetUsers']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Update details of an existing user based on the provided user ID.
+         * @summary Update user details
+         * @param {string} id The ID of the user to update.
+         * @param {AdminUpdateUserRequest} adminUpdateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminUpdateUser(id: string, adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminUpdateUser200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateUser(id, adminUpdateUserRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminUpdateUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -612,14 +1311,47 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
     const localVarFp = AdminApiFp(configuration)
     return {
         /**
-         * Admin can create a new user, hash their password, generate an email verification token, and send a verification email.
-         * @summary Admin creates a new user
-         * @param {ApiAdminUserCreateUserPostRequest} apiAdminUserCreateUserPostRequest 
+         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+         * @summary Register a new user
+         * @param {AdminCreateUserRequest} adminCreateUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest: ApiAdminUserCreateUserPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiAdminUserCreateUserPost201Response> {
-            return localVarFp.apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest, options).then((request) => request(axios, basePath));
+        adminCreateUser(adminCreateUserRequest: AdminCreateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<Created> {
+            return localVarFp.adminCreateUser(adminCreateUserRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Deletes users from the database based on the provided IDs.
+         * @summary Delete users by IDs
+         * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteUsers(adminDeleteUsersRequest: AdminDeleteUsersRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.adminDeleteUsers(adminDeleteUsersRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves users from the database with pagination and optional search.
+         * @summary Fetch users with pagination and search
+         * @param {number} page Page number for pagination
+         * @param {number} limit Number of users per page
+         * @param {string} [search] Optional search term to filter users by fields like email, first name, last name, etc.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetUsers(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig): AxiosPromise<AdminGetUsers200Response> {
+            return localVarFp.adminGetUsers(page, limit, search, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Update details of an existing user based on the provided user ID.
+         * @summary Update user details
+         * @param {string} id The ID of the user to update.
+         * @param {AdminUpdateUserRequest} adminUpdateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminUpdateUser(id: string, adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminUpdateUser200Response> {
+            return localVarFp.adminUpdateUser(id, adminUpdateUserRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -632,15 +1364,54 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
  */
 export class AdminApi extends BaseAPI {
     /**
-     * Admin can create a new user, hash their password, generate an email verification token, and send a verification email.
-     * @summary Admin creates a new user
-     * @param {ApiAdminUserCreateUserPostRequest} apiAdminUserCreateUserPostRequest 
+     * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+     * @summary Register a new user
+     * @param {AdminCreateUserRequest} adminCreateUserRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest: ApiAdminUserCreateUserPostRequest, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).apiAdminUserCreateUserPost(apiAdminUserCreateUserPostRequest, options).then((request) => request(this.axios, this.basePath));
+    public adminCreateUser(adminCreateUserRequest: AdminCreateUserRequest, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).adminCreateUser(adminCreateUserRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Deletes users from the database based on the provided IDs.
+     * @summary Delete users by IDs
+     * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public adminDeleteUsers(adminDeleteUsersRequest: AdminDeleteUsersRequest, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).adminDeleteUsers(adminDeleteUsersRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Retrieves users from the database with pagination and optional search.
+     * @summary Fetch users with pagination and search
+     * @param {number} page Page number for pagination
+     * @param {number} limit Number of users per page
+     * @param {string} [search] Optional search term to filter users by fields like email, first name, last name, etc.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public adminGetUsers(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).adminGetUsers(page, limit, search, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Update details of an existing user based on the provided user ID.
+     * @summary Update user details
+     * @param {string} id The ID of the user to update.
+     * @param {AdminUpdateUserRequest} adminUpdateUserRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public adminUpdateUser(id: string, adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).adminUpdateUser(id, adminUpdateUserRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -652,150 +1423,6 @@ export class AdminApi extends BaseAPI {
  */
 export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * 
-         * @summary Send verification email to a registered user
-         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiAuthVerifyEmailRequestPost: async (apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'apiForgetPasswordPostRequest' is not null or undefined
-            assertParamExists('apiAuthVerifyEmailRequestPost', 'apiForgetPasswordPostRequest', apiForgetPasswordPostRequest)
-            const localVarPath = `/api/auth/verify-email-request`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(apiForgetPasswordPostRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Allows an authenticated user to change their password by providing the old and new password.
-         * @summary Change user password
-         * @param {ApiChangePasswordPostRequest} apiChangePasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiChangePasswordPost: async (apiChangePasswordPostRequest: ApiChangePasswordPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'apiChangePasswordPostRequest' is not null or undefined
-            assertParamExists('apiChangePasswordPost', 'apiChangePasswordPostRequest', apiChangePasswordPostRequest)
-            const localVarPath = `/api/change-password`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(apiChangePasswordPostRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
-         * @summary Send a password reset email
-         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiForgetPasswordPost: async (apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'apiForgetPasswordPostRequest' is not null or undefined
-            assertParamExists('apiForgetPasswordPost', 'apiForgetPasswordPostRequest', apiForgetPasswordPostRequest)
-            const localVarPath = `/api/forget-password`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(apiForgetPasswordPostRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
-         * @summary Reset password for a user
-         * @param {ApiResetPasswordPostRequest} apiResetPasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiResetPasswordPost: async (apiResetPasswordPostRequest: ApiResetPasswordPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'apiResetPasswordPostRequest' is not null or undefined
-            assertParamExists('apiResetPasswordPost', 'apiResetPasswordPostRequest', apiResetPasswordPostRequest)
-            const localVarPath = `/api/reset-password`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(apiResetPasswordPostRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
         /**
          * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
          * @summary Register a new user
@@ -833,16 +1460,196 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
+         * Allows an authenticated user to change their password by providing the old and new password.
+         * @summary Change user password
+         * @param {ChangePasswordRequest} changePasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        changePassword: async (changePasswordRequest: ChangePasswordRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'changePasswordRequest' is not null or undefined
+            assertParamExists('changePassword', 'changePasswordRequest', changePasswordRequest)
+            const localVarPath = `/api/auth/change-password`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(changePasswordRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
+         * @summary Send a password reset email
+         * @param {ForgetPasswordRequest} forgetPasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        forgetPassword: async (forgetPasswordRequest: ForgetPasswordRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'forgetPasswordRequest' is not null or undefined
+            assertParamExists('forgetPassword', 'forgetPasswordRequest', forgetPasswordRequest)
+            const localVarPath = `/api/auth/forget-password`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(forgetPasswordRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+         * @summary Register a new user
+         * @param {RegisterRequest} registerRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        register: async (registerRequest: RegisterRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'registerRequest' is not null or undefined
+            assertParamExists('register', 'registerRequest', registerRequest)
+            const localVarPath = `/api/auth/register`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(registerRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
+         * @summary Reset password for a user
+         * @param {ResetPasswordRequest} resetPasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        resetPassword: async (resetPasswordRequest: ResetPasswordRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'resetPasswordRequest' is not null or undefined
+            assertParamExists('resetPassword', 'resetPasswordRequest', resetPasswordRequest)
+            const localVarPath = `/api/reset-password`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(resetPasswordRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * This endpoint sends a verification email to the user with the provided email address.
+         * @summary Send verification email to a registered user
+         * @param {ForgetPasswordRequest} forgetPasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sendVerificationEmail: async (forgetPasswordRequest: ForgetPasswordRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'forgetPasswordRequest' is not null or undefined
+            assertParamExists('sendVerificationEmail', 'forgetPasswordRequest', forgetPasswordRequest)
+            const localVarPath = `/api/auth/verify-email-request`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(forgetPasswordRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Verifies the user\'s email address using a provided verification token. Marks the user\'s email as verified in the database.
          * @summary Verify user email
          * @param {string} token The email verification token sent to the user\&#39;s email address.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiVerifyEmailGet: async (token: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        verifyEmail: async (token: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'token' is not null or undefined
-            assertParamExists('apiVerifyEmailGet', 'token', token)
-            const localVarPath = `/api/verify-email`;
+            assertParamExists('verifyEmail', 'token', token)
+            const localVarPath = `/api/auth/verify-email`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -880,68 +1687,81 @@ export const AuthApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
     return {
         /**
-         * 
-         * @summary Send verification email to a registered user
-         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiAuthVerifyEmailRequestPost200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiAuthVerifyEmailRequestPost']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Allows an authenticated user to change their password by providing the old and new password.
-         * @summary Change user password
-         * @param {ApiChangePasswordPostRequest} apiChangePasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiChangePasswordPost(apiChangePasswordPostRequest: ApiChangePasswordPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiChangePasswordPost200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiChangePasswordPost(apiChangePasswordPostRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiChangePasswordPost']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
-         * @summary Send a password reset email
-         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiForgetPasswordPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiForgetPasswordPost200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiForgetPasswordPost(apiForgetPasswordPostRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiForgetPasswordPost']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
-         * @summary Reset password for a user
-         * @param {ApiResetPasswordPostRequest} apiResetPasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiResetPasswordPost(apiResetPasswordPostRequest: ApiResetPasswordPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResetPasswordPost200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiResetPasswordPost(apiResetPasswordPostRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiResetPasswordPost']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
          * @summary Register a new user
          * @param {ApiSignupPostRequest} apiSignupPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiAdminUserCreateUserPost201Response>> {
+        async apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiSignupPost201Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiSignupPost(apiSignupPostRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuthApi.apiSignupPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows an authenticated user to change their password by providing the old and new password.
+         * @summary Change user password
+         * @param {ChangePasswordRequest} changePasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async changePassword(changePasswordRequest: ChangePasswordRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.changePassword(changePasswordRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.changePassword']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
+         * @summary Send a password reset email
+         * @param {ForgetPasswordRequest} forgetPasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async forgetPassword(forgetPasswordRequest: ForgetPasswordRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.forgetPassword(forgetPasswordRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.forgetPassword']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+         * @summary Register a new user
+         * @param {RegisterRequest} registerRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async register(registerRequest: RegisterRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Created>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.register(registerRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.register']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
+         * @summary Reset password for a user
+         * @param {ResetPasswordRequest} resetPasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async resetPassword(resetPasswordRequest: ResetPasswordRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.resetPassword(resetPasswordRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.resetPassword']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * This endpoint sends a verification email to the user with the provided email address.
+         * @summary Send verification email to a registered user
+         * @param {ForgetPasswordRequest} forgetPasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async sendVerificationEmail(forgetPasswordRequest: ForgetPasswordRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sendVerificationEmail(forgetPasswordRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.sendVerificationEmail']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -951,10 +1771,10 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiVerifyEmailGet(token: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiVerifyEmailGet200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiVerifyEmailGet(token, options);
+        async verifyEmail(token: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.verifyEmail(token, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiVerifyEmailGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.verifyEmail']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -968,54 +1788,64 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = AuthApiFp(configuration)
     return {
         /**
-         * 
-         * @summary Send verification email to a registered user
-         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiAuthVerifyEmailRequestPost200Response> {
-            return localVarFp.apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Allows an authenticated user to change their password by providing the old and new password.
-         * @summary Change user password
-         * @param {ApiChangePasswordPostRequest} apiChangePasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiChangePasswordPost(apiChangePasswordPostRequest: ApiChangePasswordPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiChangePasswordPost200Response> {
-            return localVarFp.apiChangePasswordPost(apiChangePasswordPostRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
-         * @summary Send a password reset email
-         * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiForgetPasswordPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiForgetPasswordPost200Response> {
-            return localVarFp.apiForgetPasswordPost(apiForgetPasswordPostRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
-         * @summary Reset password for a user
-         * @param {ApiResetPasswordPostRequest} apiResetPasswordPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiResetPasswordPost(apiResetPasswordPostRequest: ApiResetPasswordPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResetPasswordPost200Response> {
-            return localVarFp.apiResetPasswordPost(apiResetPasswordPostRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
          * @summary Register a new user
          * @param {ApiSignupPostRequest} apiSignupPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiAdminUserCreateUserPost201Response> {
+        apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiSignupPost201Response> {
             return localVarFp.apiSignupPost(apiSignupPostRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows an authenticated user to change their password by providing the old and new password.
+         * @summary Change user password
+         * @param {ChangePasswordRequest} changePasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        changePassword(changePasswordRequest: ChangePasswordRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.changePassword(changePasswordRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
+         * @summary Send a password reset email
+         * @param {ForgetPasswordRequest} forgetPasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        forgetPassword(forgetPasswordRequest: ForgetPasswordRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.forgetPassword(forgetPasswordRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+         * @summary Register a new user
+         * @param {RegisterRequest} registerRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        register(registerRequest: RegisterRequest, options?: RawAxiosRequestConfig): AxiosPromise<Created> {
+            return localVarFp.register(registerRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
+         * @summary Reset password for a user
+         * @param {ResetPasswordRequest} resetPasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        resetPassword(resetPasswordRequest: ResetPasswordRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.resetPassword(resetPasswordRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * This endpoint sends a verification email to the user with the provided email address.
+         * @summary Send verification email to a registered user
+         * @param {ForgetPasswordRequest} forgetPasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sendVerificationEmail(forgetPasswordRequest: ForgetPasswordRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.sendVerificationEmail(forgetPasswordRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Verifies the user\'s email address using a provided verification token. Marks the user\'s email as verified in the database.
@@ -1024,8 +1854,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiVerifyEmailGet(token: string, options?: RawAxiosRequestConfig): AxiosPromise<ApiVerifyEmailGet200Response> {
-            return localVarFp.apiVerifyEmailGet(token, options).then((request) => request(axios, basePath));
+        verifyEmail(token: string, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.verifyEmail(token, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1037,54 +1867,6 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
  * @extends {BaseAPI}
  */
 export class AuthApi extends BaseAPI {
-    /**
-     * 
-     * @summary Send verification email to a registered user
-     * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).apiAuthVerifyEmailRequestPost(apiForgetPasswordPostRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Allows an authenticated user to change their password by providing the old and new password.
-     * @summary Change user password
-     * @param {ApiChangePasswordPostRequest} apiChangePasswordPostRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public apiChangePasswordPost(apiChangePasswordPostRequest: ApiChangePasswordPostRequest, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).apiChangePasswordPost(apiChangePasswordPostRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
-     * @summary Send a password reset email
-     * @param {ApiForgetPasswordPostRequest} apiForgetPasswordPostRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public apiForgetPasswordPost(apiForgetPasswordPostRequest: ApiForgetPasswordPostRequest, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).apiForgetPasswordPost(apiForgetPasswordPostRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
-     * @summary Reset password for a user
-     * @param {ApiResetPasswordPostRequest} apiResetPasswordPostRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public apiResetPasswordPost(apiResetPasswordPostRequest: ApiResetPasswordPostRequest, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).apiResetPasswordPost(apiResetPasswordPostRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
     /**
      * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
      * @summary Register a new user
@@ -1098,6 +1880,66 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
+     * Allows an authenticated user to change their password by providing the old and new password.
+     * @summary Change user password
+     * @param {ChangePasswordRequest} changePasswordRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public changePassword(changePasswordRequest: ChangePasswordRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).changePassword(changePasswordRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
+     * @summary Send a password reset email
+     * @param {ForgetPasswordRequest} forgetPasswordRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public forgetPassword(forgetPasswordRequest: ForgetPasswordRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).forgetPassword(forgetPasswordRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+     * @summary Register a new user
+     * @param {RegisterRequest} registerRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public register(registerRequest: RegisterRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).register(registerRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Resets the user\'s password using a provided reset token and new password. The reset token is invalidated after the reset.
+     * @summary Reset password for a user
+     * @param {ResetPasswordRequest} resetPasswordRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public resetPassword(resetPasswordRequest: ResetPasswordRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).resetPassword(resetPasswordRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * This endpoint sends a verification email to the user with the provided email address.
+     * @summary Send verification email to a registered user
+     * @param {ForgetPasswordRequest} forgetPasswordRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public sendVerificationEmail(forgetPasswordRequest: ForgetPasswordRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).sendVerificationEmail(forgetPasswordRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Verifies the user\'s email address using a provided verification token. Marks the user\'s email as verified in the database.
      * @summary Verify user email
      * @param {string} token The email verification token sent to the user\&#39;s email address.
@@ -1105,8 +1947,8 @@ export class AuthApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public apiVerifyEmailGet(token: string, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).apiVerifyEmailGet(token, options).then((request) => request(this.axios, this.basePath));
+    public verifyEmail(token: string, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).verifyEmail(token, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

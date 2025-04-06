@@ -1,54 +1,92 @@
-"use client";
+'use client';
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import IdoAuth from '@/api/IdoAuth';
+import { AxiosError } from 'axios';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+
+interface ResetPasswordForm {
+  password: string;
+  confirmPassword: string;
+}
 
 export default function ResetPasswordPage() {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const token = searchParams.get('token');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<ResetPasswordForm>({
+    mode: 'onChange',
+  });
 
+  const onSubmit: SubmitHandler<ResetPasswordForm> = async (data) => {
+    setLoading(true);
+
+    // Clear previous errors
+    clearErrors();
+
+    // Token validation
     if (!token) {
-      setError("Invalid or missing token.");
+      setError('password', {
+        type: 'manual',
+        message: 'Invalid or missing token.',
+      });
+      setLoading(false);
       return;
     }
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+    // Check if passwords match
+    if (data.password !== data.confirmPassword) {
+      setError('confirmPassword', {
+        type: 'manual',
+        message: 'Passwords do not match.',
+      });
+      setLoading(false);
       return;
     }
 
     try {
-      const response = await fetch(`/api/auth/reset-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token, newPassword: password }),
+      const response = await IdoAuth.resetPassword({
+        newPassword: data.password,
+        token: token,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccess(data?.message || "Password reset successfully!");
-        setTimeout(() => {
-          router.push("/");
-        }, 1500);
+      if (response.status === 200) {
+        // If password reset is successful
+        toast.success(response.data.message || 'Password reset successfully.', {
+          position: 'bottom-right',
+        });
+        router.push('/signin');
       } else {
-        setError(data?.error || "Failed to reset password.");
+        // Handle failure response
+        toast.error(response.data.message || 'Failed to reset password.', {
+          position: 'bottom-right',
+        });
       }
-    } catch (err) {
-      console.error("Error resetting password:", err);
-      setError("An unexpected error occurred.");
+    } catch (err: any) {
+      if (err instanceof AxiosError) {
+        toast.error(
+          err.response?.data.message || 'An unexpected error occurred.',
+          {
+            position: 'bottom-right',
+          }
+        );
+      } else {
+        toast.error('Unexpected error occurred.', {
+          position: 'bottom-right',
+        });
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,28 +95,42 @@ export default function ResetPasswordPage() {
       <div className='p-6 bg-white shadow-md rounded w-96'>
         <h2 className='text-xl font-bold mb-4'>Reset Password</h2>
 
-        {error && <p className='text-red-500'>{error}</p>}
-        {success && <p className='text-green-500'>{success}</p>}
+        {errors.password && <p className='text-red-500'>{errors.password.message}</p>}
+        {errors.confirmPassword && (
+          <p className='text-red-500'>{errors.confirmPassword.message}</p>
+        )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <input
             type='password'
             className='border p-2 w-full mb-2'
             placeholder='Enter new password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            {...register('password', {
+              required: 'Password is required',
+              minLength: {
+                value: 6,
+                message: 'Password must be at least 6 characters long',
+              },
+            })}
           />
           <input
             type='password'
             className='border p-2 w-full mb-2'
             placeholder='Confirm new password'
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            {...register('confirmPassword', {
+              required: 'Please confirm your password',
+              minLength: {
+                value: 6,
+                message: 'Password must be at least 6 characters long',
+              },
+            })}
           />
           <button
             className='bg-gray-500 text-white p-2 rounded-md mt-4 w-full'
-            type='submit'>
-            Reset Password
+            type='submit'
+            disabled={loading}
+          >
+            {loading ? 'Resetting...' : 'Reset Password'}
           </button>
         </form>
       </div>

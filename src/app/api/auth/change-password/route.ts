@@ -1,22 +1,18 @@
-import {
-  ApiChangePasswordPost200Response,
-  ApiChangePasswordPost400Response,
-  ApiChangePasswordPost401Response,
-  ApiChangePasswordPostRequest,
-} from "@/api/client";
+import { ChangePasswordRequest, InternalServerError, Success, UnAuthorizedError, ValidationError } from "@/api/client";
 import getSession from "@/lib/auth/getSession";
 import { prisma } from "@/lib/prisma";
 import { changePasswordSchema } from "@/lib/zod/auth/auth";
-import { handleValidationError } from "@/lib/zod/validation-error";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
 /**
  * @swagger
- * /api/change-password:
+ * /api/auth/change-password:
  *   post:
  *     summary: Change user password
  *     description: Allows an authenticated user to change their password by providing the old and new password.
+ *     operationId: changePassword
  *     tags:
  *       - Auth
  *     requestBody:
@@ -41,11 +37,7 @@ import { NextResponse } from "next/server";
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Password has been changed successfully."
+ *               $ref: "#/components/schemas/Success"
  *       400:
  *         description: Validation error, same old and new password, or invalid old password
  *         content:
@@ -78,29 +70,22 @@ import { NextResponse } from "next/server";
  *                   type: string
  *                   example: "Unauthorized"
  *       500:
- *        $ref: "#/components/responses/ServerError"
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/InternalServerError"
  */
-export async function POST(
-  req: Request
-): Promise<
-  NextResponse<
-    | ApiChangePasswordPost200Response
-    | ApiChangePasswordPost400Response
-    | ApiChangePasswordPost401Response
-  >
-> {
+
+export async function POST(req: Request): Promise<NextResponse<
+  | Success | ValidationError | UnAuthorizedError | InternalServerError>> {
   try {
     // Parse and validate request body using Zod
-    const body: ApiChangePasswordPostRequest = await req.json();
+    const body: ChangePasswordRequest = await req.json();
 
-    const parsedBody = changePasswordSchema.safeParse(body);
+    const parsedBody = await changePasswordSchema.parseAsync(body);
 
-    // Handle validation errors
-    if (!parsedBody.success) {
-      return handleValidationError(parsedBody.error); // Use reusable validation handler
-    }
-
-    const { oldPassword, newPassword } = parsedBody.data;
+    const { oldPassword, newPassword } = parsedBody;
 
     // Get user from session
     const session = await getSession();
@@ -155,11 +140,23 @@ export async function POST(
 
     return NextResponse.json(responseBody, { status: 200 });
   } catch (error: unknown) {
-    console.error("Error:", error);
-
-    const errorResponse = {
-      error: "Server error",
-    };
-    return NextResponse.json(errorResponse, { status: 500 });
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: "Validation error",
+          errors: error.errors.map((error) => ({
+            path: error.path[0],
+            message: error.message,
+          })),
+        },
+        { status: 400 }
+      );
+    } else {
+      console.error("Error during change password:", error);
+      return NextResponse.json({
+        error: "Internal server error",
+        message: "Error during change password",
+      }, { status: 500 });
+    }
   }
 }

@@ -1,33 +1,135 @@
+import {
+  AdminCreateUserRequest,
+  Created,
+  InternalServerError,
+  UnAuthorizedError,
+  ValidationError
+} from "@/api/client";
 import { prisma } from "@/lib/prisma";
 import { authorizeAdmin } from "@/lib/utils/authorize-admin";
 import { sendEmail } from "@/lib/utils/send-email";
 import { adminCreateUserSchema } from "@/lib/zod/admin/user-management/user";
-import { handleValidationError } from "@/lib/zod/validation-error";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+import { z } from "zod";
 
-export async function POST(req: Request): Promise<NextResponse> {
+
+/**
+ * @swagger
+ * /api/admin/users/create-user:
+ *   post:
+ *     summary: Register a new user
+ *     description: Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+ *     operationId: adminCreateUser
+ *     tags:
+ *       - Admin
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firstName
+ *               - lastName
+ *               - username
+ *               - country
+ *               - email
+ *               - password
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 example: "John"
+ *               lastName:
+ *                 type: string
+ *                 example: "Doe"
+ *               username:
+ *                 type: string
+ *                 example: "johndoe"
+ *               country:
+ *                 type: string
+ *                 example: "Bangladesh"
+ *               gender:
+ *                 type: string
+ *                 enum: [male, female, other]
+ *                 example: "male"
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "user@example.com"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "SecureP@ssw0rd"
+ *               phone:
+ *                 type: string
+ *                 example: "1234567890"
+ *               address:
+ *                 type: string
+ *                 example: "123 Main St"
+ *               role:
+ *                 type: string
+ *                 example: "user"
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/Created"
+ *       400:
+ *         description: Validation errors or user already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "User already exists with this email: user@example.com"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/InternalServerError"
+ */
+
+export async function POST(
+  req: Request
+): Promise<
+  NextResponse<
+    | UnAuthorizedError
+    | Created
+    | ValidationError
+    | InternalServerError
+  >
+> {
   try {
     // Check for admin authorization
     const adminAuthError = await authorizeAdmin();
     if (adminAuthError) {
-      return adminAuthError; // If authorization fails, return the error response
+      return adminAuthError;
     }
 
-    const body = await req.json();
-    const parsedBody = adminCreateUserSchema.safeParse(body);
+    const body: AdminCreateUserRequest = await req.json();
+    const parsedBody = await adminCreateUserSchema.parseAsync(body);
 
-    if (!parsedBody.success) {
-      return handleValidationError(parsedBody.error); // Use reusable validation handler
-    }
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      username,
+      address,
+      phone,
+      role,
+      country
+    } = parsedBody;
 
-    // Destructure the body data
-    const { email, password, name, address, phone, role } = parsedBody.data;
-
-    // Check if a user already exists with the incoming email
     const existingUserEmail = await prisma.user.findUnique({
-      where: { email },
+      where: { email }
     });
 
     if (existingUserEmail) {
@@ -38,9 +140,8 @@ export async function POST(req: Request): Promise<NextResponse> {
     }
 
     if (phone) {
-      // Check if a user already exists with the incoming phone
       const existingUserPhone = await prisma.user.findUnique({
-        where: { phone },
+        where: { phone }
       });
 
       if (existingUserPhone) {
@@ -51,33 +152,31 @@ export async function POST(req: Request): Promise<NextResponse> {
       }
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create the user in the database
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        name,
+        firstName,
+        lastName,
+        username,
         address,
+        country,
         phone,
-        role,
-      },
+        role
+      }
     });
 
-    // Generate email verification token
     const verificationToken = uuidv4();
 
-    // Update the user with the verification token
     await prisma.user.update({
       where: { id: user.id },
-      data: { emailVerificationToken: verificationToken },
+      data: { emailVerificationToken: verificationToken }
     });
 
     const verificationUrl = `${process.env.NEXTAUTH_URL}/auth/verify-email?token=${verificationToken}`;
 
-    // Send the verification email
     const emailResponse = await sendEmail({
       from: process.env.SMTP_USERNAME,
       to: email,
@@ -85,7 +184,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       html: `
         <p>Thank you for registering!</p>
         <p>Click <a href="${verificationUrl}">here</a> to verify your email address.</p>
-      `,
+      `
     });
 
     if (!emailResponse.success) {
@@ -98,18 +197,31 @@ export async function POST(req: Request): Promise<NextResponse> {
     return NextResponse.json(
       {
         message:
-          "User created successfully. A verification email has been sent.",
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        },
+          "User created successfully. A verification email has been sent."
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error during admin user creation:", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: "Validation error",
+          errors: error.errors.map((error) => ({
+            path: error.path[0],
+            message: error.message
+          }))
+        },
+        { status: 400 }
+      );
+    } else {
+      console.error("Error during create user:", error);
+      return NextResponse.json(
+        {
+          error: "Internal server error",
+          message: "Error during create user"
+        },
+        { status: 500 }
+      );
+    }
   }
 }
