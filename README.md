@@ -62,13 +62,13 @@ Ensure the following are installed on your system:
    ```env
    DATABASE_URL=postgresql://postgres:password@db:5432/mydatabase
    NODE_ENV=development
-   NEXTAUTH_URL=http://localhost:3000
+   NEXT_PUBLIC_API_URL=http://localhost:3000
    NEXTAUTH_SECRET=your-secret-key
    ```
 
    - `DATABASE_URL`: PostgreSQL connection string.
    - `NODE_ENV`: `development` or `production`.
-   - `NEXTAUTH_URL`: NextAuth.js URL for authentication.
+   - `NEXT_PUBLIC_API_URL`: Frontend URL.
    - `NEXTAUTH_SECRET`: Secret key for `next-auth`.
 
 ---

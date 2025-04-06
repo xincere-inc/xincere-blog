@@ -1,92 +1,138 @@
-"use client";
+'use client'
+import IdoAuth from '@/api/IdoAuth'
+import PasswordField from '@/components/inputs/PasswordField'
+import { AxiosError } from 'axios'
+import { useRouter } from 'next/navigation'
+import React from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
-import { changePasswordSchema } from "@/lib/zod/auth";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+interface ChangePasswordForm {
+  oldPassword: string
+  newPassword: string
+  confirmPassword: string
+}
 
-export default function ChangePasswordPage() {
-  const [form, setForm] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const router = useRouter();
+const ChangePasswordPage = () => {
+  const router = useRouter()
+  const [loading, setLoading] = React.useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    setError,
+    formState: { errors }
+  } = useForm<ChangePasswordForm>({ mode: 'onChange' })
 
-    // Validate form data with Zod schema
-    const result = changePasswordSchema.safeParse(form);
+  const onSubmit: SubmitHandler<ChangePasswordForm> = async (data) => {
+    setLoading(true)
 
-    if (!result.success) {
-      // If validation fails, set the error message
-      setError(result.error.errors.map((err) => err.message).join(", "));
-      return;
+    try {
+      const res = await IdoAuth.changePassword({
+        oldPassword: data.oldPassword,
+        newPassword: data.newPassword
+      })
+
+      if (res.status === 200) {
+        toast.success(res.data.message || 'Password updated.', {
+          position: 'bottom-right'
+        })
+        router.push('/dashboard')
+      } else {
+        toast.error(res.data.message || 'Failed to update password.', {
+          position: 'bottom-right'
+        })
+      }
+    } catch (err: any) {
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 400 && Array.isArray(err.response.data.errors)) {
+          err.response.data.errors.forEach((error: any) => {
+            if (['oldPassword', 'newPassword', 'confirmPassword'].includes(error.path)) {
+              setError(error.path as keyof ChangePasswordForm, {
+                type: 'manual',
+                message: error.message
+              })
+            }
+          })
+        } else {
+          toast.error(err.response?.data.message || 'Something went wrong.', {
+            position: 'bottom-right',
+            autoClose: 3000
+          })
+        }
+      } else {
+        toast.error('Unexpected error occurred.', {
+          position: 'bottom-right',
+          autoClose: 3000
+        })
+      }
+    } finally {
+      setLoading(false)
     }
-
-    // Clear any previous error messages
-    setError(null);
-
-    if (form.newPassword !== form.confirmPassword) {
-      setError("New password and confirm password do not match.");
-      return;
-    }
-
-    const res = await fetch("/api/auth/change-password", {
-      method: "POST",
-      body: JSON.stringify(form),
-      headers: { "Content-Type": "application/json" },
-    });
-
-    const data = await res.json(); // Parse the response body
-
-    // Check if the response was successful and display messages accordingly
-    if (res.ok) {
-      setSuccess(data.message || "Password changed successfully!"); // Display success message from the response
-      setTimeout(() => {
-        router.push("/dashboard"); // Redirect to protected page
-      }, 1500);
-    } else {
-      setError(data.error || "Password change failed. Please try again."); // Display error message from the response
-    }
-  };
+  }
 
   return (
-    <div className='flex items-center justify-center h-screen'>
-      <form onSubmit={handleSubmit} className='p-6 bg-white shadow-md rounded'>
-        <h2 className='text-xl font-bold mb-4'>Change Password</h2>
+    <div className="flex items-center justify-center min-h-screen">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-md p-6 bg-white rounded shadow"
+      >
+        <h2 className="mb-4 text-xl font-bold text-center">Change Password</h2>
 
-        {error && <p className='text-red-500 mb-2'>{error}</p>}
-        {success && <p className='text-green-500 mb-2'>{success}</p>}
+        <PasswordField
+          id="oldPassword"
+          label="Old Password"
+          placeholder="Enter old password"
+          register={register('oldPassword', {
+            required: 'Old password is required'
+          })}
+          error={errors.oldPassword}
+          value={watch('oldPassword')}
+          isPassword
+        />
 
-        <input
-          type='password'
-          placeholder='Old Password'
-          className='border p-2 w-full mb-2'
-          onChange={(e) => setForm({ ...form, oldPassword: e.target.value })}
+        <PasswordField
+          id="newPassword"
+          label="New Password"
+          placeholder="Enter new password"
+          register={register('newPassword', {
+            required: 'New password is required',
+            minLength: {
+              value: 8,
+              message: 'Password must be at least 8 characters'
+            }
+          })}
+          error={errors.newPassword}
+          value={watch('newPassword')}
+          isPassword
         />
-        <input
-          type='password'
-          placeholder='New Password'
-          className='border p-2 w-full mb-2'
-          onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
+
+        <PasswordField
+          id="confirmPassword"
+          label="Confirm Password"
+          placeholder="Re-enter new password"
+          register={register('confirmPassword', {
+            required: 'Please confirm your password',
+            validate: (value) =>
+              value === getValues('newPassword') || 'Passwords do not match'
+          })}
+          error={errors.confirmPassword}
+          value={watch('confirmPassword')}
+          isPassword
         />
-        <input
-          type='password'
-          placeholder='Confirm New Password'
-          className='border p-2 w-full mb-4'
-          onChange={(e) =>
-            setForm({ ...form, confirmPassword: e.target.value })
-          }
-        />
+
         <button
-          className='bg-gray-500 text-white p-2 rounded-md mt-4 w-full'
-          type='submit'>
-          Change Password
+          type="submit"
+          disabled={loading}
+          className="w-full py-2 mt-4 text-white bg-gray-600 rounded hover:bg-gray-700"
+        >
+          {loading ? 'Updating...' : 'Change Password'}
         </button>
       </form>
     </div>
-  );
+  )
 }
+
+export default ChangePasswordPage
