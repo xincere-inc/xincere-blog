@@ -1,4 +1,4 @@
-import UserTable from './_components/UserTable';
+import UserTable from '../../../components/admin/UserTable';
 
 export default function UserTablePage() {
 
