@@ -6,6 +6,7 @@ import {
   UnAuthorizedError,
   ValidationError
 } from "@/api/client";
+import getSession from "@/lib/auth/getSession";
 import { prisma } from "@/lib/prisma";
 import { authorizeAdmin } from "@/lib/utils/authorize-admin";
 import { validateUUIDSSchema } from "@/lib/zod/common/common";
@@ -96,6 +97,14 @@ export async function DELETE(req: Request): Promise<
       return adminAuthError; // If authorization fails, return the error response
     }
 
+    // Get user from session
+    const session = await getSession();
+
+    // Logged user id 
+    const loggedUserId = session?.user?.id;
+
+
+
     // Parse the request body
     const { ids }: AdminDeleteUsersRequest
       = await req.json();
@@ -103,29 +112,31 @@ export async function DELETE(req: Request): Promise<
     // Validate the request body using the Zod schema
     const parsedBody = await validateUUIDSSchema.safeParseAsync(ids);
 
-    // Fetch users to delete by ids
-    const usersToDelete = await prisma.user.findMany({
-      where: {
-        id: { in: ids },
-      },
-    });
-
-    if (usersToDelete.length !== ids.length) {
-      return NextResponse.json(
-        { error: "Some users not found with the provided ids" },
-        { status: 404 }
-      );
-    }
-
-    // Delete users
+    // Delete users excluding admins and the logged-in user(s)
     await prisma.user.deleteMany({
       where: {
-        id: { in: ids },
-      },
+        AND: [
+          {
+            id: {
+              in: ids
+            }
+          },
+          {
+            role: {
+              not: "admin"
+            }
+          },
+          {
+            id: {
+              not: loggedUserId
+            }
+          }
+        ]
+      }
     });
 
     return NextResponse.json(
-      { message: `${ids.length} user(s) deleted successfully` },
+      { message: "User(s) deleted successfully" },
       { status: 200 }
     );
   } catch (error) {
