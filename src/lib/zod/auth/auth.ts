@@ -19,7 +19,8 @@ export const registerSchemaBase: z.ZodType<RegisterRequest> = z.object({
     .string({ required_error: "Username is required" })
     .min(3, { message: "Username must be at least 3 characters" })
     .max(50, { message: "Username must be at most 50 characters" })
-    .regex(/^[a-zA-Z0-9_]*$/, { message: "Username must contain only letters, numbers, and underscores" }),
+    .regex(/^[a-zA-Z0-9_]*$/, { message: "Username must contain only letters, numbers, and underscores" })
+    .transform(val => val.toLowerCase()),
 
   email: z
     .string({ required_error: "Email is required" })

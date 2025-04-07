@@ -53,7 +53,8 @@ export default auth(async (req) => {
   }
 
   if (nextUrl.pathname.startsWith('/admin')) {
-    const isAdmin = session?.user!.role === Role.admin
+    console.log(session?.user.role);
+    const isAdmin = session?.user.role === Role.admin;
     if (!isAdmin) {
       return NextResponse.redirect(new URL('/403', nextUrl))
     }

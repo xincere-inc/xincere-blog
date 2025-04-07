@@ -4,11 +4,11 @@ import { z } from "zod";
 export const adminCreateUserSchema = z.object({
   email: z.string().email().min(1, "Email is required"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  firstName: z.string().min(1, "First name is required").max(20, "First name must be at most 20 characters"),
-  lastName: z.string().min(1, "Last name is required").max(20, "Last name must be at most 20 characters"),
-  username: z.string().min(1, "Username is required").max(20, "Username must be at most 20 characters"),
+  firstName: z.string().min(1, "First name is required").max(50, "First name must be at most 50 characters"),
+  lastName: z.string().min(1, "Last name is required").max(50, "Last name must be at most 50 characters"),
+  username: z.string().min(1, "Username is required").max(50, "Username must be at most 50 characters").transform(val => val.toLowerCase()),
   address: z.string().min(8, "Address must be at least 8 characters"),
-  country: z.string().min(1, "Country is required").max(20, "Country must be at most 20 characters"),
+  country: z.string().min(1, "Country is required").max(50, "Country must be at most 50 characters"),
   phone: z
     .string()
     .min(8, "Phone number must be at least 8 characters")
@@ -30,18 +30,19 @@ export const updateAdminUserSchema = z.object({
   firstName: z
     .string()
     .min(1, "First name is required")
-    .max(20, "First name must be at most 20 characters")
+    .max(50, "First name must be at most 50 characters")
     .optional(),
   lastName: z
     .string()
     .min(1, "Last name is required")
-    .max(20, "Last name must be at most 20 characters")
+    .max(50, "Last name must be at most 50 characters")
     .optional(),
   username: z
     .string()
     .min(1, "Username is required")
-    .max(20, "Username must be at most 20 characters")
-    .optional(),
+    .max(50, "Username must be at most 50 characters")
+    .optional()
+    .transform(val => val?.toLowerCase()),
   address: z
     .string()
     .min(1, "Address is required")
@@ -49,7 +50,7 @@ export const updateAdminUserSchema = z.object({
   country: z
     .string()
     .min(1, "Country is required")
-    .max(20, "Country must be at most 20 characters")
+    .max(50, "Country must be at most 50 characters")
     .optional(),
   phone: z
     .string()

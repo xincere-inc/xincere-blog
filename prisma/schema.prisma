@@ -30,7 +30,7 @@ model User {
   role                    Role     @default(user) // User role, default is user
   country                 String?
   password                String
-  phone                   String?  @unique  @default("")
+  phone                   String?  @unique  
   emailVerified           Boolean  @default(false) // Email verification status
   emailVerificationToken  String?  @unique         // Email verification token
   resetPasswordToken      String?  @unique         // Reset password token

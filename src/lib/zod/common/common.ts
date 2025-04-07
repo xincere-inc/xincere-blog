@@ -11,13 +11,11 @@ export const validateUUIDSSchema = z.object({
 export const paginationWithSearchSchema = z.object({
   page: z
     .number()
-    .optional()
     .refine(async (val) => !val || (!isNaN(Number(val)) && Number(val) > 0), {
       message: "Page must be a positive number",
     }),
   limit: z
     .number()
-    .optional()
     .refine(async (val) => !val || (!isNaN(Number(val)) && Number(val) > 0), {
       message: "Limit must be a positive number",
     })

@@ -21,6 +21,7 @@ export async function authorizeAdmin(): Promise<NextResponse<UnAuthorizedError> 
     select: { role: true },
   });
 
+
   if (isAdmin?.role !== "admin") {
     return NextResponse.json(
       { error: "You're unauthorized to access this request" },

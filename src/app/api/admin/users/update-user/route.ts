@@ -21,14 +21,6 @@ import { z } from "zod";
  *     operationId: adminUpdateUser
  *     tags:
  *       - Admin
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: The ID of the user to update.
- *         schema:
- *           type: string
- *           format: uuid
  *     requestBody:
  *       required: true
  *       content:
@@ -195,13 +187,32 @@ export async function PUT(req: Request): Promise<
       phone,
       role,
       country,
-    } = parsed as any
+    } = parsed.data as any;
 
-    // Check if user exists
-    const userExists = await prisma.user.findUnique({ where: { id } });
+    const userExists = await prisma.user.findUnique({ where: { id } })
 
     if (!userExists) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Check if email or phone is already taken by another user (excluding the current user)
+    if (email || phone) {
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          OR: [
+            { email, NOT: { id } },   // Check if email exists (excluding the current user)
+            { phone, NOT: { id } },   // Check if phone exists (excluding the current user)
+            { username, NOT: { id } },   // Check if username exists (excluding the current user)
+          ],
+        },
+      });
+
+      if (existingUser) {
+        return NextResponse.json(
+          { error: "Email, Phone or username already taken by another user" },
+          { status: 400 }
+        );
+      }
     }
 
     // Prepare updated fields
@@ -223,7 +234,7 @@ export async function PUT(req: Request): Promise<
     if (country) updatedData.country = country;
     if (address) updatedData.address = address;
     if (phone) updatedData.phone = phone;
-    if (role) updatedData.role = role.toUpperCase() as Role;
+    if (role) updatedData.role = role as Role;
 
     const updatedUser = await prisma.user.update({
       where: { id },

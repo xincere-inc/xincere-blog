@@ -103,8 +103,6 @@ export async function DELETE(req: Request): Promise<
     // Logged user id 
     const loggedUserId = session?.user?.id;
 
-
-
     // Parse the request body
     const { ids }: AdminDeleteUsersRequest
       = await req.json();

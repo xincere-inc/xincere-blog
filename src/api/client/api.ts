@@ -334,6 +334,31 @@ export interface AdminGetUsers400ResponseErrorsInner {
 /**
  * 
  * @export
+ * @interface AdminGetUsersRequest
+ */
+export interface AdminGetUsersRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetUsersRequest
+     */
+    'page'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetUsersRequest
+     */
+    'limit'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetUsersRequest
+     */
+    'search'?: string;
+}
+/**
+ * 
+ * @export
  * @interface AdminUpdateUser200Response
  */
 export interface AdminUpdateUser200Response {
@@ -558,94 +583,6 @@ export const AdminUpdateUserRequestRoleEnum = {
 
 export type AdminUpdateUserRequestRoleEnum = typeof AdminUpdateUserRequestRoleEnum[keyof typeof AdminUpdateUserRequestRoleEnum];
 
-/**
- * 
- * @export
- * @interface ApiSignupPost201Response
- */
-export interface ApiSignupPost201Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPost201Response
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {ApiSignupPost201ResponseUser}
-     * @memberof ApiSignupPost201Response
-     */
-    'user'?: ApiSignupPost201ResponseUser;
-}
-/**
- * 
- * @export
- * @interface ApiSignupPost201ResponseUser
- */
-export interface ApiSignupPost201ResponseUser {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPost201ResponseUser
-     */
-    'id'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPost201ResponseUser
-     */
-    'email'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPost201ResponseUser
-     */
-    'name'?: string;
-}
-/**
- * 
- * @export
- * @interface ApiSignupPost400Response
- */
-export interface ApiSignupPost400Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPost400Response
-     */
-    'error'?: string;
-    /**
-     * 
-     * @type {Array<ChangePassword400ResponseDetailsInner>}
-     * @memberof ApiSignupPost400Response
-     */
-    'details'?: Array<ChangePassword400ResponseDetailsInner>;
-}
-/**
- * 
- * @export
- * @interface ApiSignupPostRequest
- */
-export interface ApiSignupPostRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPostRequest
-     */
-    'email': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPostRequest
-     */
-    'password': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiSignupPostRequest
-     */
-    'name': string;
-}
 /**
  * 
  * @export
@@ -1149,17 +1086,13 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Retrieves users from the database with pagination and optional search.
          * @summary Fetch users with pagination and search
-         * @param {number} page Page number for pagination
-         * @param {number} limit Number of users per page
-         * @param {string} [search] Optional search term to filter users by fields like email, first name, last name, etc.
+         * @param {AdminGetUsersRequest} adminGetUsersRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminGetUsers: async (page: number, limit: number, search?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'page' is not null or undefined
-            assertParamExists('adminGetUsers', 'page', page)
-            // verify required parameter 'limit' is not null or undefined
-            assertParamExists('adminGetUsers', 'limit', limit)
+        adminGetUsers: async (adminGetUsersRequest: AdminGetUsersRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminGetUsersRequest' is not null or undefined
+            assertParamExists('adminGetUsers', 'adminGetUsersRequest', adminGetUsersRequest)
             const localVarPath = `/api/admin/users/get-user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1168,27 +1101,18 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            if (page !== undefined) {
-                localVarQueryParameter['page'] = page;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (search !== undefined) {
-                localVarQueryParameter['search'] = search;
-            }
-
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminGetUsersRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1198,18 +1122,14 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Update details of an existing user based on the provided user ID.
          * @summary Update user details
-         * @param {string} id The ID of the user to update.
          * @param {AdminUpdateUserRequest} adminUpdateUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminUpdateUser: async (id: string, adminUpdateUserRequest: AdminUpdateUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('adminUpdateUser', 'id', id)
+        adminUpdateUser: async (adminUpdateUserRequest: AdminUpdateUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'adminUpdateUserRequest' is not null or undefined
             assertParamExists('adminUpdateUser', 'adminUpdateUserRequest', adminUpdateUserRequest)
-            const localVarPath = `/api/admin/users/update-user`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            const localVarPath = `/api/admin/users/update-user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1274,14 +1194,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
         /**
          * Retrieves users from the database with pagination and optional search.
          * @summary Fetch users with pagination and search
-         * @param {number} page Page number for pagination
-         * @param {number} limit Number of users per page
-         * @param {string} [search] Optional search term to filter users by fields like email, first name, last name, etc.
+         * @param {AdminGetUsersRequest} adminGetUsersRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async adminGetUsers(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminGetUsers200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetUsers(page, limit, search, options);
+        async adminGetUsers(adminGetUsersRequest: AdminGetUsersRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminGetUsers200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetUsers(adminGetUsersRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.adminGetUsers']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1289,13 +1207,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
         /**
          * Update details of an existing user based on the provided user ID.
          * @summary Update user details
-         * @param {string} id The ID of the user to update.
          * @param {AdminUpdateUserRequest} adminUpdateUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async adminUpdateUser(id: string, adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminUpdateUser200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateUser(id, adminUpdateUserRequest, options);
+        async adminUpdateUser(adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminUpdateUser200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateUser(adminUpdateUserRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.adminUpdateUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1333,25 +1250,22 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
         /**
          * Retrieves users from the database with pagination and optional search.
          * @summary Fetch users with pagination and search
-         * @param {number} page Page number for pagination
-         * @param {number} limit Number of users per page
-         * @param {string} [search] Optional search term to filter users by fields like email, first name, last name, etc.
+         * @param {AdminGetUsersRequest} adminGetUsersRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminGetUsers(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig): AxiosPromise<AdminGetUsers200Response> {
-            return localVarFp.adminGetUsers(page, limit, search, options).then((request) => request(axios, basePath));
+        adminGetUsers(adminGetUsersRequest: AdminGetUsersRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminGetUsers200Response> {
+            return localVarFp.adminGetUsers(adminGetUsersRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Update details of an existing user based on the provided user ID.
          * @summary Update user details
-         * @param {string} id The ID of the user to update.
          * @param {AdminUpdateUserRequest} adminUpdateUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminUpdateUser(id: string, adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminUpdateUser200Response> {
-            return localVarFp.adminUpdateUser(id, adminUpdateUserRequest, options).then((request) => request(axios, basePath));
+        adminUpdateUser(adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminUpdateUser200Response> {
+            return localVarFp.adminUpdateUser(adminUpdateUserRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1390,28 +1304,25 @@ export class AdminApi extends BaseAPI {
     /**
      * Retrieves users from the database with pagination and optional search.
      * @summary Fetch users with pagination and search
-     * @param {number} page Page number for pagination
-     * @param {number} limit Number of users per page
-     * @param {string} [search] Optional search term to filter users by fields like email, first name, last name, etc.
+     * @param {AdminGetUsersRequest} adminGetUsersRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public adminGetUsers(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).adminGetUsers(page, limit, search, options).then((request) => request(this.axios, this.basePath));
+    public adminGetUsers(adminGetUsersRequest: AdminGetUsersRequest, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).adminGetUsers(adminGetUsersRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Update details of an existing user based on the provided user ID.
      * @summary Update user details
-     * @param {string} id The ID of the user to update.
      * @param {AdminUpdateUserRequest} adminUpdateUserRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public adminUpdateUser(id: string, adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).adminUpdateUser(id, adminUpdateUserRequest, options).then((request) => request(this.axios, this.basePath));
+    public adminUpdateUser(adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).adminUpdateUser(adminUpdateUserRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1423,42 +1334,6 @@ export class AdminApi extends BaseAPI {
  */
 export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
-         * @summary Register a new user
-         * @param {ApiSignupPostRequest} apiSignupPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiSignupPost: async (apiSignupPostRequest: ApiSignupPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'apiSignupPostRequest' is not null or undefined
-            assertParamExists('apiSignupPost', 'apiSignupPostRequest', apiSignupPostRequest)
-            const localVarPath = `/api/signup`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(apiSignupPostRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
         /**
          * Allows an authenticated user to change their password by providing the old and new password.
          * @summary Change user password
@@ -1687,19 +1562,6 @@ export const AuthApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
     return {
         /**
-         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
-         * @summary Register a new user
-         * @param {ApiSignupPostRequest} apiSignupPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiSignupPost201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSignupPost(apiSignupPostRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.apiSignupPost']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Allows an authenticated user to change their password by providing the old and new password.
          * @summary Change user password
          * @param {ChangePasswordRequest} changePasswordRequest 
@@ -1788,16 +1650,6 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = AuthApiFp(configuration)
     return {
         /**
-         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
-         * @summary Register a new user
-         * @param {ApiSignupPostRequest} apiSignupPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiSignupPost201Response> {
-            return localVarFp.apiSignupPost(apiSignupPostRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Allows an authenticated user to change their password by providing the old and new password.
          * @summary Change user password
          * @param {ChangePasswordRequest} changePasswordRequest 
@@ -1867,18 +1719,6 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
  * @extends {BaseAPI}
  */
 export class AuthApi extends BaseAPI {
-    /**
-     * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
-     * @summary Register a new user
-     * @param {ApiSignupPostRequest} apiSignupPostRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public apiSignupPost(apiSignupPostRequest: ApiSignupPostRequest, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).apiSignupPost(apiSignupPostRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
     /**
      * Allows an authenticated user to change their password by providing the old and new password.
      * @summary Change user password

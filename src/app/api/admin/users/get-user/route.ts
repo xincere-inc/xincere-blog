@@ -1,5 +1,6 @@
 import {
   AdminGetUsers200Response,
+  AdminGetUsersRequest,
   InternalServerError,
   UnAuthorizedError,
   ValidationError
@@ -12,34 +13,28 @@ import { z } from "zod";
 /**
  * @swagger
  * /api/admin/users/get-user:
- *   get:
+ *   post:
  *     summary: Fetch users with pagination and search
  *     description: Retrieves users from the database with pagination and optional search.
  *     operationId: adminGetUsers
  *     tags:
  *       - Admin
- *     parameters:
- *       - name: page
- *         in: query
- *         description: Page number for pagination
- *         required: true
- *         schema:
- *           type: integer
- *           example: 1
- *       - name: limit
- *         in: query
- *         description: Number of users per page
- *         required: true
- *         schema:
- *           type: integer
- *           example: 10
- *       - name: search
- *         in: query
- *         description: Optional search term to filter users by fields like email, first name, last name, etc.
- *         required: false
- *         schema:
- *           type: string
- *           example: "john"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               page:
+ *                 type: integer
+ *                 example: 1
+ *               limit:
+ *                 type: integer
+ *                 example: 10
+ *               search:
+ *                 type: string
+ *                 example: "john"
  *     responses:
  *       200:
  *         description: Successfully retrieved users with pagination
@@ -109,7 +104,7 @@ import { z } from "zod";
  *                         type: string
  *                         example: "page"
  *                       message:
- *                         type: string
+ *                         type: string  
  *                         example: "Page must be a number"
  *       500:
  *         description: Internal server error
@@ -118,13 +113,8 @@ import { z } from "zod";
  *             schema:
  *               $ref: "#/components/schemas/InternalServerError"
  */
-export async function GET(req: Request): Promise<
-  NextResponse<
-    | UnAuthorizedError
-    | AdminGetUsers200Response
-    | ValidationError
-    | InternalServerError
-  >
+export async function POST(req: Request): Promise<
+  NextResponse<AdminGetUsers200Response | ValidationError | InternalServerError | UnAuthorizedError>
 > {
   try {
     // Check for admin authorization
@@ -133,51 +123,40 @@ export async function GET(req: Request): Promise<
       return adminAuthError; // If authorization fails, return the error response
     }
 
-    const url = new URL(req.url);
-    const pageParam = url.searchParams.get("page");
-    const limitParam = url.searchParams.get("limit");
-    const searchParam = url.searchParams.get("search");
-
-    // Validate pagination and search parameters using Zod
-    const parsedParams = await paginationWithSearchSchema.safeParseAsync({
-      page: pageParam ? parseInt(pageParam, 10) : undefined,
-      limit: limitParam ? parseInt(limitParam, 10) : undefined,
-      search: searchParam,
-    });
+    const body: AdminGetUsersRequest = await req.json();
+    const parsedBody = await paginationWithSearchSchema.parseAsync(body);
 
     // Destructure the validated pagination and search data
-    const { page, limit, search } = parsedParams as any;
+    const { page, limit, search } = parsedBody;
 
     // Build the search condition
-    let whereCondition = {};
+    let whereCondition: any = {};
 
+    // Set up the condition for string fields using contains
     if (search) {
       whereCondition = {
         OR: [
-          { email: { contains: search, mode: "insensitive" } },
-          { firstName: { contains: search, mode: "insensitive" } },
-          { lastName: { contains: search, mode: "insensitive" } },
-          { country: { contains: search, mode: "insensitive" } },
-          { username: { contains: search, mode: "insensitive" } },
-          { role: { contains: search, mode: "insensitive" } },
-          { address: { contains: search, mode: "insensitive" } },
-          { phone: { contains: search, mode: "insensitive" } },
+          { email: { contains: search, mode: 'insensitive' } },
+          { firstName: { contains: search, mode: 'insensitive' } },
+          { lastName: { contains: search, mode: 'insensitive' } },
+          { country: { contains: search, mode: 'insensitive' } },
+          { username: { contains: search, mode: 'insensitive' } },
+          { address: { contains: search, mode: 'insensitive' } },
+          { phone: { contains: search, mode: 'insensitive' } },
         ],
       };
+
+      // Add condition for enums (e.g., role) using equals
+      if (search in ['user', 'admin']) { // Assuming your `search` could match enum values (case-sensitive)
+        whereCondition.OR.push({ role: { equals: search } });
+      }
     }
 
-    // Pagination logic
-    const totalUsers = await prisma.user.count({
-      where: whereCondition,
-    });
-    const totalPages = Math.ceil(totalUsers / limit);
-
-
-
+    // Use findMany to get the users with the search condition
     const users = await prisma.user.findMany({
-      skip: (page - 1) * limit,
-      take: limit,
-      where: whereCondition,
+      skip: (page - 1) * limit, // Skip records based on the current page
+      take: limit, // Limit the number of records per page
+      where: whereCondition, // Apply the search condition
       select: {
         id: true,
         email: true,
@@ -191,16 +170,22 @@ export async function GET(req: Request): Promise<
       },
     });
 
+    // Get the total count of users matching the search condition
+    const totalUsers = await prisma.user.count({
+      where: whereCondition, // Use the same whereCondition for total count
+    });
+
+    const totalPages = Math.ceil(totalUsers / limit);
+
     // Map users to ensure all optional fields return `undefined` instead of `null`
     const sanitizedUsers = users.map((user) => ({
       ...user,
-      firstName: user.firstName ?? "",
-      lastName: user.lastName ?? "",
-      country: user.country ?? "",
-      address: user.address ?? "",
-      phone: user.phone ?? "",
+      firstName: user.firstName ?? '',
+      lastName: user.lastName ?? '',
+      country: user.country ?? '',
+      address: user.address ?? '',
+      phone: user.phone ?? '',
     }));
-
 
     return NextResponse.json(
       {
@@ -219,23 +204,25 @@ export async function GET(req: Request): Promise<
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
-          error: "Validation error",
-          errors: error.errors.map((error) => ({
-            path: error.path[0],
-            message: error.message
-          }))
+          error: 'Validation error',
+          errors: error.errors.map((err) => ({
+            path: err.path[0],
+            message: err.message,
+          })),
         },
         { status: 400 }
       );
     } else {
-      console.error("Error during get users:", error);
+      console.error('Error during get users:', error);
       return NextResponse.json(
         {
-          error: "Internal server error",
-          message: "Error during get users",
+          error: 'Internal server error',
+          message: 'Error during get users',
         },
         { status: 500 }
       );
     }
   }
 }
+
+

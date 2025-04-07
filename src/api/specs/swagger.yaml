@@ -258,36 +258,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
   /api/admin/users/get-user:
-    get:
+    post:
       summary: Fetch users with pagination and search
       description: Retrieves users from the database with pagination and optional search.
       operationId: adminGetUsers
       tags:
         - Admin
-      parameters:
-        - name: page
-          in: query
-          description: Page number for pagination
-          required: true
-          schema:
-            type: integer
-            example: 1
-        - name: limit
-          in: query
-          description: Number of users per page
-          required: true
-          schema:
-            type: integer
-            example: 10
-        - name: search
-          in: query
-          description: >-
-            Optional search term to filter users by fields like email, first
-            name, last name, etc.
-          required: false
-          schema:
-            type: string
-            example: john
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  example: 1
+                limit:
+                  type: integer
+                  example: 10
+                search:
+                  type: string
+                  example: john
       responses:
         '200':
           description: Successfully retrieved users with pagination
@@ -372,14 +364,6 @@ paths:
       operationId: adminUpdateUser
       tags:
         - Admin
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: The ID of the user to update.
-          schema:
-            type: string
-            format: uuid
       requestBody:
         required: true
         content:
@@ -779,88 +763,6 @@ paths:
                   error:
                     type: string
                     example: Token and new password are required
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerError'
-  /api/signup:
-    post:
-      summary: Register a new user
-      description: >-
-        Creates a new user, hashes their password, generates an email
-        verification token, and sends a verification email.
-      tags:
-        - Auth
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - email
-                - password
-                - name
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: user@example.com
-                password:
-                  type: string
-                  format: password
-                  example: SecureP@ssw0rd
-                name:
-                  type: string
-                  example: John Doe
-      responses:
-        '201':
-          description: User created successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: >-
-                      User created successfully. A verification email has been
-                      sent.
-                  user:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        example: clvhgclxy0000zkw9d74mj2mu
-                      email:
-                        type: string
-                        example: user@example.com
-                      name:
-                        type: string
-                        example: John Doe
-        '400':
-          description: Validation error or user already exists
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: User already exists
-                  details:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        path:
-                          type: array
-                          items:
-                            type: string
-                        message:
-                          type: string
         '500':
           description: Internal server error
           content:
