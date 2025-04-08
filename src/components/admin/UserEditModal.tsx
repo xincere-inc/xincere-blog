@@ -75,7 +75,18 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
             <Form.Item
               label="Username"
               name="username"
-              rules={[{ required: true, message: 'Please input the username!' }]}
+              rules={[
+                { required: true, message: 'Please input the username!' },
+                { pattern: /^[a-zA-Z0-9_]+$/, message: 'Username can only contain letters, numbers, and underscores' },
+                {
+                  validator: (_, value) => {
+                    if (!value || (value.length >= 3 && value.length <= 50)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Username must be between 3 and 50 characters'));
+                  },
+                },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -103,8 +114,9 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
           </Col>
         </Row>
 
-        <Row>
-          <Col span={24}>
+
+        <Row gutter={16}>
+          <Col span={12}>
             <Form.Item
               label="Address"
               name="address"
@@ -113,9 +125,6 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
               <Input />
             </Form.Item>
           </Col>
-        </Row>
-
-        <Row gutter={16}>
           <Col span={12}>
             <Form.Item
               label="Role"
@@ -128,22 +137,24 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
               </Select>
             </Form.Item>
           </Col>
+
+        </Row>
+        <Row>
           <Col span={12} style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <Form.Item style={{ width: '100%' }}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={loading}
-                style={{ width: '100%' }}
-              >
-                Update User
-              </Button>
-            </Form.Item>
+            <Button
+              type="primary"
+              className="form-btn"
+              htmlType="submit"
+              loading={loading}
+              style={{ width: '100%' }}
+            >
+              Update User
+            </Button>
           </Col>
         </Row>
         <Row>
           <Col span={24}>
-            {serverError && <Alert message={serverError} type="error" />}
+            {serverError && <Alert message={serverError} type="error" style={{ marginTop: "10px" }} />}
           </Col>
         </Row>
       </Form>

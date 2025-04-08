@@ -30,3 +30,6 @@
 .ant-table-thead {
   white-space: nowrap;
 }
+.ant-modal-title {
+  padding-bottom: 10px;
+}

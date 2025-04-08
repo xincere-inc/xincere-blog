@@ -64,11 +64,24 @@ export function UserCreateModal({ visible, onCancel, onCreate, loading, serverEr
             <Form.Item
               label="Username"
               name="username"
-              rules={[{ required: true, message: 'Please input the username!' }]}
+              rules={[
+                { required: true, message: 'Please input the username!' },
+                { pattern: /^[a-zA-Z0-9_]+$/, message: 'Username can only contain letters, numbers, and underscores' },
+                {
+                  validator: (_, value) => {
+                    if (!value || (value.length >= 3 && value.length <= 50)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Username must be between 3 and 50 characters'));
+                  },
+                },
+              ]}
             >
               <Input />
             </Form.Item>
           </Col>
+
+
         </Row>
 
         <Row gutter={16}>
@@ -128,14 +141,12 @@ export function UserCreateModal({ visible, onCancel, onCreate, loading, serverEr
           </Col>
         </Row>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
-            Create User
-          </Button>
-        </Form.Item>
+        <Button className="form-btn" type="primary" htmlType="submit" loading={loading}>
+          Create User
+        </Button>
         <Row>
           <Col span={24}>
-            {serverError && <Alert message={serverError} type="error" />}
+            {serverError && <Alert message={serverError} type="error" style={{ marginTop: "10px" }} />}
           </Col>
         </Row>
       </Form>
