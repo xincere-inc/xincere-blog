@@ -28,6 +28,7 @@ export default function UserTable() {
   const loggedInUserId = session?.user?.id;
 
   const [data, setData] = useState<User[]>([]);
+  const [serverError, setServerError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -87,7 +88,6 @@ export default function UserTable() {
     setLoading(true);
     try {
       const response = await IdoAdminUsers.adminDeleteUsers({ ids });
-
       if (response.status === 200) {
         toast.success('User(s) deleted successfully', { position: 'bottom-right' });
         fetchData(pagination.current, pagination.pageSize, searchText);
@@ -125,7 +125,8 @@ export default function UserTable() {
         toast.error(response.data.message || 'Failed to create user', { position: 'bottom-right' });
       }
     } catch (error: any) {
-      toast.error(error.response?.data.message || 'Error creating user', { position: 'bottom-right' });
+      setServerError(error?.response?.data?.error || 'Error creating user');
+
     } finally {
       setLoading(false);
     }
@@ -147,8 +148,8 @@ export default function UserTable() {
         } else {
           toast.error('Failed to update user', { position: 'bottom-right' });
         }
-      } catch (error) {
-        toast.error('Error updating user', { position: 'bottom-right' });
+      } catch (error: any) {
+        setServerError(error?.response?.data?.error || 'Error updating user');
       } finally {
         setLoading(false);
       }
@@ -169,6 +170,10 @@ export default function UserTable() {
     setCurrentUser({ ...record });
     setIsEditModalVisible(true);
   };
+  const handleCancelEditModal = () => {
+    setIsEditModalVisible(false);
+    setServerError(null);
+  }
 
   const handleDelete = (record: User) => {
     if (record.id) {
@@ -252,17 +257,22 @@ export default function UserTable() {
 
       <UserCreateModal
         visible={isCreateModalVisible}
-        onCancel={() => setIsCreateModalVisible(false)}
+        onCancel={() => {
+          setIsCreateModalVisible(false);
+          setServerError(null);
+        }}
         onCreate={createUser}
         loading={loading}
+        serverError={serverError}
       />
 
       <UserEditModal
         visible={isEditModalVisible}
-        onCancel={() => setIsEditModalVisible(false)}
+        onCancel={handleCancelEditModal}
         onEdit={updateUser}
         loading={loading}
         user={currentUser}
+        serverError={serverError}
       />
     </div>
   );

@@ -197,22 +197,53 @@ export async function PUT(req: Request): Promise<
 
     // Check if email or phone is already taken by another user (excluding the current user)
     if (email || phone) {
-      const existingUser = await prisma.user.findFirst({
-        where: {
-          OR: [
-            { email, NOT: { id } },   // Check if email exists (excluding the current user)
-            { phone, NOT: { id } },   // Check if phone exists (excluding the current user)
-            { username, NOT: { id } },   // Check if username exists (excluding the current user)
-          ],
-        },
-      });
 
-      if (existingUser) {
-        return NextResponse.json(
-          { error: "Email, Phone or username already taken by another user" },
-          { status: 400 }
-        );
+      // Check for conflicts individually and return specific messages
+      if (email) {
+        const emailTaken = await prisma.user.findFirst({
+          where: {
+            email,
+            NOT: { id },
+          },
+        });
+        if (emailTaken) {
+          return NextResponse.json(
+            { error: "Email already taken by another user" },
+            { status: 400 }
+          );
+        }
       }
+
+      if (phone) {
+        const phoneTaken = await prisma.user.findFirst({
+          where: {
+            phone,
+            NOT: { id },
+          },
+        });
+        if (phoneTaken) {
+          return NextResponse.json(
+            { error: "Phone already taken by another user" },
+            { status: 400 }
+          );
+        }
+      }
+
+      if (username) {
+        const usernameTaken = await prisma.user.findFirst({
+          where: {
+            username,
+            NOT: { id },
+          },
+        });
+        if (usernameTaken) {
+          return NextResponse.json(
+            { error: "Username already taken by another user" },
+            { status: 400 }
+          );
+        }
+      }
+
     }
 
     // Prepare updated fields

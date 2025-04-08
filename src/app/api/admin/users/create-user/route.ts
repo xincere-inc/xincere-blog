@@ -151,6 +151,18 @@ export async function POST(
         );
       }
     }
+    if (username) {
+      const existingUserUsername = await prisma.user.findUnique({
+        where: { username }
+      });
+
+      if (existingUserUsername) {
+        return NextResponse.json(
+          { error: `User already exists with this username: ${username}` },
+          { status: 400 }
+        );
+      }
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 

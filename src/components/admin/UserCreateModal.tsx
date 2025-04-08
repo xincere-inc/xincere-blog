@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
+import { Alert, Button, Col, Form, Input, Modal, Row, Select } from 'antd';
 const { Option } = Select;
 
 interface UserCreateModalProps {
@@ -6,9 +6,10 @@ interface UserCreateModalProps {
   onCancel: () => void;
   onCreate: (values: any) => void;
   loading: boolean;
+  serverError?: string | null;
 }
 
-export function UserCreateModal({ visible, onCancel, onCreate, loading }: UserCreateModalProps) {
+export function UserCreateModal({ visible, onCancel, onCreate, loading, serverError }: UserCreateModalProps) {
   const [form] = Form.useForm();
 
   return (
@@ -132,6 +133,11 @@ export function UserCreateModal({ visible, onCancel, onCreate, loading }: UserCr
             Create User
           </Button>
         </Form.Item>
+        <Row>
+          <Col span={24}>
+            {serverError && <Alert message={serverError} type="error" />}
+          </Col>
+        </Row>
       </Form>
     </Modal>
   );

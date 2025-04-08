@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
+import { Alert, Button, Col, Form, Input, Modal, Row, Select } from 'antd';
 import { useEffect } from 'react';
 const { Option } = Select;
 
@@ -8,9 +8,10 @@ interface UserEditModalProps {
   onEdit: (values: any) => void;
   loading: boolean;
   user: any;
+  serverError: string | null;
 }
 
-export function UserEditModal({ visible, onCancel, onEdit, loading, user }: UserEditModalProps) {
+export function UserEditModal({ visible, onCancel, onEdit, loading, user, serverError }: UserEditModalProps) {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -138,6 +139,11 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user }: User
                 Update User
               </Button>
             </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            {serverError && <Alert message={serverError} type="error" />}
           </Col>
         </Row>
       </Form>
