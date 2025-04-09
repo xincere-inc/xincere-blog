@@ -3,7 +3,7 @@ import { AdminGetUsers200ResponseDataInner } from "@/api/client";
 import IdoAdminUsers from '@/api/IdoAdminUsers';
 import { Table } from 'antd';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { UserActions } from './UserActions';
 import { UserCreateModal } from './UserCreateModal';
@@ -26,6 +26,7 @@ interface User {
 export default function UserTable() {
   const { data: session } = useSession();
   const loggedInUserId = session?.user?.id;
+  const createFormRef = useRef<any>(null);
 
   const [data, setData] = useState<User[]>([]);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -49,6 +50,7 @@ export default function UserTable() {
         limit: pageSize,
         search,
       });
+      console.log('get data', response?.data?.data?.length);
 
       if (response.status === 200) {
         const users = response.data?.data?.map((user: AdminGetUsers200ResponseDataInner) => ({
@@ -85,20 +87,21 @@ export default function UserTable() {
   };
 
   const deleteUser = async (ids: string[]) => {
-    setLoading(true);
+    setSelectedRowKeys([]);
+
     try {
       const response = await IdoAdminUsers.adminDeleteUsers({ ids });
-      if (response.status === 200) {
-        toast.success('User(s) deleted successfully', { position: 'bottom-right' });
-        fetchData(pagination.current, pagination.pageSize, searchText);
-        setSelectedRowKeys([]);
+      if (response.status !== 200) {
+        toast.error(response?.data?.message || 'Failed to delete users data.', { position: 'bottom-right' });
       } else {
-        toast.error(response.data.message || 'Failed to delete users data.', { position: 'bottom-right' });
+        fetchData(pagination.current, pagination.pageSize, searchText);
+        toast.success(response?.data?.message, { position: 'bottom-right' });
       }
     } catch (err: any) {
-      toast.error('Error deleting user(s).', { position: 'bottom-right' });
-    } finally {
-      setLoading(false);
+      toast.error(err.response?.data?.message || 'Error deleting user(s).', {
+        position: 'bottom-right',
+        autoClose: 3000
+      });
     }
   };
 
@@ -121,6 +124,8 @@ export default function UserTable() {
         toast.success(response.data.message || 'User created successfully', { position: 'bottom-right' });
         fetchData(pagination.current, pagination.pageSize, searchText);
         setIsCreateModalVisible(false);
+        setServerError(null);
+        createFormRef.current?.resetFields();
       } else {
         toast.error(response.data.message || 'Failed to create user', { position: 'bottom-right' });
       }
@@ -143,6 +148,7 @@ export default function UserTable() {
 
         if (response.status === 200) {
           toast.success('User updated successfully', { position: 'bottom-right' });
+          setServerError(null);
           setIsEditModalVisible(false);
           fetchData(pagination.current, pagination.pageSize, searchText);
         } else {
@@ -264,6 +270,7 @@ export default function UserTable() {
         onCreate={createUser}
         loading={loading}
         serverError={serverError}
+        formRef={createFormRef}
       />
 
       <UserEditModal

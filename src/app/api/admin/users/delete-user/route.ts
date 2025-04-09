@@ -12,12 +12,13 @@ import { authorizeAdmin } from "@/lib/utils/authorize-admin";
 import { validateUUIDSSchema } from "@/lib/zod/common/common";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+
 /**
  * @swagger
  * /api/admin/users/delete-user:
  *   delete:
  *     summary: Delete users by IDs
- *     description: Deletes users from the database based on the provided IDs.
+ *     description: Admin can delete user accounts including their own, but not other admins.
  *     operationId: adminDeleteUsers
  *     tags:
  *       - Admin
@@ -48,32 +49,9 @@ import { z } from "zod";
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Validation error"
- *                 errors:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       path:
- *                         type: string
- *                         example: "ids"
- *                       message:
- *                         type: string
- *                         example: "Invalid UUID"
+ *               $ref: "#/components/schemas/ValidationError"
  *       404:
  *         description: Some users not found with the provided IDs
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Some users not found with the provided ids"
  *       500:
  *         description: Internal server error
  *         content:
@@ -91,50 +69,76 @@ export async function DELETE(req: Request): Promise<
   >
 > {
   try {
-    // Check for admin authorization
     const adminAuthError = await authorizeAdmin();
     if (adminAuthError) {
-      return adminAuthError; // If authorization fails, return the error response
+      return adminAuthError;
     }
 
-    // Get user from session
     const session = await getSession();
-
-    // Logged user id 
     const loggedUserId = session?.user?.id;
 
-    // Parse the request body
-    const { ids }: AdminDeleteUsersRequest
-      = await req.json();
+    const body: AdminDeleteUsersRequest = await req.json();
+    const { ids } = body;
 
-    // Validate the request body using the Zod schema
-    const parsedBody = await validateUUIDSSchema.safeParseAsync(ids);
+    const parsedBody = await validateUUIDSSchema.safeParseAsync({ ids });
+    if (!parsedBody.success) {
+      return NextResponse.json(
+        {
+          error: "Validation error",
+          errors: parsedBody.error.errors.map((error) => ({
+            path: error.path.join("."),
+            message: error.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
 
-    // Delete users excluding admins and the logged-in user(s)
-    await prisma.user.deleteMany({
+    // Fetch roles of users being deleted
+    const usersToDelete = await prisma.user.findMany({
       where: {
-        AND: [
-          {
-            id: {
-              in: ids
-            }
-          },
-          {
-            role: {
-              not: "admin"
-            }
-          },
-          {
-            id: {
-              not: loggedUserId
-            }
-          }
-        ]
-      }
+        id: {
+          in: ids,
+        },
+      },
+      select: {
+        id: true,
+        role: true,
+      },
+    });
+
+    // Filter out other admins (excluding self)
+    const filteredIds = usersToDelete
+      .filter(
+        (user) =>
+          user.role !== "admin" || user.id === loggedUserId // Allow self, block other admins
+      )
+      .map((user) => user.id);
+
+    if (filteredIds.length === 0) {
+      return NextResponse.json(
+        {
+          message:
+            "No users were deleted. Admins cannot delete other admin accounts.",
+          count: 0,
+        },
+        { status: 400 }
+      );
+    }
+
+    const deleteResult = await prisma.user.deleteMany({
+      where: {
+        id: {
+          in: filteredIds,
+        },
+      },
     });
 
     return NextResponse.json(
-      { message: "User(s) deleted successfully" },
+      {
+        message: `Deleted ${deleteResult.count} user(s). Admins can only delete non-admins or their own account.`,
+        count: deleteResult.count,
+      },
       { status: 200 }
     );
   } catch (error) {
@@ -143,18 +147,20 @@ export async function DELETE(req: Request): Promise<
         {
           error: "Validation error",
           errors: error.errors.map((error) => ({
-            path: error.path[0],
+            path: error.path.join("."),
             message: error.message,
           })),
         },
         { status: 400 }
       );
     } else {
-      console.error("Error during user deletion:", error);
-      return NextResponse.json({
-        error: "Internal server error",
-        message: "Error during user deletion",
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          error: "Internal server error",
+          message: "Error during user deletion",
+        },
+        { status: 500 }
+      );
     }
   }
 }

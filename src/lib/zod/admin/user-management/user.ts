@@ -7,11 +7,11 @@ export const adminCreateUserSchema = z.object({
   firstName: z.string().min(1, "First name is required").max(50, "First name must be at most 50 characters"),
   lastName: z.string().min(1, "Last name is required").max(50, "Last name must be at most 50 characters"),
   username: z.string().min(3, "Username is required").max(50, "Username must be at most 50 characters").transform(val => val.toLowerCase()),
-  address: z.string().min(8, "Address must be at least 8 characters"),
+  address: z.string().max(50, "Address must not exceed 50 characters").optional(),
   country: z.string().min(1, "Country is required").max(50, "Country must be at most 50 characters"),
   phone: z
     .string()
-    .min(8, "Phone number must be at least 8 characters")
+    .max(15, "Phone number must not exceed 15 characters")
     .optional(),
   role: z.enum(["user", "admin"], {
     errorMap: () => ({

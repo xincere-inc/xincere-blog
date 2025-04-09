@@ -173,9 +173,9 @@ export async function POST(
         firstName,
         lastName,
         username,
-        address,
+        address: address || "",
         country,
-        phone,
+        phone: phone || "",
         role
       }
     });

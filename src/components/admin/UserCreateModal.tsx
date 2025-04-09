@@ -1,4 +1,5 @@
-import { Alert, Button, Col, Form, Input, Modal, Row, Select } from 'antd';
+import { Alert, Button, Col, Form, FormInstance, Input, Modal, Row, Select } from 'antd';
+import { useImperativeHandle } from 'react';
 const { Option } = Select;
 
 interface UserCreateModalProps {
@@ -7,10 +8,12 @@ interface UserCreateModalProps {
   onCreate: (values: any) => void;
   loading: boolean;
   serverError?: string | null;
+  formRef?: React.RefObject<FormInstance>;
 }
 
-export function UserCreateModal({ visible, onCancel, onCreate, loading, serverError }: UserCreateModalProps) {
+export function UserCreateModal({ visible, onCancel, onCreate, loading, serverError, formRef }: UserCreateModalProps) {
   const [form] = Form.useForm();
+  useImperativeHandle(formRef, () => form);
 
   return (
     <Modal
@@ -110,7 +113,6 @@ export function UserCreateModal({ visible, onCancel, onCreate, loading, serverEr
             <Form.Item
               label="Address"
               name="address"
-              rules={[{ required: true, message: 'Please input the address!' }]}
             >
               <Input />
             </Form.Item>
@@ -134,7 +136,14 @@ export function UserCreateModal({ visible, onCancel, onCreate, loading, serverEr
             <Form.Item
               label="Password"
               name="password"
-              rules={[{ required: true, message: 'Please input the password!' }]}
+              rules={[{ required: true, message: 'Please input the password!' }, {
+                validator: (_, value) => {
+                  if (!value || (value.length >= 8)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Password must be at least 8 characters'));
+                },
+              },]}
             >
               <Input.Password />
             </Form.Item>

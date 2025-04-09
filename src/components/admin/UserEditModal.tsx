@@ -120,7 +120,6 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
             <Form.Item
               label="Address"
               name="address"
-              rules={[{ required: true, message: 'Please input the address!' }]}
             >
               <Input />
             </Form.Item>

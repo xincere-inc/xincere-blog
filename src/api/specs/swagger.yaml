@@ -192,7 +192,9 @@ paths:
   /api/admin/users/delete-user:
     delete:
       summary: Delete users by IDs
-      description: Deletes users from the database based on the provided IDs.
+      description: >-
+        Admin can delete user accounts including their own, but not other
+        admins.
       operationId: adminDeleteUsers
       tags:
         - Admin
@@ -225,32 +227,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: Validation error
-                  errors:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        path:
-                          type: string
-                          example: ids
-                        message:
-                          type: string
-                          example: Invalid UUID
+                $ref: '#/components/schemas/ValidationError'
         '404':
           description: Some users not found with the provided IDs
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: Some users not found with the provided ids
         '500':
           description: Internal server error
           content:
