@@ -13,6 +13,18 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'flagcdn.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'readdy.ai',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.gravatar.com',
+      },
     ],
   },
 };
