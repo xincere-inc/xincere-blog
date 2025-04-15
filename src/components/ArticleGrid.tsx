@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useState } from 'react';
 
 interface Article {
@@ -14,12 +14,9 @@ interface ArticleGridProps {
   articles: Article[];
 }
 
-const ArticleGrid: React.FC<ArticleGridProps> = ({
-  articles,
-}) => {
+const ArticleGrid: React.FC<ArticleGridProps> = ({ articles }) => {
   const [activeTab, setActiveTab] = useState<string>('all');
   const handleTabChange = (tab: string) => setActiveTab(tab);
-
 
   const tabs = [
     'all',

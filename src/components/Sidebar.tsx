@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import ContactCTA from './ContactCTA';
@@ -19,10 +19,7 @@ interface SidebarProps {
   popularArticles: Article[];
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  categories,
-  popularArticles,
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ categories, popularArticles }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) =>
