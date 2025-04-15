@@ -13,7 +13,8 @@
     "db:migrate:docker": "npx prisma migrate deploy && npx prisma generate",
     "db:deploy": "npx prisma migrate deploy",
     "db:studio": "DATABASE_URL='postgresql://postgres:postgres@localhost:5432/postgres' npx prisma studio",
-    "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client"
+    "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{ts,tsx}": "prettier --write",
@@ -80,6 +81,7 @@
     "prisma-erd-generator": "^2.0.4",
     "tailwindcss": "^4.0.13",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "husky": "^8.0.0"
   }
 }
