@@ -24,11 +24,25 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
+      POSTGRES_DB: xincere_blog
     volumes:
       - pg_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000" # APIアクセス用
+      - "9001:9001" # 管理コンソール用
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadminroot
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
 volumes:
   pg_data:
+  minio_data:

@@ -5,30 +5,7 @@ import AuthorCard from '@/components/AuthorCard';
 import ContactCTA from '@/components/ContactCTA'; // ContactCTAをインポート
 import ArticleCard from '@/components/ArticleCard'; // ArticleCardをインポート
 import Image from 'next/image';
-
-// 記事カードデータ
-const articleCardData = [
-  {
-    imageUrl: "https://readdy.ai/api/search-image?query=Content%2520marketing%2520planning%2520session%2520with%2520SEO%2520analytics%2520displayed%252C%2520team%2520collaborating%2520on%2520editorial%2520calendar%252C%2520modern%2520marketing%2520office%2520with%2520green%2520design%2520elements&width=100&height=70&seq=15&orientation=landscape",
-    altText: "コンテンツマーケティングの効果的な実践方法",
-    title: "コンテンツマーケティングの効果的な実践方法",
-  },
-  {
-    imageUrl: "https://readdy.ai/api/search-image?query=B2B%2520marketing%2520strategy%2520meeting%2520with%2520lead%2520generation%2520funnel%2520displayed%252C%2520professional%2520business%2520environment%2520with%2520marketing%2520team%2520discussion%252C%2520modern%2520office%2520with%2520green%2520accents&width=100&height=70&seq=16&orientation=landscape",
-    altText: "BtoBマーケティングの最新トレンド2025",
-    title: "BtoBマーケティングの最新トレンド2025",
-  },
-  {
-    imageUrl: "https://readdy.ai/api/search-image?query=Marketing%2520ROI%2520dashboard%2520with%2520positive%2520metrics%252C%2520professional%2520marketing%2520team%2520analyzing%2520data%252C%2520modern%2520office%2520with%2520green%2520design%2520elements%252C%2520high%2520quality%2520professional%2520photo&width=100&height=70&seq=17&orientation=landscape",
-    altText: "マーケティングROIを2倍にする実践テクニック",
-    title: "マーケティングROIを2倍にする実践テクニック",
-  },
-  {
-    imageUrl: "https://readdy.ai/api/search-image?query=Email%2520marketing%2520campaign%2520analysis%2520on%2520computer%2520screens%252C%2520marketing%2520team%2520reviewing%2520performance%2520metrics%252C%2520professional%2520office%2520setting%2520with%2520green%2520design%2520elements&width=100&height=70&seq=18&orientation=landscape",
-    altText: "メールマーケティングで実現した開封率40%の施策",
-    title: "メールマーケティングで実現した開封率40%の施策",
-  },
-];
+import articleCardData from '@/data/articleCardData'; // articleCardDataをインポート
 
 const ArticleDetailPage = () => {
   return (
@@ -209,13 +186,13 @@ const ArticleDetailPage = () => {
                   <li className="mb-2">
                     オーガニック検索トラフィック（全体およびセグメント別）
                   </li>
-                  <li className="mb-2">キーワードランキングの変動</li>
-                  <li className="mb-2">CTR（クリック率）</li>
-                  <li className="mb-2">滞在時間とバウンス率</li>
-                  <li className="mb-2">コンバージョン率（リード獲得率）</li>
-                  <li>ROI（投資対効果）</li>
-                </ul>
-                <p className="mb-6">
+                  </li>
+                  <li className="mb-2">
+                    ページ読み込み速度の最適化（Core Web Vitalsの改善）
+                  </li>
+                  <li className="mb-2">明確で使いやすいナビゲーション</li>
+                  <li className="mb-2">
+                    スキャンしやすいコンテンツ構成（見出し、箇条書き、画像の効果的活用）
                   2週間ごとのSEOレビュー会議を開催し、データの分析結果に基づいて戦略の微調整を行っています。この「仮説→実行→検証→改善」のサイクルを高速で回すことで、常に最適な戦略を追求しています。
                 </p>
                 <h2 className="text-2xl font-bold mt-10 mb-4 pb-2 border-b border-gray-200">

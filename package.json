@@ -1,5 +1,5 @@
 {
-  "name": "my-next-app",
+  "name": "xincere-blog",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,8 +8,19 @@
     "start": "next start",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write .",
-    "db:migrate:docker": "prisma migrate deploy",
+    "db:migrate": "npx prisma migrate dev && npx prisma generate",
+    "db:migrate:local": "DATABASE_URL='postgresql://postgres:postgres@localhost:5432/postgres' sh -c 'npx prisma migrate reset --skip-seed && npx prisma migrate dev && npx prisma generate && npx prisma db seed'",
+    "db:migrate:docker": "npx prisma migrate deploy && npx prisma generate",
+    "db:deploy": "npx prisma migrate deploy",
+    "db:studio": "DATABASE_URL='postgresql://postgres:postgres@localhost:5432/postgres' npx prisma studio",
     "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "prettier --write",
+    "*.{css,scss}": [
+      "stylelint",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.2",
@@ -36,6 +47,7 @@
     "react": "^18.3.1",
     "react-hook-form": "^7.55.0",
     "react-icons": "^5.5.0",
+    "react-paginate": "^8.3.0",
     "react-select": "^5.10.1",
     "react-toastify": "^11.0.5",
     "swagger-jsdoc": "^6.2.8",
@@ -47,6 +59,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@mermaid-js/mermaid-cli": "^11.4.2",
     "@openapitools/openapi-generator-cli": "^2.13.4",
     "@tailwindcss/postcss": "^4.0.13",
     "@types/js-yaml": "^4.0.9",
@@ -64,6 +77,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "prettier": "^3.5.3",
     "prisma": "^6.5.0",
+    "prisma-erd-generator": "^2.0.4",
     "tailwindcss": "^4.0.13",
     "ts-node": "^10.9.2",
     "typescript": "^5"
