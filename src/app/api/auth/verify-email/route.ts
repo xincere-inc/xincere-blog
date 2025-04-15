@@ -1,11 +1,7 @@
-import {
-  InternalServerError,
-  Success,
-  ValidationError
-} from "@/api/client";
-import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
-import { z } from "zod";
+import { InternalServerError, Success, ValidationError } from '@/api/client';
+import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
 /**
  * @swagger
@@ -15,7 +11,7 @@ import { z } from "zod";
  *     description: Verifies the user's email address using a provided verification token. Marks the user's email as verified in the database.
  *     operationId: verifyEmail
  *     tags:
- *       - Auth 
+ *       - Auth
  *     parameters:
  *       - in: query
  *         name: token
@@ -53,17 +49,15 @@ import { z } from "zod";
  */
 export async function GET(
   req: Request
-): Promise<
-  NextResponse<Success | ValidationError | InternalServerError>
-> {
+): Promise<NextResponse<Success | ValidationError | InternalServerError>> {
   try {
     const url = new URL(req.url);
-    const token = url.searchParams.get("token");
+    const token = url.searchParams.get('token');
 
     // If token is not provided, return a 400 error
     if (!token) {
       const errorResponse = {
-        error: "Token is required",
+        error: 'Token is required',
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
@@ -75,7 +69,7 @@ export async function GET(
 
     if (!user) {
       const errorResponse = {
-        error: "Invalid or expired token",
+        error: 'Invalid or expired token',
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
@@ -91,14 +85,14 @@ export async function GET(
 
     // Return a success message (you can also redirect or send a confirmation email)
     const successResponse = {
-      message: "Email successfully verified",
+      message: 'Email successfully verified',
     };
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
-          error: "Validation error",
+          error: 'Validation error',
           errors: error.errors.map((error) => ({
             path: error.path[0],
             message: error.message,
@@ -107,11 +101,14 @@ export async function GET(
         { status: 400 }
       );
     } else {
-      console.error("Error during verify email:", error);
-      return NextResponse.json({
-        error: "Internal server error",
-        message: "Error during verify email",
-      }, { status: 500 });
+      console.error('Error during verify email:', error);
+      return NextResponse.json(
+        {
+          error: 'Internal server error',
+          message: 'Error during verify email',
+        },
+        { status: 500 }
+      );
     }
   }
 }

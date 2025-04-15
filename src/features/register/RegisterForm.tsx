@@ -1,33 +1,33 @@
-'use client'
-import { RegisterRequest } from '@/api/client'
-import IdoAuth from '@/api/IdoAuth'
-import InputField from '@/components/inputs/InputField'
-import PasswordField from '@/components/inputs/PasswordField'
-import Image from 'next/image'
+'use client';
+import { RegisterRequest } from '@/api/client';
+import IdoAuth from '@/api/IdoAuth';
+import InputField from '@/components/inputs/InputField';
+import PasswordField from '@/components/inputs/PasswordField';
+import Image from 'next/image';
 
-import { AxiosError } from 'axios'
-import { useRouter } from 'next/navigation'
-import React from 'react'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import Select from 'react-select'
-import { toast } from 'react-toastify'
-import countries from 'world-countries'
+import { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import Select from 'react-select';
+import { toast } from 'react-toastify';
+import countries from 'world-countries';
 
 interface CountryOption {
-  value: string
-  label: string
-  code: string
-  countryName: string
+  value: string;
+  label: string;
+  code: string;
+  countryName: string;
 }
 
 interface GenderOption {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 const RegisterForm = () => {
-  const router = useRouter()
-  const [loading, setLoading] = React.useState(false)
+  const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
 
   const {
     register,
@@ -36,27 +36,27 @@ const RegisterForm = () => {
     getValues,
     setError,
     control,
-    formState: { errors }
+    formState: { errors },
   } = useForm<RegisterRequest>({
-    mode: 'onChange'
-  })
+    mode: 'onChange',
+  });
 
   const countryOptions: CountryOption[] = countries.map((country) => ({
     value: country.cca2,
     label: country.name.common,
     code: country.cca2,
-    countryName: country.name.common
-  }))
+    countryName: country.name.common,
+  }));
 
   const genderOptions: GenderOption[] = [
     { value: 'male', label: 'Male' },
     { value: 'female', label: 'Female' },
-    { value: 'others', label: 'Others' }
-  ]
+    { value: 'others', label: 'Others' },
+  ];
 
   const onSubmit: SubmitHandler<RegisterRequest> = async (formData) => {
     try {
-      setLoading(true)
+      setLoading(true);
       // Call your API to register the user here
       const response = await IdoAuth.register({
         firstName: formData.firstName,
@@ -66,61 +66,57 @@ const RegisterForm = () => {
         password: formData.password,
         country: formData.country,
         gender: formData.gender,
-        confirmPassword: formData.confirmPassword
-      })
+        confirmPassword: formData.confirmPassword,
+      });
 
       if (response.status === 201) {
-
         toast.success(response.data.message, {
           position: 'bottom-right',
-          autoClose: 3000 // Auto-close after 3 seconds
-        })
+          autoClose: 3000, // Auto-close after 3 seconds
+        });
         // redirect to the root page after 3 seconds
         setTimeout(() => {
-          router.push('/signin')
-        }
-          , 3000);
+          router.push('/signin');
+        }, 3000);
       } else {
-        toast.error("Error during register", {
+        toast.error('Error during register', {
           position: 'bottom-right',
-          autoClose: 3000
-        })
+          autoClose: 3000,
+        });
       }
 
-      setLoading(false)
+      setLoading(false);
     } catch (err: any) {
-      setLoading(false)
+      setLoading(false);
       if (err instanceof AxiosError) {
         if (err.response?.status === 400) {
           err.response?.data.errors.forEach((error: any) => {
             if (error.path === 'email') {
               setError(error.path, {
                 type: 'manual',
-                message: error.message
-              })
+                message: error.message,
+              });
             } else if (error.path === 'username') {
               setError(error.path, {
                 type: 'manual',
-                message: error.message
-              })
+                message: error.message,
+              });
             }
-          })
+          });
         } else {
           toast.error(err.response?.data.message, {
             position: 'bottom-right',
-            autoClose: 3000
-          })
+            autoClose: 3000,
+          });
         }
-
       } else {
-        toast.error("Error during register", {
+        toast.error('Error during register', {
           position: 'bottom-right',
-          autoClose: 3000
-        })
+          autoClose: 3000,
+        });
       }
-
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -135,13 +131,12 @@ const RegisterForm = () => {
               required: 'First name is required',
               pattern: {
                 value: /^[a-zA-Z ]*$/i,
-                message: 'First name must contain only letters and spaces'
+                message: 'First name must contain only letters and spaces',
               },
               maxLength: {
                 value: 50,
-                message: 'First name must be at most 50 characters long'
-              }
-
+                message: 'First name must be at most 50 characters long',
+              },
             })}
             error={errors.firstName}
           />
@@ -155,12 +150,12 @@ const RegisterForm = () => {
               required: 'Last name is required',
               pattern: {
                 value: /^[a-zA-Z ]*$/i,
-                message: 'Last name must contain only letters and spaces'
+                message: 'Last name must contain only letters and spaces',
               },
               maxLength: {
                 value: 50,
-                message: 'Last name must be at most 50 characters long'
-              }
+                message: 'Last name must be at most 50 characters long',
+              },
             })}
             error={errors.lastName}
           />
@@ -176,17 +171,17 @@ const RegisterForm = () => {
           required: 'Username is required',
           pattern: {
             value: /^[a-zA-Z0-9_]*$/i,
-            message: 'Username must contain only letters, numbers, and underscores',
+            message:
+              'Username must contain only letters, numbers, and underscores',
           },
           minLength: {
             value: 3,
-            message: 'Username must be at least 3 characters long'
+            message: 'Username must be at least 3 characters long',
           },
           maxLength: {
             value: 50,
-            message: 'Username must be at most 20 characters long'
-          }
-
+            message: 'Username must be at most 20 characters long',
+          },
         })}
         error={errors.username}
       />
@@ -201,8 +196,8 @@ const RegisterForm = () => {
           required: 'Email is required',
           pattern: {
             value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i,
-            message: 'Invalid email address'
-          }
+            message: 'Invalid email address',
+          },
         })}
         error={errors.email}
       />
@@ -225,13 +220,21 @@ const RegisterForm = () => {
                 {...field}
                 options={genderOptions}
                 placeholder="Select Gender"
-                value={genderOptions.find((option) => option.value === field.value)}
-                onChange={(selectedOption) => field.onChange(selectedOption?.value)}
-                filterOption={(option, searchText) => option.value.toLowerCase().includes(searchText.toLowerCase())}
+                value={genderOptions.find(
+                  (option) => option.value === field.value
+                )}
+                onChange={(selectedOption) =>
+                  field.onChange(selectedOption?.value)
+                }
+                filterOption={(option, searchText) =>
+                  option.value.toLowerCase().includes(searchText.toLowerCase())
+                }
               />
             )}
           />
-          {errors.gender && <p className="error-message">{String(errors.gender?.message)}</p>}
+          {errors.gender && (
+            <p className="error-message">{String(errors.gender?.message)}</p>
+          )}
         </div>
 
         {/* Country Field */}
@@ -263,13 +266,21 @@ const RegisterForm = () => {
                     {option.countryName}
                   </div>
                 )}
-                onChange={(selectedOption) => field.onChange(selectedOption?.countryName)}
-                value={countryOptions.find((option) => option.countryName === field.value)}
-                filterOption={(option, searchText) => option.label.toLowerCase().includes(searchText.toLowerCase())}
+                onChange={(selectedOption) =>
+                  field.onChange(selectedOption?.countryName)
+                }
+                value={countryOptions.find(
+                  (option) => option.countryName === field.value
+                )}
+                filterOption={(option, searchText) =>
+                  option.label.toLowerCase().includes(searchText.toLowerCase())
+                }
               />
             )}
           />
-          {errors.country && <p className="error-message">{String(errors.country?.message)}</p>}
+          {errors.country && (
+            <p className="error-message">{String(errors.country?.message)}</p>
+          )}
         </div>
       </div>
 
@@ -281,9 +292,10 @@ const RegisterForm = () => {
         register={register('password', {
           required: 'Password is required',
           pattern: {
-            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
-            message: ''
-          }
+            value:
+              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
+            message: '',
+          },
         })}
         isPassword={true}
         error={errors.password}
@@ -295,7 +307,8 @@ const RegisterForm = () => {
         placeholder="Re-enter password"
         register={register('confirmPassword', {
           required: 'Please confirm your password',
-          validate: (value) => value == getValues('password') || 'Passwords do not match'
+          validate: (value) =>
+            value == getValues('password') || 'Passwords do not match',
         })}
         error={errors.confirmPassword}
         value={watch('confirmPassword', '')}
@@ -305,11 +318,12 @@ const RegisterForm = () => {
       <button
         type="submit"
         className="mt-4 w-full rounded-lg bg-blue-600 py-2 text-white hover:bg-blue-700 hover:shadow-lg"
-        disabled={loading}>
+        disabled={loading}
+      >
         {loading ? 'Registering...' : 'Register'}
       </button>
     </form>
-  )
-}
+  );
+};
 
-export default RegisterForm
+export default RegisterForm;

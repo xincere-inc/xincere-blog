@@ -1,10 +1,9 @@
-"use client";
+'use client';
 
 import Breadcrumb from '@/components/Breadcrumb';
 import AuthorCard from '@/components/AuthorCard';
 import ContactCTA from '@/components/ContactCTA';
 import ArticleCard from '@/components/ArticleCard';
-import Image from 'next/image';
 
 const ArticleDetail = ({
   breadcrumbItems,
@@ -42,16 +41,27 @@ const ArticleDetail = ({
                 <span className="inline-block bg-primary-light text-primary text-xs px-3 py-1 rounded-full">
                   {articleHeader.category}
                 </span>
-                <span className="text-gray-500 text-sm ml-4">{articleHeader.date}</span>
+                <span className="text-gray-500 text-sm ml-4">
+                  {articleHeader.date}
+                </span>
               </div>
               <div className="flex space-x-3">
-                <a href="#" className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer">
+                <a
+                  href="#"
+                  className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
+                >
                   <i className="fab fa-twitter"></i>
                 </a>
-                <a href="#" className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer">
+                <a
+                  href="#"
+                  className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
+                >
                   <i className="fab fa-facebook-f"></i>
                 </a>
-                <a href="#" className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer">
+                <a
+                  href="#"
+                  className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
+                >
                   <i className="fab fa-linkedin-in"></i>
                 </a>
               </div>
@@ -59,7 +69,10 @@ const ArticleDetail = ({
             <AuthorCard {...articleHeader.author} />
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-            <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: articleContent.body }} />
+            <div
+              className="prose max-w-none"
+              dangerouslySetInnerHTML={{ __html: articleContent.body }}
+            />
           </div>
           <div className="mb-8">
             <div className="flex flex-wrap gap-2">
@@ -88,7 +101,10 @@ const ArticleDetail = ({
                 <div key={index} className="border-b pb-4">
                   <div className="flex justify-between mb-2">
                     <div className="font-bold">
-                      {comment.name} {comment.isAuthor && <span className="text-primary text-sm">（著者）</span>}
+                      {comment.name}{' '}
+                      {comment.isAuthor && (
+                        <span className="text-primary text-sm">（著者）</span>
+                      )}
                     </div>
                     <div className="text-sm text-gray-500">{comment.date}</div>
                   </div>

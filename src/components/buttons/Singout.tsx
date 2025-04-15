@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
-import { signOut } from "next-auth/react";
+import { signOut } from 'next-auth/react';
 
 const SingOut = () => {
   return (
     <button
-      onClick={() => signOut({ redirectTo: "/" })}
-      className='bg-gray-500 text-white p-2 rounded-md mt-4'>
+      onClick={() => signOut({ redirectTo: '/' })}
+      className="bg-gray-500 text-white p-2 rounded-md mt-4"
+    >
       Sign out
     </button>
   );

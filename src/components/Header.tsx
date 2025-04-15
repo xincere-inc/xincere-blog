@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 const Header = () => {
   return (
@@ -29,9 +29,7 @@ const Header = () => {
           >
             技術スタック
           </a>
-          <button
-            className="bg-xincereGreen text-white px-4 py-2 rounded-md hover:bg-[#356423] transition-colors duration-300 !rounded-button whitespace-nowrap cursor-pointer"
-          >
+          <button className="bg-xincereGreen text-white px-4 py-2 rounded-md hover:bg-[#356423] transition-colors duration-300 !rounded-button whitespace-nowrap cursor-pointer">
             無料相談
           </button>
         </nav>

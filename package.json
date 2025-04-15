@@ -2,11 +2,13 @@
   "name": "xincere-blog",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint --ext .ts,.js,.tsx . && prettier --check \"./**/*.{ts,js,tsx}\"",
+    "lint:fix": "eslint --ext .ts,.js,.tsx . --fix && prettier --write \"./**/*.{ts,js,tsx,scss}\"",
     "format": "prettier --write .",
     "db:migrate": "npx prisma migrate dev && npx prisma generate",
     "db:migrate:local": "DATABASE_URL='postgresql://postgres:postgres@localhost:5432/postgres' sh -c 'npx prisma migrate reset --skip-seed && npx prisma migrate dev && npx prisma generate && npx prisma db seed'",
@@ -54,6 +56,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui": "^5.20.1",
     "swagger-ui-react": "^5.20.2",
+    "typescript-eslint": "^8.30.1",
     "uuid": "^11.1.0",
     "world-countries": "^5.1.0",
     "zod": "^3.24.2"
@@ -68,20 +71,20 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/swagger-jsdoc": "^6.0.4",
-    "@typescript-eslint/eslint-plugin": "^8.29.1",
-    "@typescript-eslint/parser": "^8.29.1",
+    "@typescript-eslint/eslint-plugin": "^8.30.1",
+    "@typescript-eslint/parser": "^8.30.1",
     "eslint": "^9.24.0",
     "eslint-config-next": "15.2.2",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^8.0.0",
     "prettier": "^3.5.3",
     "prisma": "^6.5.0",
     "prisma-erd-generator": "^2.0.4",
     "tailwindcss": "^4.0.13",
     "ts-node": "^10.9.2",
-    "typescript": "^5",
-    "husky": "^8.0.0"
+    "typescript": "^5.8.3"
   }
 }

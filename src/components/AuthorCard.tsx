@@ -8,7 +8,13 @@ interface AuthorCardProps {
   profileUrl?: string;
 }
 
-const AuthorCard = ({ name, role, description, imageUrl, profileUrl }: AuthorCardProps) => {
+const AuthorCard = ({
+  name,
+  role,
+  description,
+  imageUrl,
+  profileUrl,
+}: AuthorCardProps) => {
   return (
     <div className="flex items-center p-4 bg-gray-50 rounded-lg">
       <Image
@@ -21,7 +27,9 @@ const AuthorCard = ({ name, role, description, imageUrl, profileUrl }: AuthorCar
       <div>
         {profileUrl ? (
           <a href={profileUrl} className="block">
-            <div className="font-bold hover:text-primary transition-colors duration-300">{name}</div>
+            <div className="font-bold hover:text-primary transition-colors duration-300">
+              {name}
+            </div>
           </a>
         ) : (
           <div className="font-bold">{name}</div>

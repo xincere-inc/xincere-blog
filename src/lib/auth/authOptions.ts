@@ -1,6 +1,6 @@
-import { Session, User } from "next-auth";
-import { JWT } from "next-auth/jwt";
-import credentialsProvider from "./credentialsProvider";
+import { Session, User } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
+import credentialsProvider from './credentialsProvider';
 
 export const authOptions = {
   providers: [credentialsProvider],
@@ -30,6 +30,6 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/", // Corrected typo in path
+    signIn: '/', // Corrected typo in path
   },
 };

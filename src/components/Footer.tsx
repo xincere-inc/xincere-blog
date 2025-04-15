@@ -1,6 +1,11 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub, faLinkedin, faFacebook, faTwitter } from "@fortawesome/free-brands-svg-icons";
+import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faGithub,
+  faLinkedin,
+  faFacebook,
+  faTwitter,
+} from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
   const iconStyle: React.CSSProperties = { padding: 10, fontSize: 24 };

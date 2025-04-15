@@ -27,7 +27,9 @@ const PopularArticles: React.FC<PopularArticlesProps> = ({ articles }) => {
               />
             </div>
             <div className="flex-1">
-              <h4 className="text-sm font-medium line-clamp-3">{article.title}</h4>
+              <h4 className="text-sm font-medium line-clamp-3">
+                {article.title}
+              </h4>
             </div>
           </li>
         ))}

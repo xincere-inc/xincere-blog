@@ -20,7 +20,12 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
   activeTab,
   onTabChange,
 }) => {
-  const tabs = ['all', 'マーケティング戦略', 'SNSマーケティング', 'コンテンツ戦略'];
+  const tabs = [
+    'all',
+    'マーケティング戦略',
+    'SNSマーケティング',
+    'コンテンツ戦略',
+  ];
 
   return (
     <>

@@ -6,7 +6,11 @@ interface ArticleCardProps {
   title: string;
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ imageUrl, altText, title }) => {
+const ArticleCard: React.FC<ArticleCardProps> = ({
+  imageUrl,
+  altText,
+  title,
+}) => {
   return (
     <div className="flex space-x-3 cursor-pointer">
       <div className="w-[100px] h-[70px] overflow-hidden rounded">
