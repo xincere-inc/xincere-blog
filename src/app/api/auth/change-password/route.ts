@@ -1,10 +1,16 @@
-import { ChangePasswordRequest, InternalServerError, Success, UnAuthorizedError, ValidationError } from "@/api/client";
-import getSession from "@/lib/auth/getSession";
-import { prisma } from "@/lib/prisma";
-import { changePasswordSchema } from "@/lib/zod/auth";
-import bcrypt from "bcryptjs";
-import { NextResponse } from "next/server";
-import { z } from "zod";
+import {
+  ChangePasswordRequest,
+  InternalServerError,
+  Success,
+  UnAuthorizedError,
+  ValidationError,
+} from '@/api/client';
+import getSession from '@/lib/auth/getSession';
+import { prisma } from '@/lib/prisma';
+import { changePasswordSchema } from '@/lib/zod/auth';
+import bcrypt from 'bcryptjs';
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
 /**
  * @swagger
@@ -77,8 +83,13 @@ import { z } from "zod";
  *               $ref: "#/components/schemas/InternalServerError"
  */
 
-export async function POST(req: Request): Promise<NextResponse<
-  | Success | ValidationError | UnAuthorizedError | InternalServerError>> {
+export async function POST(
+  req: Request
+): Promise<
+  NextResponse<
+    Success | ValidationError | UnAuthorizedError | InternalServerError
+  >
+> {
   try {
     // Parse and validate request body using Zod
     const body: ChangePasswordRequest = await req.json();
@@ -93,9 +104,8 @@ export async function POST(req: Request): Promise<NextResponse<
       session?.expires && new Date(session.expires).getTime() < Date.now();
 
     if (!session || sessionExpired) {
-      const errorResponse =
-      {
-        error: "Unauthorized",
+      const errorResponse = {
+        error: 'Unauthorized',
       };
       return NextResponse.json(errorResponse, { status: 401 });
     }
@@ -105,18 +115,16 @@ export async function POST(req: Request): Promise<NextResponse<
     });
 
     if (!user) {
-      const errorResponse =
-      {
-        error: "Unauthorized",
+      const errorResponse = {
+        error: 'Unauthorized',
       };
       return NextResponse.json(errorResponse, { status: 401 });
     }
 
     // Check if the old password and new password are the same
     if (oldPassword === newPassword) {
-      const errorResponse =
-      {
-        error: "New password cannot be the same as the old password",
+      const errorResponse = {
+        error: 'New password cannot be the same as the old password',
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
@@ -124,9 +132,8 @@ export async function POST(req: Request): Promise<NextResponse<
     // Verify old password
     const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
     if (!isPasswordValid) {
-      const errorResponse =
-      {
-        error: "Invalid old password",
+      const errorResponse = {
+        error: 'Invalid old password',
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
@@ -138,9 +145,8 @@ export async function POST(req: Request): Promise<NextResponse<
       data: { password: hashedPassword },
     });
 
-    const responseBody =
-    {
-      message: "Password has been changed successfully.",
+    const responseBody = {
+      message: 'Password has been changed successfully.',
     };
 
     return NextResponse.json(responseBody, { status: 200 });
@@ -148,7 +154,7 @@ export async function POST(req: Request): Promise<NextResponse<
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
-          error: "Validation error",
+          error: 'Validation error',
           errors: error.errors.map((error) => ({
             path: error.path[0],
             message: error.message,
@@ -157,11 +163,14 @@ export async function POST(req: Request): Promise<NextResponse<
         { status: 400 }
       );
     } else {
-      console.error("Error during change password:", error);
-      return NextResponse.json({
-        error: "Internal server error",
-        message: "Error during change password",
-      }, { status: 500 });
+      console.error('Error during change password:', error);
+      return NextResponse.json(
+        {
+          error: 'Internal server error',
+          message: 'Error during change password',
+        },
+        { status: 500 }
+      );
     }
   }
 }

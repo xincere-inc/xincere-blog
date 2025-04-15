@@ -8,10 +8,10 @@ import {
   SearchOutlined,
   SettingOutlined,
   UserOutlined,
-} from "@ant-design/icons";
-import { Avatar, Badge, Button, Dropdown, Layout, Select, Space } from "antd";
-import { signOut } from "next-auth/react";
-import { useState } from "react";
+} from '@ant-design/icons';
+import { Avatar, Badge, Button, Dropdown, Layout, Select, Space } from 'antd';
+import { signOut } from 'next-auth/react';
+import { useState } from 'react';
 
 const { Header } = Layout;
 
@@ -21,7 +21,7 @@ interface HeaderBarProps {
 }
 
 const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggleSidebar }) => {
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState('en');
 
   const handleLanguageChange = (value: string) => {
     setLanguage(value);
@@ -29,13 +29,13 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggleSidebar }) => {
 
   const userMenu = {
     items: [
-      { key: "1", label: "Profile", icon: <UserOutlined /> },
-      { key: "2", label: "Settings", icon: <SettingOutlined /> },
+      { key: '1', label: 'Profile', icon: <UserOutlined /> },
+      { key: '2', label: 'Settings', icon: <SettingOutlined /> },
       {
-        key: "3",
-        label: "Logout",
+        key: '3',
+        label: 'Logout',
         icon: <LogoutOutlined />,
-        onClick: () => signOut({ redirectTo: "/" }),
+        onClick: () => signOut({ redirectTo: '/' }),
       },
     ],
   };
@@ -43,34 +43,35 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggleSidebar }) => {
   return (
     <Header
       style={{
-        background: "#fff",
-        padding: "0 16px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}>
+        background: '#fff',
+        padding: '0 16px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
+    >
       {/* Left Side: Toggle & Title */}
-      <div className='flex items-center'>
+      <div className="flex items-center">
         <Button
-          type='text'
+          type="text"
           icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           onClick={toggleSidebar}
-          style={{ fontSize: "18px", marginRight: "16px" }}
+          style={{ fontSize: '18px', marginRight: '16px' }}
         />
         <h2 style={{ margin: 0 }}>Admin Dashboard</h2>
       </div>
 
       {/* Right Side: Icons & User Menu */}
-      <Space size='middle'>
+      <Space size="middle">
         {/* Search Icon */}
-        <Button type='text' icon={<SearchOutlined />} />
+        <Button type="text" icon={<SearchOutlined />} />
 
         {/* Help Icon */}
-        <Button type='text' icon={<QuestionCircleOutlined />} />
+        <Button type="text" icon={<QuestionCircleOutlined />} />
 
         {/* Notifications with Badge */}
-        <Badge count={12} size='small'>
-          <Button type='text' icon={<BellOutlined />} />
+        <Badge count={12} size="small">
+          <Button type="text" icon={<BellOutlined />} />
         </Badge>
 
         {/* Language Selector */}
@@ -79,18 +80,18 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggleSidebar }) => {
           onChange={handleLanguageChange}
           style={{ width: 80 }}
           options={[
-            { value: "en", label: "EN" },
-            { value: "zh", label: "中文" },
+            { value: 'en', label: 'EN' },
+            { value: 'zh', label: '中文' },
           ]}
           suffixIcon={<GlobalOutlined />}
         />
 
         {/* User Profile */}
-        <Dropdown menu={userMenu} trigger={["click"]}>
+        <Dropdown menu={userMenu} trigger={['click']}>
           <Avatar
-            size='large'
+            size="large"
             icon={<UserOutlined />}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
           />
         </Dropdown>
       </Space>

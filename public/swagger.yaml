@@ -3,15 +3,27 @@ info:
   title: Next.js API
   description: API documentation for Next.js 15 application
   version: 1.0.0
+  contact:
+    name: "API Support"
+    email: "support@example.com"
+
 servers:
   - url: http://localhost:3000
     description: Local server
+
+tags:
+  - name: Greeting
+    description: Operations related to greeting functionality.
+  - name: Auth
+    description: Operations related to authentication and user management.
+
 paths:
   /api/hello:
     get:
       summary: Greet the user
       tags: [Greeting]
       operationId: greetUser
+      description: Returns a simple greeting message to the user.
       responses:
         "200":
           description: A greeting message
@@ -29,6 +41,7 @@ paths:
       summary: Register a new user
       tags: [Auth]
       operationId: registerUser
+      description: Registers a new user by providing their email, password, and name. A verification email will be sent upon successful registration.
       requestBody:
         required: true
         content:
@@ -60,6 +73,7 @@ paths:
       summary: Verify user email using the verification token
       tags: [Auth]
       operationId: verifyEmail
+      description: Verifies the user's email address using a token sent to their email. This confirms the user's registration.
       parameters:
         - name: token
           in: query
@@ -93,6 +107,7 @@ paths:
       summary: Verify if the email exists and send a verification email
       tags: [Auth]
       operationId: verifyEmailRequest
+      description: Checks if the provided email exists in the system and sends a verification email if it does.
       requestBody:
         required: true
         content:
@@ -138,6 +153,7 @@ paths:
       summary: Change user password
       tags: [Auth]
       operationId: changePassword
+      description: Allows a logged-in user to change their password by providing the old password and a new password.
       security:
         - bearerAuth: []
       requestBody:
@@ -179,8 +195,7 @@ paths:
   /api/auth/forgot-password:
     post:
       summary: Sends a password reset email to the user.
-      description: |
-        This API sends a password reset email to the user, allowing them to reset their password.
+      description: Sends an email to the user with a link to reset their password. The user must provide their registered email address.
       tags: [Auth]
       operationId: sendPasswordResetEmail
       requestBody:
@@ -225,17 +240,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /auth/reset-password:
+  /api/auth/reset-password:
     post:
+      tags: [Auth]
       summary: Reset password
-      description: Resets the user's password using a valid reset token.
+      description: Resets the user's password using a valid reset token. The user must provide the token and a new password.
       operationId: resetPassword
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ResetPasswordRequestInput"
+              $ref: "#/components/schemas/ResetPasswordInput"
       responses:
         "200":
           description: Password reset successfully
@@ -373,20 +389,6 @@ components:
           format: email
           description: "The email address of the user requesting the password reset."
 
-    ResetPasswordRequestInput:
-      type: object
-      properties:
-        token:
-          type: string
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        newPassword:
-          type: string
-          format: password
-          example: "NewSecurePassword123!"
-      required:
-        - token
-        - newPassword
-
     SuccessResponse:
       type: object
       properties:
@@ -416,6 +418,7 @@ components:
                 description: "The field that failed validation."
                 example: "password"
 
+  securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer

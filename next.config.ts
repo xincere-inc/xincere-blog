@@ -1,5 +1,5 @@
-import { writeSwaggerSpecToFile } from "@/lib/generateSwagger";
-import type { NextConfig } from "next";
+import { writeSwaggerSpecToFile } from '@/lib/generateSwagger';
+import type { NextConfig } from 'next';
 
 // Generate Swagger spec on Next.js startup
 writeSwaggerSpecToFile();
@@ -12,6 +12,18 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'flagcdn.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'readdy.ai',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.gravatar.com',
       },
     ],
   },

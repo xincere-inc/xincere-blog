@@ -1,10 +1,17 @@
-import { ForgetPassword404Response, ForgetPassword429Response, ForgetPasswordRequest, InternalServerError, Success, ValidationError } from "@/api/client";
-import { prisma } from "@/lib/prisma";
-import { sendEmail } from "@/lib/utils/send-email";
-import { emailSchema } from "@/lib/zod/auth";
-import { NextResponse } from "next/server";
-import { v4 as uuidv4 } from "uuid";
-import { z } from "zod";
+import {
+  ForgetPassword404Response,
+  ForgetPassword429Response,
+  ForgetPasswordRequest,
+  InternalServerError,
+  Success,
+  ValidationError,
+} from '@/api/client';
+import { prisma } from '@/lib/prisma';
+import { sendEmail } from '@/lib/utils/send-email';
+import { emailSchema } from '@/lib/zod/auth';
+import { NextResponse } from 'next/server';
+import { v4 as uuidv4 } from 'uuid';
+import { z } from 'zod';
 
 /**
  * @swagger
@@ -87,8 +94,16 @@ import { z } from "zod";
  *             schema:
  *               $ref: "#/components/schemas/InternalServerError"
  */
-export async function POST(req: Request): Promise<
-  NextResponse<Success | ValidationError | ForgetPassword404Response | ForgetPassword429Response | InternalServerError>
+export async function POST(
+  req: Request
+): Promise<
+  NextResponse<
+    | Success
+    | ValidationError
+    | ForgetPassword404Response
+    | ForgetPassword429Response
+    | InternalServerError
+  >
 > {
   try {
     // Parse the incoming request JSON body
@@ -102,9 +117,8 @@ export async function POST(req: Request): Promise<
 
     // If no email is provided, return a 400 error
     if (!email) {
-      const errorResponse =
-      {
-        error: "Email is required",
+      const errorResponse = {
+        error: 'Email is required',
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
@@ -115,9 +129,8 @@ export async function POST(req: Request): Promise<
     });
 
     if (!user) {
-      const errorResponse =
-      {
-        error: "Email not found.",
+      const errorResponse = {
+        error: 'Email not found.',
       };
       return NextResponse.json(errorResponse, { status: 404 });
     }
@@ -136,9 +149,8 @@ export async function POST(req: Request): Promise<
       user.resetPasswordMailCount >= 3 &&
       timeDifference < oneHourInMilliseconds
     ) {
-      const errorResponse =
-      {
-        error: "Too many requests. Please try again later (1 hr).",
+      const errorResponse = {
+        error: 'Too many requests. Please try again later (1 hr).',
       };
       return NextResponse.json(errorResponse, { status: 429 });
     } else {
@@ -165,7 +177,7 @@ export async function POST(req: Request): Promise<
     const emailOptions = {
       from: process.env.SMTP_USERNAME, // Sender address
       to: email, // Receiver address
-      subject: "Password Reset Request", // Email subject
+      subject: 'Password Reset Request', // Email subject
       html: ` 
         <p>We received a request to reset your password.</p>
         <p>Click <a href="${resetPasswordUrl}">here</a> to reset your password.</p>
@@ -176,25 +188,23 @@ export async function POST(req: Request): Promise<
     const emailResponse = await sendEmail(emailOptions);
 
     if (!emailResponse.success) {
-      const errorResponse =
-      {
-        error: "Internal server error",
-        message: "Error sending password reset email"
+      const errorResponse = {
+        error: 'Internal server error',
+        message: 'Error sending password reset email',
       };
       return NextResponse.json(errorResponse, { status: 500 });
     }
 
     // Return a success message
-    const successResponse =
-    {
-      message: "Password reset email sent successfully",
+    const successResponse = {
+      message: 'Password reset email sent successfully',
     };
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
-          error: "Validation error",
+          error: 'Validation error',
           errors: error.errors.map((error) => ({
             path: error.path[0],
             message: error.message,
@@ -203,11 +213,14 @@ export async function POST(req: Request): Promise<
         { status: 400 }
       );
     } else {
-      console.error("Error during forget password:", error);
-      return NextResponse.json({
-        error: "Internal server error",
-        message: "Error during forget password",
-      }, { status: 500 });
+      console.error('Error during forget password:', error);
+      return NextResponse.json(
+        {
+          error: 'Internal server error',
+          message: 'Error during forget password',
+        },
+        { status: 500 }
+      );
     }
   }
 }

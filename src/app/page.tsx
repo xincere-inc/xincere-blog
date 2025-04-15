@@ -1,14 +1,30 @@
-import Link from 'next/link';
+import HeroSection from '../components/HeroSection';
+import ArticleGrid from '../components/ArticleGrid';
+import Sidebar from '../components/Sidebar';
+import { articles, popularArticles, categories } from '../data/articleData'; // データをインポート
 
 const HomePage = () => {
+  // フィルタリングされた記事
+  const filteredArticles = articles;
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold mb-4">Welcome to Our App</h1>
-      <p className="text-lg mb-8">Please sign in to continue.</p>
-      <Link href="/signin" className="text-blue-500 hover:underline mb-4">
-        Go to Sign In Page
-      </Link>
-    </div>
+    <main className="container mx-auto px-4">
+      {/* ヒーローセクション */}
+      <HeroSection />
+
+      {/* メインコンテンツ */}
+      <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
+        {/* 記事一覧エリア */}
+        <div className="w-full lg:w-2/3 xl:w-3/4">
+          <ArticleGrid articles={filteredArticles} />
+        </div>
+
+        {/* サイドバー */}
+        <div className="w-full md:w-1/3 lg:w-1/4">
+          <Sidebar categories={categories} popularArticles={popularArticles} />
+        </div>
+      </div>
+    </main>
   );
 };
 

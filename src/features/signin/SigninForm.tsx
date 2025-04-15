@@ -9,20 +9,20 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 const SigninForm = () => {
-  const router = useRouter()
-  const [loading, setLoading] = React.useState(false)
-
+  const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors }
-  } = useForm({ mode: 'onChange' })
+    formState: { errors },
+  } = useForm({ mode: 'onChange' });
 
   const onSubmit = async (formData: any) => {
+    setLoading(true);
     try {
-      const res = await signIn("credentials", {
+      const res = await signIn('credentials', {
         username: formData.username,
         password: formData.password,
         redirect: false,
@@ -34,15 +34,16 @@ const SigninForm = () => {
         // Redirect to dashboard or any other page
         router.push('/dashboard');
       } else {
-        toast.error("Failed! check your credentials", {
+        toast.error('Failed! check your credentials', {
           position: 'bottom-right',
-          autoClose: 2000 // Auto-close after 2 seconds
-        })
+          autoClose: 2000, // Auto-close after 2 seconds
+        });
       }
     } catch (err: Error | any) {
-      console.error('Login error:', err.message)
+      console.error('Login error:', err.message);
     }
-  }
+    setLoading(false);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -61,19 +62,20 @@ const SigninForm = () => {
         label="Password"
         placeholder="Enter password"
         register={register('password', {
-          required: 'Password is required'
+          required: 'Password is required',
         })}
         error={errors.password}
         value={watch('password', '')}
       />
       <Link href={'/forget-password'} className="inline-block cursor-pointer">
-        <p className="text-center text-sm font-medium text-blue-500">Forgot Password?</p>
+        <p className="text-center text-sm font-medium text-blue-500">
+          Forgot Password?
+        </p>
       </Link>
       <button type="submit" className="primary-button" disabled={loading}>
         {loading ? 'Signing...' : 'Signin'}
       </button>
     </form>
-
   );
 };
 

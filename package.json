@@ -1,17 +1,34 @@
 {
-  "name": "my-next-app",
+  "name": "xincere-blog",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "db:migrate:docker": "prisma migrate deploy",
-    "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client"
+    "lint": "eslint --ext .ts,.js,.tsx . && prettier --check \"./**/*.{ts,js,tsx}\"",
+    "lint:fix": "eslint --ext .ts,.js,.tsx . --fix && prettier --write \"./**/*.{ts,js,tsx,scss}\"",
+    "format": "prettier --write .",
+    "db:migrate": "npx prisma migrate dev && npx prisma generate",
+    "db:migrate:local": "DATABASE_URL='postgresql://postgres:postgres@localhost:5432/postgres' sh -c 'npx prisma migrate reset --skip-seed && npx prisma migrate dev && npx prisma generate && npx prisma db seed'",
+    "db:migrate:docker": "npx prisma migrate deploy && npx prisma generate",
+    "db:deploy": "npx prisma migrate deploy",
+    "db:studio": "DATABASE_URL='postgresql://postgres:postgres@localhost:5432/postgres' npx prisma studio",
+    "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "prettier --write",
+    "*.{css,scss}": [
+      "stylelint",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.2",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@prisma/client": "^6.5.0",
     "@types/bcrypt": "^5.0.2",
     "@types/nodemailer": "^6.4.17",
@@ -30,21 +47,24 @@
     "next-auth": "^5.0.0-beta.25",
     "nodemailer": "^6.10.0",
     "postcss": "^8.5.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "puppeteer": "^23.11.1",
+    "react": "^18.3.1",
     "react-hook-form": "^7.55.0",
     "react-icons": "^5.5.0",
+    "react-paginate": "^8.3.0",
     "react-select": "^5.10.1",
     "react-toastify": "^11.0.5",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui": "^5.20.1",
     "swagger-ui-react": "^5.20.2",
+    "typescript-eslint": "^8.30.1",
     "uuid": "^11.1.0",
     "world-countries": "^5.1.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@mermaid-js/mermaid-cli": "^11.4.2",
     "@openapitools/openapi-generator-cli": "^2.13.4",
     "@tailwindcss/postcss": "^4.0.13",
     "@types/js-yaml": "^4.0.9",
@@ -52,11 +72,20 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/swagger-jsdoc": "^6.0.4",
-    "eslint": "^9",
+    "@typescript-eslint/eslint-plugin": "^8.30.1",
+    "@typescript-eslint/parser": "^8.30.1",
+    "eslint": "^9.24.0",
     "eslint-config-next": "15.2.2",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^8.0.0",
+    "prettier": "^3.5.3",
     "prisma": "^6.5.0",
+    "prisma-erd-generator": "^2.0.4",
     "tailwindcss": "^4.0.13",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5.8.3"
   }
 }

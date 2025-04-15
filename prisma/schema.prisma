@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "./erd.svg"
+}
+
 enum Gender {
   male
   female
@@ -34,5 +39,154 @@ model User {
   resetPasswordMailCount  Int      @default(0)     // Reset password mail count in one hour only three mail can be sent 
   resetPasswordMailTime   DateTime?                // Reset password mail time                
   createdAt               DateTime @default(now())
+
+  articles      Article[]
+  comments      Comment[]
+  likes         Like[]
+  media         Media[]
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  deletedAt     DateTime?  @map("deleted_at")
+
+  @@map("users")
 }
 
+enum UserRole {
+  ADMIN
+  AUTHOR
+  EDITOR
+  USER
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+
+model Category {
+  id          Int       @id @default(autoincrement()) @map("id")
+  name        String    @map("name")
+  slug        String    @unique @map("slug")
+  description String?   @map("description")
+  articles    Article[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@map("categories")
+}
+
+model Tag {
+  id        Int       @id @default(autoincrement()) @map("id")
+  name      String    @unique @map("name")
+  articles  ArticleTag[]
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("tags")
+}
+
+model Article {
+  id           Int            @id @default(autoincrement()) @map("id")
+  author       User           @relation(fields: [authorId], references: [id])
+  authorId     String         @map("author_id")
+  category     Category       @relation(fields: [categoryId], references: [id])
+  categoryId   Int            @map("category_id")
+  title        String         @map("title")
+  slug         String         @unique @map("slug")
+  summary      String         @map("summary")
+  content      String         @map("content")
+  thumbnailUrl String?        @map("thumbnail_url")
+  status       ArticleStatus  @map("status")
+  tags         ArticleTag[]
+  comments     Comment[]
+  likes        Like[]
+  analytics    Analytics?
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  deletedAt    DateTime?      @map("deleted_at")
+
+  @@map("articles")
+}
+
+model ArticleTag {
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId Int     @map("article_id")
+  tag       Tag     @relation(fields: [tagId], references: [id])
+  tagId     Int     @map("tag_id")
+
+  @@id([articleId, tagId])
+  @@map("article_tags")
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement()) @map("id")
+  article   Article   @relation(fields: [articleId], references: [id])
+  articleId Int       @map("article_id")
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?   @map("user_id")
+  name      String?   @map("name")
+  email     String?   @map("email")
+  content   String    @map("content")
+  status    String    @default("pending") @map("status")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("comments")
+}
+
+model Like {
+  id        Int      @id @default(autoincrement()) @map("id")
+  article   Article  @relation(fields: [articleId], references: [id])
+  articleId Int      @map("article_id")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("likes")
+}
+
+model Media {
+  id         Int      @id @default(autoincrement()) @map("id")
+  uploader   User     @relation(fields: [uploaderId], references: [id])
+  uploaderId String   @map("uploader_id")
+  fileName   String   @map("file_name")
+  fileUrl    String   @map("file_url")
+  mimeType   String   @map("mime_type")
+  size       Int      @map("size")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  @@map("media")
+}
+
+model SiteSetting {
+  key       String   @id @map("key")
+  value     String   @map("value")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("site_settings")
+}
+
+model Analytics {
+  id            Int      @id @default(autoincrement()) @map("id")
+  article       Article  @relation(fields: [articleId], references: [id])
+  articleId     Int      @unique @map("article_id")
+  viewsCount    Int      @default(0) @map("views_count")
+  likesCount    Int      @default(0) @map("likes_count")
+  commentsCount Int      @default(0) @map("comments_count")
+  lastViewedAt  DateTime? @map("last_viewed_at")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  deletedAt     DateTime? @map("deleted_at")
+
+  @@map("analytics")
+}

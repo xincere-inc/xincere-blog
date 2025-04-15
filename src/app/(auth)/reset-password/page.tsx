@@ -91,20 +91,22 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className='flex items-center justify-center h-screen'>
-      <div className='p-6 bg-white shadow-md rounded w-96'>
-        <h2 className='text-xl font-bold mb-4'>Reset Password</h2>
+    <div className="flex items-center justify-center h-screen">
+      <div className="p-6 bg-white shadow-md rounded w-96">
+        <h2 className="text-xl font-bold mb-4">Reset Password</h2>
 
-        {errors.password && <p className='text-red-500'>{errors.password.message}</p>}
+        {errors.password && (
+          <p className="text-red-500">{errors.password.message}</p>
+        )}
         {errors.confirmPassword && (
-          <p className='text-red-500'>{errors.confirmPassword.message}</p>
+          <p className="text-red-500">{errors.confirmPassword.message}</p>
         )}
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <input
-            type='password'
-            className='border p-2 w-full mb-2'
-            placeholder='Enter new password'
+            type="password"
+            className="border p-2 w-full mb-2"
+            placeholder="Enter new password"
             {...register('password', {
               required: 'Password is required',
               minLength: {
@@ -114,9 +116,9 @@ export default function ResetPasswordPage() {
             })}
           />
           <input
-            type='password'
-            className='border p-2 w-full mb-2'
-            placeholder='Confirm new password'
+            type="password"
+            className="border p-2 w-full mb-2"
+            placeholder="Confirm new password"
             {...register('confirmPassword', {
               required: 'Please confirm your password',
               minLength: {
@@ -126,8 +128,8 @@ export default function ResetPasswordPage() {
             })}
           />
           <button
-            className='bg-gray-500 text-white p-2 rounded-md mt-4 w-full'
-            type='submit'
+            className="bg-gray-500 text-white p-2 rounded-md mt-4 w-full"
+            type="submit"
             disabled={loading}
           >
             {loading ? 'Resetting...' : 'Reset Password'}
