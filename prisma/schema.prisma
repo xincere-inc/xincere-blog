@@ -179,7 +179,7 @@ model SiteSetting {
 model Analytics {
   id            Int      @id @default(autoincrement()) @map("id")
   article       Article  @relation(fields: [articleId], references: [id])
-  articleId     Int      @map("article_id")
+  articleId     Int      @unique @map("article_id")
   viewsCount    Int      @default(0) @map("views_count")
   likesCount    Int      @default(0) @map("likes_count")
   commentsCount Int      @default(0) @map("comments_count")

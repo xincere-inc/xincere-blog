@@ -1,4 +1,5 @@
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
 
 interface Article {
   id: number;
@@ -11,15 +12,15 @@ interface Article {
 
 interface ArticleGridProps {
   articles: Article[];
-  activeTab: string;
-  onTabChange: (tab: string) => void;
 }
 
 const ArticleGrid: React.FC<ArticleGridProps> = ({
   articles,
-  activeTab,
-  onTabChange,
 }) => {
+  const [activeTab, setActiveTab] = useState<string>('all');
+  const handleTabChange = (tab: string) => setActiveTab(tab);
+
+
   const tabs = [
     'all',
     'マーケティング戦略',
@@ -35,7 +36,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
         {tabs.map((tab) => (
           <button
             key={tab}
-            onClick={() => onTabChange(tab)}
+            onClick={() => handleTabChange(tab)}
             className={`px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-t-md transition-colors duration-300 !rounded-button whitespace-nowrap cursor-pointer ${
               activeTab === tab
                 ? 'bg-[#427C2E] text-white'

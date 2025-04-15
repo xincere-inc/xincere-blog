@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import ContactCTA from './ContactCTA';
 
 interface Category {
@@ -13,18 +15,19 @@ interface Article {
 }
 
 interface SidebarProps {
-  searchQuery: string;
-  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   categories: Category[];
   popularArticles: Article[];
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
-  searchQuery,
-  onSearchChange,
   categories,
   popularArticles,
 }) => {
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setSearchQuery(e.target.value);
+
   return (
     <>
       {/* 検索ボックス */}
@@ -35,7 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             placeholder="記事を検索"
             className="w-full pl-10 pr-4 py-2 border border-[#427C2E] rounded-md focus:outline-none focus:ring-2 focus:ring-[#427C2E] focus:border-transparent text-sm"
             value={searchQuery}
-            onChange={onSearchChange}
+            onChange={handleSearchChange}
           />
           <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#427C2E]">
             <i className="fas fa-search"></i>

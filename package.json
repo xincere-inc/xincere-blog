@@ -47,6 +47,7 @@
     "next-auth": "^5.0.0-beta.25",
     "nodemailer": "^6.10.0",
     "postcss": "^8.5.3",
+    "puppeteer": "^23.11.1",
     "react": "^18.3.1",
     "react-hook-form": "^7.55.0",
     "react-icons": "^5.5.0",
