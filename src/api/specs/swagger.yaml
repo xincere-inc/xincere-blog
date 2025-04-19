@@ -4,7 +4,7 @@ info:
   description: API documentation for Next.js 15 application
   version: 1.0.0
 servers:
-  - url: http://localhost:3001
+  - url: http://localhost:3000
     description: Local server
 components:
   securitySchemes:

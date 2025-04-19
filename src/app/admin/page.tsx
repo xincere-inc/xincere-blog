@@ -1,9 +1,3 @@
-
-
-
 export default function AdminDashboard() {
-
-  return (
-    <>Welcome to the admin panel</>
-  );
+  return <>Welcome to the admin panel</>;
 }

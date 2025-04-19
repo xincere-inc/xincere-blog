@@ -33,9 +33,12 @@ export default function VerifyEmailPage() {
         if (response.status === 200) {
           // If email verification is successful
           setSuccess(response.data.message || 'Email verified successfully.');
-          toast.success(response.data.message || 'Email verified successfully.', {
-            position: 'bottom-right',
-          });
+          toast.success(
+            response.data.message || 'Email verified successfully.',
+            {
+              position: 'bottom-right',
+            }
+          );
           // Optionally, redirect to login or another page after success
           router.push('/signin');
         } else {
@@ -53,7 +56,9 @@ export default function VerifyEmailPage() {
             { position: 'bottom-right' }
           );
         } else {
-          toast.error('An unexpected error occurred.', { position: 'bottom-right' });
+          toast.error('An unexpected error occurred.', {
+            position: 'bottom-right',
+          });
         }
         setError('An unexpected error occurred.');
       } finally {

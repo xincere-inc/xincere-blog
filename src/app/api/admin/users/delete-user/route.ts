@@ -4,62 +4,18 @@ import {
   InternalServerError,
   Success,
   UnAuthorizedError,
-  ValidationError
-} from "@/api/client";
-import getSession from "@/lib/auth/getSession";
-import { prisma } from "@/lib/prisma";
-import { authorizeAdmin } from "@/lib/utils/authorize-admin";
-import { validateUUIDSSchema } from "@/lib/zod/common/common";
-import { NextResponse } from "next/server";
-import { z } from "zod";
+  ValidationError,
+} from '@/api/client';
+import getSession from '@/lib/auth/getSession';
+import { prisma } from '@/lib/prisma';
+import { authorizeAdmin } from '@/lib/utils/authorize-admin';
+import { validateUUIDSSchema } from '@/lib/zod/common/common';
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
-/**
- * @swagger
- * /api/admin/users/delete-user:
- *   delete:
- *     summary: Delete users by IDs
- *     description: Admin can delete user accounts including their own, but not other admins.
- *     operationId: adminDeleteUsers
- *     tags:
- *       - Admin
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - ids
- *             properties:
- *               ids:
- *                 type: array
- *                 items:
- *                   type: string
- *                   format: uuid
- *                 example: ["123e4567-e89b-12d3-a456-426614174000", "123e4567-e89b-12d3-a456-426614174001"]
- *     responses:
- *       200:
- *         description: Users deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/Success"
- *       400:
- *         description: Validation errors or malformed request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ValidationError"
- *       404:
- *         description: Some users not found with the provided IDs
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/InternalServerError"
- */
-export async function DELETE(req: Request): Promise<
+export async function DELETE(
+  req: Request
+): Promise<
   NextResponse<
     | UnAuthorizedError
     | Success
@@ -84,9 +40,9 @@ export async function DELETE(req: Request): Promise<
     if (!parsedBody.success) {
       return NextResponse.json(
         {
-          error: "Validation error",
+          error: 'Validation error',
           errors: parsedBody.error.errors.map((error) => ({
-            path: error.path.join("."),
+            path: error.path.join('.'),
             message: error.message,
           })),
         },
@@ -110,8 +66,7 @@ export async function DELETE(req: Request): Promise<
     // Filter out other admins (excluding self)
     const filteredIds = usersToDelete
       .filter(
-        (user) =>
-          user.role !== "admin" || user.id === loggedUserId // Allow self, block other admins
+        (user) => user.role !== 'admin' || user.id === loggedUserId // Allow self, block other admins
       )
       .map((user) => user.id);
 
@@ -119,7 +74,7 @@ export async function DELETE(req: Request): Promise<
       return NextResponse.json(
         {
           message:
-            "No users were deleted. Admins cannot delete other admin accounts.",
+            'No users were deleted. Admins cannot delete other admin accounts.',
           count: 0,
         },
         { status: 400 }
@@ -145,9 +100,9 @@ export async function DELETE(req: Request): Promise<
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
-          error: "Validation error",
+          error: 'Validation error',
           errors: error.errors.map((error) => ({
-            path: error.path.join("."),
+            path: error.path.join('.'),
             message: error.message,
           })),
         },
@@ -156,8 +111,8 @@ export async function DELETE(req: Request): Promise<
     } else {
       return NextResponse.json(
         {
-          error: "Internal server error",
-          message: "Error during user deletion",
+          error: 'Internal server error',
+          message: 'Error during user deletion',
         },
         { status: 500 }
       );

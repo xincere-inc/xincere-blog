@@ -1,69 +1,19 @@
-import {
-  InternalServerError,
-  Success,
-  ValidationError
-} from "@/api/client";
-import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
-import { z } from "zod";
+import { InternalServerError, Success, ValidationError } from '@/api/client';
+import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
-/**
- * @swagger
- * /api/auth/verify-email:
- *   get:
- *     summary: Verify user email
- *     description: Verifies the user's email address using a provided verification token. Marks the user's email as verified in the database.
- *     operationId: verifyEmail
- *     tags:
- *       - Auth 
- *     parameters:
- *       - in: query
- *         name: token
- *         required: true
- *         description: The email verification token sent to the user's email address.
- *         schema:
- *           type: string
- *           example: "d4c79ab8-b6b7-48b4-b5a4-56e8d41be26g"
- *     responses:
- *       200:
- *         description: Email successfully verified
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/Success"
- *       400:
- *         description: Invalid or expired token, or token not provided
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Token is required"
- *                 message:
- *                   type: string
- *                   example: "The provided token is invalid or has expired"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/InternalServerError"
- */
 export async function GET(
   req: Request
-): Promise<
-  NextResponse<Success | ValidationError | InternalServerError>
-> {
+): Promise<NextResponse<Success | ValidationError | InternalServerError>> {
   try {
     const url = new URL(req.url);
-    const token = url.searchParams.get("token");
+    const token = url.searchParams.get('token');
 
     // If token is not provided, return a 400 error
     if (!token) {
       const errorResponse = {
-        error: "Token is required",
+        error: 'Token is required',
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
@@ -75,7 +25,7 @@ export async function GET(
 
     if (!user) {
       const errorResponse = {
-        error: "Invalid or expired token",
+        error: 'Invalid or expired token',
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
@@ -91,14 +41,14 @@ export async function GET(
 
     // Return a success message (you can also redirect or send a confirmation email)
     const successResponse = {
-      message: "Email successfully verified",
+      message: 'Email successfully verified',
     };
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
-          error: "Validation error",
+          error: 'Validation error',
           errors: error.errors.map((error) => ({
             path: error.path[0],
             message: error.message,
@@ -107,11 +57,14 @@ export async function GET(
         { status: 400 }
       );
     } else {
-      console.error("Error during verify email:", error);
-      return NextResponse.json({
-        error: "Internal server error",
-        message: "Error during verify email",
-      }, { status: 500 });
+      console.error('Error during verify email:', error);
+      return NextResponse.json(
+        {
+          error: 'Internal server error',
+          message: 'Error during verify email',
+        },
+        { status: 500 }
+      );
     }
   }
 }

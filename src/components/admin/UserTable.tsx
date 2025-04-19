@@ -1,5 +1,5 @@
 'use client';
-import { AdminGetUsers200ResponseDataInner } from "@/api/client";
+import { AdminGetUsers200ResponseDataInner } from '@/api/client';
 import IdoAdminUsers from '@/api/IdoAdminUsers';
 import { Table } from 'antd';
 import { useSession } from 'next-auth/react';
@@ -53,33 +53,36 @@ export default function UserTable() {
       console.log('get data', response?.data?.data?.length);
 
       if (response.status === 200) {
-        const users = response.data?.data?.map((user: AdminGetUsers200ResponseDataInner) => ({
-          ...user,
-          id: user.id || '',
-          email: user.email || '',
-          firstName: user.firstName || '',
-          lastName: user.lastName || '',
-          country: user.country || '',
-          username: user.username || '',
-          address: user.address || '',
-          phone: user.phone || '',
-          role: user.role || '',
-        })) || [];
+        const users =
+          response.data?.data?.map(
+            (user: AdminGetUsers200ResponseDataInner) => ({
+              ...user,
+              id: user.id || '',
+              email: user.email || '',
+              firstName: user.firstName || '',
+              lastName: user.lastName || '',
+              country: user.country || '',
+              username: user.username || '',
+              address: user.address || '',
+              phone: user.phone || '',
+              role: user.role || '',
+            })
+          ) || [];
 
         setData(users);
-        setPagination(prev => ({
+        setPagination((prev) => ({
           ...prev,
           total: response.data?.pagination?.totalUsers || 0,
         }));
       } else {
         toast.error('Failed to get users data.', {
-          position: 'bottom-right'
+          position: 'bottom-right',
         });
       }
     } catch (err: any) {
       toast.error(err.response?.data.message || 'Something went wrong.', {
         position: 'bottom-right',
-        autoClose: 3000
+        autoClose: 3000,
       });
     } finally {
       setLoading(false);
@@ -92,7 +95,9 @@ export default function UserTable() {
     try {
       const response = await IdoAdminUsers.adminDeleteUsers({ ids });
       if (response.status !== 200) {
-        toast.error(response?.data?.message || 'Failed to delete users data.', { position: 'bottom-right' });
+        toast.error(response?.data?.message || 'Failed to delete users data.', {
+          position: 'bottom-right',
+        });
       } else {
         fetchData(pagination.current, pagination.pageSize, searchText);
         toast.success(response?.data?.message, { position: 'bottom-right' });
@@ -100,7 +105,7 @@ export default function UserTable() {
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Error deleting user(s).', {
         position: 'bottom-right',
-        autoClose: 3000
+        autoClose: 3000,
       });
     }
   };
@@ -121,17 +126,20 @@ export default function UserTable() {
       });
 
       if (response.status === 201) {
-        toast.success(response.data.message || 'User created successfully', { position: 'bottom-right' });
+        toast.success(response.data.message || 'User created successfully', {
+          position: 'bottom-right',
+        });
         fetchData(pagination.current, pagination.pageSize, searchText);
         setIsCreateModalVisible(false);
         setServerError(null);
         createFormRef.current?.resetFields();
       } else {
-        toast.error(response.data.message || 'Failed to create user', { position: 'bottom-right' });
+        toast.error(response.data.message || 'Failed to create user', {
+          position: 'bottom-right',
+        });
       }
     } catch (error: any) {
       setServerError(error?.response?.data?.error || 'Error creating user');
-
     } finally {
       setLoading(false);
     }
@@ -143,11 +151,13 @@ export default function UserTable() {
       try {
         const response = await IdoAdminUsers.adminUpdateUser({
           id: currentUser.id,
-          ...values
+          ...values,
         });
 
         if (response.status === 200) {
-          toast.success('User updated successfully', { position: 'bottom-right' });
+          toast.success('User updated successfully', {
+            position: 'bottom-right',
+          });
           setServerError(null);
           setIsEditModalVisible(false);
           fetchData(pagination.current, pagination.pageSize, searchText);
@@ -164,7 +174,7 @@ export default function UserTable() {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
-    setPagination(prev => ({ ...prev, current: 1 }));
+    setPagination((prev) => ({ ...prev, current: 1 }));
   };
 
   const handleTableChange = (pagination: any) => {
@@ -179,7 +189,7 @@ export default function UserTable() {
   const handleCancelEditModal = () => {
     setIsEditModalVisible(false);
     setServerError(null);
-  }
+  };
 
   const handleDelete = (record: User) => {
     if (record.id) {
@@ -197,7 +207,7 @@ export default function UserTable() {
 
   const handleSelectChange = (record: User) => {
     const newSelectedRowKeys = selectedRowKeys.includes(record.id!)
-      ? selectedRowKeys.filter(key => key !== record.id)
+      ? selectedRowKeys.filter((key) => key !== record.id)
       : [...selectedRowKeys, record.id!];
     setSelectedRowKeys(newSelectedRowKeys);
   };

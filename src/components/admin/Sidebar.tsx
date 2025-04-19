@@ -2,10 +2,10 @@ import {
   DashboardOutlined,
   SettingOutlined,
   UserOutlined,
-} from "@ant-design/icons";
-import { Layout, Menu } from "antd";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+} from '@ant-design/icons';
+import { Layout, Menu } from 'antd';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const { Sider } = Layout;
 
@@ -41,19 +41,20 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       collapsible
       collapsed={collapsed}
       style={{
-        height: "100vh",
-        position: "fixed",
+        height: '100vh', // Make it full height
+        position: 'fixed', // Stick it to the left side
         left: 0,
         top: 0,
         bottom: 0,
-        overflow: "auto",
+        overflow: 'auto', // Allow scrolling if content overflows
       }}
     >
-      <div className='logo text-white text-center font-bold p-4'>
+      <div className="logo text-white text-center font-bold p-4">
         Admin Panel
       </div>
       <Menu
         theme="dark"
+        defaultSelectedKeys={['1']}
         mode="inline"
         selectedKeys={[pathname]}
         items={menuItems}

@@ -42,11 +42,7 @@ export function UserSearchBar({
           cancelText="No"
           disabled={selectedRowCount === 0}
         >
-          <Button
-            type="primary"
-            danger
-            disabled={selectedRowCount === 0}
-          >
+          <Button type="primary" danger disabled={selectedRowCount === 0}>
             Delete Selected
           </Button>
         </Popconfirm>

@@ -1,0 +1,29 @@
+const HeroSection = () => {
+  return (
+    <div className="bg-softGreen rounded-lg p-8 mb-12 mt-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-4xl font-bold mb-6">
+          AI時代のシステム開発を
+          <br />
+          成功に導くテックブログ
+        </h1>
+        <p className="text-lg mb-8">
+          最新技術とプロジェクト実績に基づく知見を発信。
+          <br />
+          システム開発やAI推進に関する実践的な情報をお届けします。
+        </p>
+        <div className="flex gap-4">
+          <div className="bg-xincereGreen text-white px-6 py-3 rounded-md hover:bg-[#356423] transition-colors duration-300 flex items-center !rounded-button whitespace-nowrap cursor-pointer">
+            <i className="fas fa-download mr-2"></i>
+            会社案内ダウンロード
+          </div>
+          <button className="bg-white text-xincereGreen px-6 py-3 rounded-md hover:bg-gray-50 transition-colors duration-300 border border-xincereGreen !rounded-button whitespace-nowrap cursor-pointer">
+            コーポレートサイトを見る
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HeroSection;

@@ -8,10 +8,19 @@ interface UserActionsProps {
   onDelete: (record: any) => void;
 }
 
-export function UserActions({ record, loggedInUserId, onEdit, onDelete }: UserActionsProps) {
+export function UserActions({
+  record,
+  loggedInUserId,
+  onEdit,
+  onDelete,
+}: UserActionsProps) {
   return (
     <Space size="middle">
-      <Button type="primary" icon={<EditOutlined />} onClick={() => onEdit(record)}>
+      <Button
+        type="primary"
+        icon={<EditOutlined />}
+        onClick={() => onEdit(record)}
+      >
         Edit
       </Button>
       {record.id !== loggedInUserId && (

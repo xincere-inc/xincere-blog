@@ -1,9 +1,9 @@
 // lib/utils/auth.ts
 
-import { UnAuthorizedError } from "@/api/client";
-import getSession from "@/lib/auth/getSession";
-import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { UnAuthorizedError } from '@/api/client';
+import getSession from '@/lib/auth/getSession';
+import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server';
 
 export async function authorizeAdmin(): Promise<NextResponse<UnAuthorizedError> | null> {
   // Get user session
@@ -12,7 +12,7 @@ export async function authorizeAdmin(): Promise<NextResponse<UnAuthorizedError> 
     session?.expires && new Date(session.expires).getTime() < Date.now();
 
   if (!session || sessionExpired) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   // Check if the logged-in user is an admin
@@ -21,12 +21,11 @@ export async function authorizeAdmin(): Promise<NextResponse<UnAuthorizedError> 
     select: { role: true },
   });
 
-
-  if (isAdmin?.role !== "admin") {
+  if (isAdmin?.role !== 'admin') {
     return NextResponse.json(
       { error: "You're unauthorized to access this request" },
       { status: 401 }
-    )
+    );
   }
 
   // Return null if authorization is successful (to proceed with the request)

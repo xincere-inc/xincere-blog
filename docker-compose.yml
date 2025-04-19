@@ -1,21 +1,5 @@
 version: "3.8"
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
-    env_file:
-      - .env.local
-    depends_on:
-      - db
-    command: sh -c "npm run db:migrate:docker && npm run dev"
 
   db:
     image: postgres
@@ -24,11 +8,25 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
+      POSTGRES_DB: xincere_blog
     volumes:
       - pg_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000" # APIアクセス用
+      - "9001:9001" # 管理コンソール用
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadminroot
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
 volumes:
   pg_data:
+  minio_data:

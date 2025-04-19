@@ -2,73 +2,17 @@ import {
   InternalServerError,
   ResetPasswordRequest,
   Success,
-  ValidationError
-} from "@/api/client";
-import { prisma } from "@/lib/prisma";
-import { resetPasswordSchema } from "@/lib/zod/auth/auth";
-import { hash } from "bcryptjs";
-import { NextResponse } from "next/server";
-import { z } from "zod";
+  ValidationError,
+} from '@/api/client';
+import { prisma } from '@/lib/prisma';
+import { resetPasswordSchema } from '@/lib/zod/auth/auth';
+import { hash } from 'bcryptjs';
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
-/**
- * @swagger
- * /api/reset-password:
- *   post:
- *     summary: Reset password for a user
- *     description: Resets the user's password using a provided reset token and new password. The reset token is invalidated after the reset.
- *     operationId: resetPassword 
- *     tags:
- *       - Auth
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - token
- *               - newPassword
- *             properties:
- *               token:
- *                 type: string
- *                 example: "d4c79ab8-b6b7-48b4-b5a4-56e8d41be26f"
- *               newPassword:
- *                 type: string
- *                 format: password
- *                 example: "NewSecureP@ssw0rd"
- *     responses:
- *       200:
- *         description: Password reset successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/Success"
- *       400:
- *         description: Invalid or expired token, or missing fields
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Token and new password are required"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/InternalServerError"
- */
 export async function POST(
   req: Request
-): Promise<
-  NextResponse<
-    | Success
-    | ValidationError
-    | InternalServerError
-  >
-> {
+): Promise<NextResponse<Success | ValidationError | InternalServerError>> {
   try {
     // Parse the incoming request JSON body
     const data: ResetPasswordRequest = await req.json();
@@ -82,7 +26,7 @@ export async function POST(
     // If no token or newPassword is provided, return a 400 error
     if (!token || !newPassword) {
       const errorResponse = {
-        error: "Token and new password are required",
+        error: 'Token and new password are required',
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
@@ -94,7 +38,7 @@ export async function POST(
 
     if (!user) {
       const errorResponse = {
-        error: "Invalid or expired token",
+        error: 'Invalid or expired token',
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
@@ -115,14 +59,14 @@ export async function POST(
 
     // Return a success message
     const successResponse = {
-      message: "Password reset successfully",
+      message: 'Password reset successfully',
     };
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
-          error: "Validation error",
+          error: 'Validation error',
           errors: error.errors.map((error) => ({
             path: error.path[0],
             message: error.message,
@@ -131,11 +75,14 @@ export async function POST(
         { status: 400 }
       );
     } else {
-      console.error("Error during reset password:", error);
-      return NextResponse.json({
-        error: "Internal server error",
-        message: "Error during reset password",
-      }, { status: 500 });
+      console.error('Error during reset password:', error);
+      return NextResponse.json(
+        {
+          error: 'Internal server error',
+          message: 'Error during reset password',
+        },
+        { status: 500 }
+      );
     }
   }
 }

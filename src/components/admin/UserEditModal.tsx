@@ -11,7 +11,14 @@ interface UserEditModalProps {
   serverError: string | null;
 }
 
-export function UserEditModal({ visible, onCancel, onEdit, loading, user, serverError }: UserEditModalProps) {
+export function UserEditModal({
+  visible,
+  onCancel,
+  onEdit,
+  loading,
+  user,
+  serverError,
+}: UserEditModalProps) {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -36,13 +43,20 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
       style={{ margin: '20px 0px' }}
       width={800}
     >
-      <Form form={form} onFinish={onEdit} layout="vertical" initialValues={user}>
+      <Form
+        form={form}
+        onFinish={onEdit}
+        layout="vertical"
+        initialValues={user}
+      >
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
               label="First Name"
               name="firstName"
-              rules={[{ required: true, message: 'Please input the first name!' }]}
+              rules={[
+                { required: true, message: 'Please input the first name!' },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -51,7 +65,9 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
             <Form.Item
               label="Last Name"
               name="lastName"
-              rules={[{ required: true, message: 'Please input the last name!' }]}
+              rules={[
+                { required: true, message: 'Please input the last name!' },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -77,13 +93,19 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
               name="username"
               rules={[
                 { required: true, message: 'Please input the username!' },
-                { pattern: /^[a-zA-Z0-9_]+$/, message: 'Username can only contain letters, numbers, and underscores' },
+                {
+                  pattern: /^[a-zA-Z0-9_]+$/,
+                  message:
+                    'Username can only contain letters, numbers, and underscores',
+                },
                 {
                   validator: (_, value) => {
                     if (!value || (value.length >= 3 && value.length <= 50)) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error('Username must be between 3 and 50 characters'));
+                    return Promise.reject(
+                      new Error('Username must be between 3 and 50 characters')
+                    );
                   },
                 },
               ]}
@@ -98,7 +120,9 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
             <Form.Item
               label="Phone"
               name="phone"
-              rules={[{ required: true, message: 'Please input the phone number!' }]}
+              rules={[
+                { required: true, message: 'Please input the phone number!' },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -114,13 +138,9 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
           </Col>
         </Row>
 
-
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item
-              label="Address"
-              name="address"
-            >
+            <Form.Item label="Address" name="address">
               <Input />
             </Form.Item>
           </Col>
@@ -136,7 +156,6 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
               </Select>
             </Form.Item>
           </Col>
-
         </Row>
         <Row>
           <Col span={12} style={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -153,7 +172,13 @@ export function UserEditModal({ visible, onCancel, onEdit, loading, user, server
         </Row>
         <Row>
           <Col span={24}>
-            {serverError && <Alert message={serverError} type="error" style={{ marginTop: "10px" }} />}
+            {serverError && (
+              <Alert
+                message={serverError}
+                type="error"
+                style={{ marginTop: '10px' }}
+              />
+            )}
           </Col>
         </Row>
       </Form>

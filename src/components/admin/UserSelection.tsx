@@ -4,7 +4,11 @@ interface UserSelectionProps {
   onSelectChange: (record: any) => void;
 }
 
-export function UserSelection({ record, selectedRowKeys, onSelectChange }: UserSelectionProps) {
+export function UserSelection({
+  record,
+  selectedRowKeys,
+  onSelectChange,
+}: UserSelectionProps) {
   return (
     <input
       type="checkbox"

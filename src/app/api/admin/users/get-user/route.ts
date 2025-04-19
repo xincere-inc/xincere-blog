@@ -3,118 +3,23 @@ import {
   AdminGetUsersRequest,
   InternalServerError,
   UnAuthorizedError,
-  ValidationError
-} from "@/api/client";
-import { prisma } from "@/lib/prisma";
-import { authorizeAdmin } from "@/lib/utils/authorize-admin";
-import { paginationWithSearchSchema } from "@/lib/zod/common/common";
-import { NextResponse } from "next/server";
-import { z } from "zod";
-/**
- * @swagger
- * /api/admin/users/get-user:
- *   post:
- *     summary: Fetch users with pagination and search
- *     description: Retrieves users from the database with pagination and optional search.
- *     operationId: adminGetUsers
- *     tags:
- *       - Admin
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               page:
- *                 type: integer
- *                 example: 1
- *               limit:
- *                 type: integer
- *                 example: 10
- *               search:
- *                 type: string
- *                 example: "john"
- *     responses:
- *       200:
- *         description: Successfully retrieved users with pagination
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: string
- *                         format: uuid
- *                       email:
- *                         type: string
- *                       firstName:
- *                         type: string
- *                       lastName:
- *                         type: string
- *                       country:
- *                         type: string
- *                       username:
- *                         type: string
- *                       address:
- *                         type: string
- *                       phone:
- *                         type: string
- *                       role:
- *                         type: string
- *                 pagination:
- *                   type: object
- *                   properties:
- *                     page:
- *                       type: integer
- *                       example: 1
- *                     limit:
- *                       type: integer
- *                       example: 10
- *                     showPerPage:
- *                       type: integer
- *                       example: 10
- *                     totalUsers:
- *                       type: integer
- *                       example: 50
- *                     totalPages:
- *                       type: integer
- *                       example: 5
- *       400:
- *         description: Validation errors or malformed request
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Validation error"
- *                 errors:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       path:
- *                         type: string
- *                         example: "page"
- *                       message:
- *                         type: string  
- *                         example: "Page must be a number"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/InternalServerError"
- */
-export async function POST(req: Request): Promise<
-  NextResponse<AdminGetUsers200Response | ValidationError | InternalServerError | UnAuthorizedError>
+  ValidationError,
+} from '@/api/client';
+import { prisma } from '@/lib/prisma';
+import { authorizeAdmin } from '@/lib/utils/authorize-admin';
+import { paginationWithSearchSchema } from '@/lib/zod/common/common';
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
+export async function POST(
+  req: Request
+): Promise<
+  NextResponse<
+    | AdminGetUsers200Response
+    | ValidationError
+    | InternalServerError
+    | UnAuthorizedError
+  >
 > {
   try {
     // Check for admin authorization
@@ -147,7 +52,8 @@ export async function POST(req: Request): Promise<
       };
 
       // Add condition for enums (e.g., role) using equals
-      if (search in ['user', 'admin']) { // Assuming your `search` could match enum values (case-sensitive)
+      if (search in ['user', 'admin']) {
+        // Assuming your `search` could match enum values (case-sensitive)
         whereCondition.OR.push({ role: { equals: search } });
       }
     }
@@ -224,5 +130,3 @@ export async function POST(req: Request): Promise<
     }
   }
 }
-
-

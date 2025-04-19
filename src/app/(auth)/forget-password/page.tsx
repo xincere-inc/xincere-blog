@@ -45,14 +45,16 @@ export default function ForgotPasswordPage() {
       if (response.status === 200) {
         // If the email was sent successfully
         toast.success(
-          response.data.message || 'Password reset email sent! Check your inbox.',
+          response.data.message ||
+            'Password reset email sent! Check your inbox.',
           {
             position: 'bottom-right',
           }
         );
       } else {
         toast.error(
-          response.data.message || 'Email not found or failed to send reset email.',
+          response.data.message ||
+            'Email not found or failed to send reset email.',
           {
             position: 'bottom-right',
           }
@@ -61,7 +63,10 @@ export default function ForgotPasswordPage() {
     } catch (err: any) {
       if (err instanceof AxiosError) {
         // Handle specific errors
-        if (err.response?.status === 400 && Array.isArray(err.response.data.errors)) {
+        if (
+          err.response?.status === 400 &&
+          Array.isArray(err.response.data.errors)
+        ) {
           err.response.data.errors.forEach((error: any) => {
             if (error.path === 'email') {
               setError('email', {
@@ -88,26 +93,24 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className='flex items-center justify-center h-screen'>
-      <div className='p-6 bg-white shadow-md rounded w-96'>
-        <h2 className='text-xl font-bold mb-4'>Forgot Password</h2>
+    <div className="flex items-center justify-center h-screen">
+      <div className="p-6 bg-white shadow-md rounded w-96">
+        <h2 className="text-xl font-bold mb-4">Forgot Password</h2>
 
-        {errors.email && (
-          <p className='text-red-500'>{errors.email.message}</p>
-        )}
+        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <input
-            type='email'
-            className='border p-2 w-full mb-2'
-            placeholder='Enter your email'
+            type="email"
+            className="border p-2 w-full mb-2"
+            placeholder="Enter your email"
             {...register('email', {
               required: 'Email is required',
             })}
           />
           <button
-            className='bg-gray-500 text-white p-2 rounded-md mt-4 w-full'
-            type='submit'
+            className="bg-gray-500 text-white p-2 rounded-md mt-4 w-full"
+            type="submit"
             disabled={loading}
           >
             {loading ? 'Sending...' : 'Send Password Reset Email'}
