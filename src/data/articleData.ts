@@ -30,3 +30,6 @@ export const categories = [
   { name: 'セキュリティ', count: 7 },
   { name: '開発事例', count: 4 },
 ];
+
+export const defaultImageUrl =
+  'https://readdy.ai/api/search-image?query=Software%20development%20team%20working%20on%20microservices%20architecture%20diagram%2C%20modern%20tech%20office%20with%20multiple%20screens%20showing%20system%20design%2C%20professional%20environment%20with%20green%20accents&width=400&height=225&seq=1&orientation=landscape';
