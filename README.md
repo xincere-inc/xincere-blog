@@ -60,7 +60,7 @@ Ensure the following are installed on your system:
    Create a `.env.local` file in the root directory with the following content:
 
    ```env
-   DATABASE_URL=postgresql://postgres:password@db:5432/mydatabase
+   DATABASE_URL=postgresql://postgres:password@localhost:5432/xincere_blog
    NODE_ENV=development
    NEXT_PUBLIC_API_URL=http://localhost:3000
    NEXTAUTH_SECRET=your-secret-key
