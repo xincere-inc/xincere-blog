@@ -18,6 +18,8 @@
         "name": "next"
       }
     ],
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
