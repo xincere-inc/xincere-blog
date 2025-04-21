@@ -20,7 +20,8 @@
     "db:studio": "DATABASE_URL=postgresql://postgres:password@localhost:5432/xincere_blog?schema=public npx prisma studio",
     "db:reset": "DATABASE_URL='postgresql://postgres:password@localhost:5432/xincere_blog?schema=public' sh -c 'npx prisma migrate reset --skip-generate && npx prisma db seed'",
     "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "lint-staged": {
     "*.{ts,tsx}": "prettier --write",
