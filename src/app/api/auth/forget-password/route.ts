@@ -8,92 +8,11 @@ import {
 } from '@/api/client';
 import { prisma } from '@/lib/prisma';
 import { sendEmail } from '@/lib/utils/send-email';
-import { emailSchema } from '@/lib/zod/auth';
+import { emailSchema } from '@/lib/zod/auth/auth';
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
-/**
- * @swagger
- * /api/auth/forget-password:
- *   post:
- *     summary: Send a password reset email
- *     description: Sends a reset password email with a secure token link. Each user is allowed a maximum of 3 emails per hour.
- *     operationId: ForgetPassword
- *     tags:
- *       - Auth
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 example: "user@example.com"
- *     responses:
- *       200:
- *         description: Password reset email sent successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Password reset email sent successfully"
- *       400:
- *         description: Validation error or missing email
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Email is required"
- *                 details:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       path:
- *                         type: array
- *                         items:
- *                           type: string
- *                       message:
- *                         type: string
- *       404:
- *         description: Email not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Email not found."
- *       429:
- *         description: Too many requests within a short period
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Too many requests. Please try again later (1 hr)."
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/InternalServerError"
- */
 export async function POST(
   req: Request
 ): Promise<

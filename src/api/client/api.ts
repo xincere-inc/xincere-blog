@@ -12,32 +12,585 @@
  * Do not edit the class manually.
  */
 
-import type { Configuration } from './configuration';
-import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
+import type { AxiosInstance, AxiosPromise, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
+import type { Configuration } from './configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
+import type { RequestArgs } from './base';
 import {
   DUMMY_BASE_URL,
   assertParamExists,
-  setApiKeyToObject,
-  setBasicAuthToObject,
-  setBearerAuthToObject,
-  setOAuthToObject,
-  setSearchParams,
-  serializeDataIfNeeded,
-  toPathString,
   createRequestFunction,
+  serializeDataIfNeeded,
+  setSearchParams,
+  toPathString,
 } from './common';
-import type { RequestArgs } from './base';
 // @ts-ignore
-import {
-  BASE_PATH,
-  COLLECTION_FORMATS,
-  BaseAPI,
-  RequiredError,
-  operationServerMap,
-} from './base';
+import { BASE_PATH, BaseAPI, RequiredError, operationServerMap } from './base';
+
+/**
+ *
+ * @export
+ * @interface AdminCreateUser400Response
+ */
+export interface AdminCreateUser400Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateUser400Response
+   */
+  error?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminCreateUserRequest
+ */
+export interface AdminCreateUserRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateUserRequest
+   */
+  firstName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateUserRequest
+   */
+  lastName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateUserRequest
+   */
+  username: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateUserRequest
+   */
+  country: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateUserRequest
+   */
+  gender?: AdminCreateUserRequestGenderEnum;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateUserRequest
+   */
+  email: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateUserRequest
+   */
+  password: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateUserRequest
+   */
+  phone?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateUserRequest
+   */
+  address?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateUserRequest
+   */
+  role?: string;
+}
+
+export const AdminCreateUserRequestGenderEnum = {
+  Male: 'male',
+  Female: 'female',
+  Other: 'other',
+} as const;
+
+export type AdminCreateUserRequestGenderEnum =
+  (typeof AdminCreateUserRequestGenderEnum)[keyof typeof AdminCreateUserRequestGenderEnum];
+
+/**
+ *
+ * @export
+ * @interface AdminDeleteUsers400Response
+ */
+export interface AdminDeleteUsers400Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminDeleteUsers400Response
+   */
+  error?: string;
+  /**
+   *
+   * @type {Array<AdminDeleteUsers400ResponseErrorsInner>}
+   * @memberof AdminDeleteUsers400Response
+   */
+  errors?: Array<AdminDeleteUsers400ResponseErrorsInner>;
+}
+/**
+ *
+ * @export
+ * @interface AdminDeleteUsers400ResponseErrorsInner
+ */
+export interface AdminDeleteUsers400ResponseErrorsInner {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminDeleteUsers400ResponseErrorsInner
+   */
+  path?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminDeleteUsers400ResponseErrorsInner
+   */
+  message?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminDeleteUsers404Response
+ */
+export interface AdminDeleteUsers404Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminDeleteUsers404Response
+   */
+  error?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminDeleteUsersRequest
+ */
+export interface AdminDeleteUsersRequest {
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof AdminDeleteUsersRequest
+   */
+  ids: Array<string>;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetUsers200Response
+ */
+export interface AdminGetUsers200Response {
+  /**
+   *
+   * @type {Array<AdminGetUsers200ResponseDataInner>}
+   * @memberof AdminGetUsers200Response
+   */
+  data?: Array<AdminGetUsers200ResponseDataInner>;
+  /**
+   *
+   * @type {AdminGetUsers200ResponsePagination}
+   * @memberof AdminGetUsers200Response
+   */
+  pagination?: AdminGetUsers200ResponsePagination;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetUsers200ResponseDataInner
+ */
+export interface AdminGetUsers200ResponseDataInner {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers200ResponseDataInner
+   */
+  id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers200ResponseDataInner
+   */
+  email?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers200ResponseDataInner
+   */
+  firstName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers200ResponseDataInner
+   */
+  lastName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers200ResponseDataInner
+   */
+  country?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers200ResponseDataInner
+   */
+  username?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers200ResponseDataInner
+   */
+  address?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers200ResponseDataInner
+   */
+  phone?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers200ResponseDataInner
+   */
+  role?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetUsers200ResponsePagination
+ */
+export interface AdminGetUsers200ResponsePagination {
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetUsers200ResponsePagination
+   */
+  page?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetUsers200ResponsePagination
+   */
+  limit?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetUsers200ResponsePagination
+   */
+  showPerPage?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetUsers200ResponsePagination
+   */
+  totalUsers?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetUsers200ResponsePagination
+   */
+  totalPages?: number;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetUsers400Response
+ */
+export interface AdminGetUsers400Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers400Response
+   */
+  error?: string;
+  /**
+   *
+   * @type {Array<AdminGetUsers400ResponseErrorsInner>}
+   * @memberof AdminGetUsers400Response
+   */
+  errors?: Array<AdminGetUsers400ResponseErrorsInner>;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetUsers400ResponseErrorsInner
+ */
+export interface AdminGetUsers400ResponseErrorsInner {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers400ResponseErrorsInner
+   */
+  path?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsers400ResponseErrorsInner
+   */
+  message?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetUsersRequest
+ */
+export interface AdminGetUsersRequest {
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetUsersRequest
+   */
+  page?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetUsersRequest
+   */
+  limit?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetUsersRequest
+   */
+  search?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminUpdateUser200Response
+ */
+export interface AdminUpdateUser200Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser200Response
+   */
+  message?: string;
+  /**
+   *
+   * @type {AdminUpdateUser200ResponseUser}
+   * @memberof AdminUpdateUser200Response
+   */
+  user?: AdminUpdateUser200ResponseUser;
+}
+/**
+ *
+ * @export
+ * @interface AdminUpdateUser200ResponseUser
+ */
+export interface AdminUpdateUser200ResponseUser {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser200ResponseUser
+   */
+  id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser200ResponseUser
+   */
+  email?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser200ResponseUser
+   */
+  firstName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser200ResponseUser
+   */
+  lastName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser200ResponseUser
+   */
+  username?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser200ResponseUser
+   */
+  address?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser200ResponseUser
+   */
+  phone?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser200ResponseUser
+   */
+  role?: AdminUpdateUser200ResponseUserRoleEnum;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser200ResponseUser
+   */
+  country?: string;
+}
+
+export const AdminUpdateUser200ResponseUserRoleEnum = {
+  User: 'USER',
+  Admin: 'ADMIN',
+} as const;
+
+export type AdminUpdateUser200ResponseUserRoleEnum =
+  (typeof AdminUpdateUser200ResponseUserRoleEnum)[keyof typeof AdminUpdateUser200ResponseUserRoleEnum];
+
+/**
+ *
+ * @export
+ * @interface AdminUpdateUser400Response
+ */
+export interface AdminUpdateUser400Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser400Response
+   */
+  error?: string;
+  /**
+   *
+   * @type {Array<AdminUpdateUser400ResponseErrorsInner>}
+   * @memberof AdminUpdateUser400Response
+   */
+  errors?: Array<AdminUpdateUser400ResponseErrorsInner>;
+}
+/**
+ *
+ * @export
+ * @interface AdminUpdateUser400ResponseErrorsInner
+ */
+export interface AdminUpdateUser400ResponseErrorsInner {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser400ResponseErrorsInner
+   */
+  path?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser400ResponseErrorsInner
+   */
+  message?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminUpdateUser404Response
+ */
+export interface AdminUpdateUser404Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser404Response
+   */
+  error?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminUpdateUser500Response
+ */
+export interface AdminUpdateUser500Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser500Response
+   */
+  error?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateUser500Response
+   */
+  message?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminUpdateUserRequest
+ */
+export interface AdminUpdateUserRequest {
+  /**
+   * The ID of the user to update.
+   * @type {string}
+   * @memberof AdminUpdateUserRequest
+   */
+  id: string;
+  /**
+   * The email address of the user.
+   * @type {string}
+   * @memberof AdminUpdateUserRequest
+   */
+  email?: string;
+  /**
+   * The first name of the user.
+   * @type {string}
+   * @memberof AdminUpdateUserRequest
+   */
+  firstName?: string;
+  /**
+   * The last name of the user.
+   * @type {string}
+   * @memberof AdminUpdateUserRequest
+   */
+  lastName?: string;
+  /**
+   * The username of the user.
+   * @type {string}
+   * @memberof AdminUpdateUserRequest
+   */
+  username?: string;
+  /**
+   * The address of the user.
+   * @type {string}
+   * @memberof AdminUpdateUserRequest
+   */
+  address?: string;
+  /**
+   * The phone number of the user.
+   * @type {string}
+   * @memberof AdminUpdateUserRequest
+   */
+  phone?: string;
+  /**
+   * The role of the user.
+   * @type {string}
+   * @memberof AdminUpdateUserRequest
+   */
+  role?: AdminUpdateUserRequestRoleEnum;
+  /**
+   * The country of the user.
+   * @type {string}
+   * @memberof AdminUpdateUserRequest
+   */
+  country?: string;
+}
+
+export const AdminUpdateUserRequestRoleEnum = {
+  User: 'user',
+  Admin: 'admin',
+} as const;
+
+export type AdminUpdateUserRequestRoleEnum =
+  (typeof AdminUpdateUserRequestRoleEnum)[keyof typeof AdminUpdateUserRequestRoleEnum];
 
 /**
  *
@@ -473,6 +1026,520 @@ export interface VerifyEmail400Response {
    * @memberof VerifyEmail400Response
    */
   message?: string;
+}
+
+/**
+ * AdminApi - axios parameter creator
+ * @export
+ */
+export const AdminApiAxiosParamCreator = function (
+  configuration?: Configuration
+) {
+  return {
+    /**
+     * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+     * @summary Register a new user
+     * @param {AdminCreateUserRequest} adminCreateUserRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminCreateUser: async (
+      adminCreateUserRequest: AdminCreateUserRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminCreateUserRequest' is not null or undefined
+      assertParamExists(
+        'adminCreateUser',
+        'adminCreateUserRequest',
+        adminCreateUserRequest
+      );
+      const localVarPath = `/api/admin/users/create-user`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminCreateUserRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Deletes users from the database based on the provided IDs.
+     * @summary Delete users by IDs
+     * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminDeleteUsers: async (
+      adminDeleteUsersRequest: AdminDeleteUsersRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminDeleteUsersRequest' is not null or undefined
+      assertParamExists(
+        'adminDeleteUsers',
+        'adminDeleteUsersRequest',
+        adminDeleteUsersRequest
+      );
+      const localVarPath = `/api/admin/users/delete-user`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'DELETE',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminDeleteUsersRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Retrieves users from the database with pagination and optional search.
+     * @summary Fetch users with pagination and search
+     * @param {AdminGetUsersRequest} adminGetUsersRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminGetUsers: async (
+      adminGetUsersRequest: AdminGetUsersRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminGetUsersRequest' is not null or undefined
+      assertParamExists(
+        'adminGetUsers',
+        'adminGetUsersRequest',
+        adminGetUsersRequest
+      );
+      const localVarPath = `/api/admin/users/get-user`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminGetUsersRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Update details of an existing user based on the provided user ID.
+     * @summary Update user details
+     * @param {AdminUpdateUserRequest} adminUpdateUserRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUpdateUser: async (
+      adminUpdateUserRequest: AdminUpdateUserRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminUpdateUserRequest' is not null or undefined
+      assertParamExists(
+        'adminUpdateUser',
+        'adminUpdateUserRequest',
+        adminUpdateUserRequest
+      );
+      const localVarPath = `/api/admin/users/update-user`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'PUT',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminUpdateUserRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * AdminApi - functional programming interface
+ * @export
+ */
+export const AdminApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = AdminApiAxiosParamCreator(configuration);
+  return {
+    /**
+     * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+     * @summary Register a new user
+     * @param {AdminCreateUserRequest} adminCreateUserRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminCreateUser(
+      adminCreateUserRequest: AdminCreateUserRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Created>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.adminCreateUser(
+        adminCreateUserRequest,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminCreateUser']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Deletes users from the database based on the provided IDs.
+     * @summary Delete users by IDs
+     * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminDeleteUsers(
+      adminDeleteUsersRequest: AdminDeleteUsersRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminDeleteUsers(
+          adminDeleteUsersRequest,
+          options
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminDeleteUsers']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Retrieves users from the database with pagination and optional search.
+     * @summary Fetch users with pagination and search
+     * @param {AdminGetUsersRequest} adminGetUsersRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminGetUsers(
+      adminGetUsersRequest: AdminGetUsersRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminGetUsers200Response>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetUsers(
+        adminGetUsersRequest,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminGetUsers']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Update details of an existing user based on the provided user ID.
+     * @summary Update user details
+     * @param {AdminUpdateUserRequest} adminUpdateUserRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminUpdateUser(
+      adminUpdateUserRequest: AdminUpdateUserRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminUpdateUser200Response>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateUser(
+        adminUpdateUserRequest,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminUpdateUser']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * AdminApi - factory interface
+ * @export
+ */
+export const AdminApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance
+) {
+  const localVarFp = AdminApiFp(configuration);
+  return {
+    /**
+     * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+     * @summary Register a new user
+     * @param {AdminCreateUserRequest} adminCreateUserRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminCreateUser(
+      adminCreateUserRequest: AdminCreateUserRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<Created> {
+      return localVarFp
+        .adminCreateUser(adminCreateUserRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     * Deletes users from the database based on the provided IDs.
+     * @summary Delete users by IDs
+     * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminDeleteUsers(
+      adminDeleteUsersRequest: AdminDeleteUsersRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<Success> {
+      return localVarFp
+        .adminDeleteUsers(adminDeleteUsersRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     * Retrieves users from the database with pagination and optional search.
+     * @summary Fetch users with pagination and search
+     * @param {AdminGetUsersRequest} adminGetUsersRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminGetUsers(
+      adminGetUsersRequest: AdminGetUsersRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminGetUsers200Response> {
+      return localVarFp
+        .adminGetUsers(adminGetUsersRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     * Update details of an existing user based on the provided user ID.
+     * @summary Update user details
+     * @param {AdminUpdateUserRequest} adminUpdateUserRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUpdateUser(
+      adminUpdateUserRequest: AdminUpdateUserRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminUpdateUser200Response> {
+      return localVarFp
+        .adminUpdateUser(adminUpdateUserRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * AdminApi - object-oriented interface
+ * @export
+ * @class AdminApi
+ * @extends {BaseAPI}
+ */
+export class AdminApi extends BaseAPI {
+  /**
+   * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+   * @summary Register a new user
+   * @param {AdminCreateUserRequest} adminCreateUserRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminCreateUser(
+    adminCreateUserRequest: AdminCreateUserRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminCreateUser(adminCreateUserRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Deletes users from the database based on the provided IDs.
+   * @summary Delete users by IDs
+   * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminDeleteUsers(
+    adminDeleteUsersRequest: AdminDeleteUsersRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminDeleteUsers(adminDeleteUsersRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Retrieves users from the database with pagination and optional search.
+   * @summary Fetch users with pagination and search
+   * @param {AdminGetUsersRequest} adminGetUsersRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminGetUsers(
+    adminGetUsersRequest: AdminGetUsersRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminGetUsers(adminGetUsersRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Update details of an existing user based on the provided user ID.
+   * @summary Update user details
+   * @param {AdminUpdateUserRequest} adminUpdateUserRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminUpdateUser(
+    adminUpdateUserRequest: AdminUpdateUserRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminUpdateUser(adminUpdateUserRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 }
 
 /**

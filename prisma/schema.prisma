@@ -18,6 +18,7 @@ enum Gender {
   other
 }
 
+// user role
 enum Role {
   user
   admin
@@ -29,10 +30,12 @@ model User {
   lastName                String?
   username                String   @unique
   email                   String   @unique
+  address                 String?  @default("")
   gender                  Gender? 
   role                    Role     @default(user) // User role, default is user
   country                 String?
   password                String
+  phone                   String?  @unique  
   emailVerified           Boolean  @default(false) // Email verification status
   emailVerificationToken  String?  @unique         // Email verification token
   resetPasswordToken      String?  @unique         // Reset password token

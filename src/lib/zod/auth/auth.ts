@@ -1,6 +1,6 @@
 import { RegisterRequest } from '@/api/client';
 import { z } from 'zod';
-import { prisma } from '../prisma';
+import { prisma } from '../../prisma';
 
 export const registerSchemaBase: z.ZodType<RegisterRequest> = z
   .object({

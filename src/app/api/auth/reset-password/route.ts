@@ -5,61 +5,11 @@ import {
   ValidationError,
 } from '@/api/client';
 import { prisma } from '@/lib/prisma';
-import { resetPasswordSchema } from '@/lib/zod/auth';
+import { resetPasswordSchema } from '@/lib/zod/auth/auth';
 import { hash } from 'bcryptjs';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-/**
- * @swagger
- * /api/reset-password:
- *   post:
- *     summary: Reset password for a user
- *     description: Resets the user's password using a provided reset token and new password. The reset token is invalidated after the reset.
- *     operationId: resetPassword
- *     tags:
- *       - Auth
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - token
- *               - newPassword
- *             properties:
- *               token:
- *                 type: string
- *                 example: "d4c79ab8-b6b7-48b4-b5a4-56e8d41be26f"
- *               newPassword:
- *                 type: string
- *                 format: password
- *                 example: "NewSecureP@ssw0rd"
- *     responses:
- *       200:
- *         description: Password reset successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/Created"
- *       400:
- *         description: Invalid or expired token, or missing fields
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Token and new password are required"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/InternalServerError"
- */
 export async function POST(
   req: Request
 ): Promise<NextResponse<Success | ValidationError | InternalServerError>> {

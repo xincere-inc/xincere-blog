@@ -3,50 +3,6 @@ import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-/**
- * @swagger
- * /api/auth/verify-email:
- *   get:
- *     summary: Verify user email
- *     description: Verifies the user's email address using a provided verification token. Marks the user's email as verified in the database.
- *     operationId: verifyEmail
- *     tags:
- *       - Auth
- *     parameters:
- *       - in: query
- *         name: token
- *         required: true
- *         description: The email verification token sent to the user's email address.
- *         schema:
- *           type: string
- *           example: "d4c79ab8-b6b7-48b4-b5a4-56e8d41be26g"
- *     responses:
- *       200:
- *         description: Email successfully verified
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/Created"
- *       400:
- *         description: Invalid or expired token, or token not provided
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Token is required"
- *                 message:
- *                   type: string
- *                   example: "The provided token is invalid or has expired"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/InternalServerError"
- */
 export async function GET(
   req: Request
 ): Promise<NextResponse<Success | ValidationError | InternalServerError>> {

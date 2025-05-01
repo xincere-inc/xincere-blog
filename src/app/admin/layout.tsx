@@ -1,7 +1,9 @@
+import AdminLayout from '@/components/admin/AdminLayout';
 import { Providers } from '@/components/provider';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { ToastContainer } from 'react-toastify';
 import '../globals.css';
 
 const geistSans = Geist({
@@ -30,8 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <AntdRegistry>{children}</AntdRegistry>
+          <AntdRegistry>
+            <AdminLayout>{children}</AdminLayout>
+          </AntdRegistry>
         </Providers>
+        <ToastContainer />
       </body>
     </html>
   );

@@ -6,84 +6,11 @@ import {
 } from '@/api/client';
 import { prisma } from '@/lib/prisma';
 import { sendEmail } from '@/lib/utils/send-email';
-import { registerSchema } from '@/lib/zod/auth';
+import { registerSchema } from '@/lib/zod/auth/auth';
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
-
-/**
- * @swagger
- * /api/auth/register:
- *   post:
- *     summary: Register a new user
- *     description: Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
- *     operationId: Register
- *     tags:
- *       - Auth
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - firstName
- *               - email
- *               - username
- *               - password
- *               - confirmPassword
- *               - gender
- *
- *             properties:
- *               firstName:
- *                 type: string
- *                 example: John
- *               lastName:
- *                 type: string
- *                 example: Doe
- *               username:
- *                 type: string
- *                 example: johndoe
- *               country:
- *                 type: string
- *                 example: Bangladesh
- *               gender:
- *                 type: string
- *                 enum: [male, female, other]
- *                 example: male
- *               email:
- *                 type: string
- *                 format: email
- *                 example: user@example.com
- *               password:
- *                 type: string
- *                 format: password
- *                 example: SecureP@ssw0rd
- *               confirmPassword:
- *                 type: string
- *                 format: password
- *                 example: SecureP@ssw0rd
- *     responses:
- *       201:
- *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/Created"
- *       400:
- *         description: Validation errors
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ValidationError"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/InternalServerError"
- */
 
 export async function POST(
   req: Request
@@ -129,6 +56,9 @@ export async function POST(
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = uuidv4();
 
+    // Get the total number of users in the database
+    const totalUsers = await prisma.user.count();
+
     await prisma.user.create({
       data: {
         firstName,
@@ -139,6 +69,7 @@ export async function POST(
         username,
         password: hashedPassword,
         emailVerificationToken: verificationToken,
+        role: totalUsers === 0 ? 'admin' : 'user',
       },
     });
 

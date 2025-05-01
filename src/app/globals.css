@@ -23,3 +23,13 @@
 .primary-button {
   @apply mt-4 w-full rounded-lg bg-blue-600 py-2 text-white hover:shadow-lg;
 }
+
+.ant-form-item {
+  margin-bottom: 20px !important;
+}
+.ant-table-thead {
+  white-space: nowrap;
+}
+.ant-modal-title {
+  padding-bottom: 10px;
+}

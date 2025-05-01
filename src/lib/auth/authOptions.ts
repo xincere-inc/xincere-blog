@@ -28,7 +28,7 @@ export const authOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'your-auth-secret',
   pages: {
     signIn: '/', // Corrected typo in path
   },

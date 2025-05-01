@@ -7,81 +7,10 @@ import {
 } from '@/api/client';
 import getSession from '@/lib/auth/getSession';
 import { prisma } from '@/lib/prisma';
-import { changePasswordSchema } from '@/lib/zod/auth';
+import { changePasswordSchema } from '@/lib/zod/auth/auth';
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-
-/**
- * @swagger
- * /api/auth/change-password:
- *   post:
- *     summary: Change user password
- *     description: Allows an authenticated user to change their password by providing the old and new password.
- *     operationId: changePassword
- *     tags:
- *       - Auth
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - oldPassword
- *               - newPassword
- *             properties:
- *               oldPassword:
- *                 type: string
- *                 example: "oldPassword123"
- *               newPassword:
- *                 type: string
- *                 example: "newSecurePassword456"
- *     responses:
- *       200:
- *         description: Password changed successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/Created"
- *       400:
- *         description: Validation error, same old and new password, or invalid old password
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Validation error"
- *                 details:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       path:
- *                         type: array
- *                         items:
- *                           type: string
- *                       message:
- *                         type: string
- *       401:
- *         description: Unauthorized or session expired
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Unauthorized"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/InternalServerError"
- */
 
 export async function POST(
   req: Request

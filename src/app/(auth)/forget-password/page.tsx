@@ -1,7 +1,7 @@
 'use client';
 
 import IdoAuth from '@/api/IdoAuth';
-import { emailSchema } from '@/lib/zod/auth';
+import { emailSchema } from '@/lib/zod/auth/auth';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';

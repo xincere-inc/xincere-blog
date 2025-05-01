@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { prisma } from '../prisma';
-import { signInSchema } from '../zod/auth';
+import { signInSchema } from '../zod/auth/auth';
 
 const credentialsProvider = CredentialsProvider({
   name: 'Credentials',

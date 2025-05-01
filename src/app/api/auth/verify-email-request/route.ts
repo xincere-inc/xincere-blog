@@ -6,78 +6,10 @@ import {
 } from '@/api/client';
 import { prisma } from '@/lib/prisma';
 import { sendEmail } from '@/lib/utils/send-email';
-import { emailSchema } from '@/lib/zod/auth';
+import { emailSchema } from '@/lib/zod/auth/auth';
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
-
-/**
- * @swagger
- * /api/auth/verify-email-request:
- *   post:
- *     summary: Send verification email to a registered user
- *     description: This endpoint sends a verification email to the user with the provided email address.
- *     operationId: sendVerificationEmail
- *     tags:
- *       - Auth
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 example: "user@example.com"
- *     responses:
- *       200:
- *         description: Verification email sent successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/Created"
- *       400:
- *         description: Validation error or missing email
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Validation error"
- *                 details:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       path:
- *                         type: array
- *                         items:
- *                           type: string
- *                       message:
- *                         type: string
- *       404:
- *         description: Email not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Email not found."
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/InternalServerError"
- */
 
 export async function POST(
   req: Request
