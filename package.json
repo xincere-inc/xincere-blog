@@ -4,7 +4,11 @@
   "private": true,
   "type": "module",
   "prisma": {
-    "seed": "ts-node -r tsconfig-paths/register --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "seed": "ts-node -r tsconfig-paths/register --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts",
+    "import": {
+      "schemas": "./prisma/schema/models/*.prisma",
+      "output": "./prisma/schema/schema.prisma"
+    }
   },
   "scripts": {
     "dev": "next dev --turbopack",
@@ -13,10 +17,10 @@
     "lint": "eslint --ext .ts,.js,.tsx . && prettier --check \"./**/*.{ts,js,tsx}\"",
     "lint:fix": "eslint --ext .ts,.js,.tsx . --fix && prettier --write \"./**/*.{ts,js,tsx,scss}\"",
     "format": "prettier --write .",
-    "db:migrate": "npx prisma migrate dev && npx prisma generate",
-    "db:migrate:local": "DATABASE_URL='postgresql://postgres:password@localhost:5432/xincere_blog?schema=public' sh -c 'npx prisma migrate reset --skip-seed && npx prisma migrate dev && npx prisma generate && npx prisma db seed'",
-    "db:migrate:docker": "npx prisma migrate deploy && npx prisma generate",
-    "db:deploy": "npx prisma migrate deploy",
+    "db:migrate": "npx prisma-import migrate dev && npx prisma-import generate",
+    "db:migrate:local": "DATABASE_URL='postgresql://postgres:password@localhost:5432/xincere_blog?schema=public' sh -c 'npx prisma-import migrate reset --skip-seed && npx prisma-import migrate dev && npx prisma-import generate && npx prisma-import db seed'",
+    "db:migrate:docker": "npx prisma-import migrate deploy && npx prisma-import generate",
+    "db:deploy": "npx prisma-import migrate deploy",
     "db:studio": "DATABASE_URL=postgresql://postgres:password@localhost:5432/xincere_blog?schema=public npx prisma studio",
     "db:reset": "DATABASE_URL='postgresql://postgres:password@localhost:5432/xincere_blog?schema=public' sh -c 'npx prisma migrate reset --skip-generate && npx prisma db seed'",
     "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client",

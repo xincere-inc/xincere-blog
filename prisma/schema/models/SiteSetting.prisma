@@ -1,0 +1,9 @@
+model SiteSetting {
+  key       String   @id @map("key")
+  value     String   @map("value")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("site_settings")
+}

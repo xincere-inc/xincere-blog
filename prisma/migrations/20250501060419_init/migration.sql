@@ -1,35 +1,32 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "Gender" AS ENUM ('male', 'female', 'other');
 
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('user', 'admin');
 
-*/
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'AUTHOR', 'EDITOR', 'USER');
 
 -- CreateEnum
 CREATE TYPE "ArticleStatus" AS ENUM ('DRAFT', 'PUBLISHED', 'ARCHIVED');
 
--- DropTable
-DROP TABLE "User";
-
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
-    "firstName" TEXT NOT NULL,
-    "lastName" TEXT,
-    "username" TEXT NOT NULL,
+    "first_name" TEXT NOT NULL,
+    "last_name" TEXT,
     "email" TEXT NOT NULL,
+    "address" TEXT DEFAULT '',
     "gender" "Gender",
     "role" "Role" NOT NULL DEFAULT 'user',
     "country" TEXT,
     "password" TEXT NOT NULL,
-    "emailVerified" BOOLEAN NOT NULL DEFAULT false,
-    "emailVerificationToken" TEXT,
-    "resetPasswordToken" TEXT,
-    "resetPasswordMailCount" INTEGER NOT NULL DEFAULT 0,
-    "resetPasswordMailTime" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "email_verified" BOOLEAN NOT NULL DEFAULT false,
+    "email_verified_token" TEXT,
+    "reset_password_token" TEXT,
+    "reset_password_mail_count" INTEGER NOT NULL DEFAULT 0,
+    "reset_password_mail_time" TIMESTAMP(3),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "deleted_at" TIMESTAMP(3),
 
@@ -156,16 +153,13 @@ CREATE TABLE "analytics" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
-
--- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_emailVerificationToken_key" ON "users"("emailVerificationToken");
+CREATE UNIQUE INDEX "users_email_verified_token_key" ON "users"("email_verified_token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_resetPasswordToken_key" ON "users"("resetPasswordToken");
+CREATE UNIQUE INDEX "users_reset_password_token_key" ON "users"("reset_password_token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "categories_slug_key" ON "categories"("slug");

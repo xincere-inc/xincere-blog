@@ -1,0 +1,12 @@
+model Category {
+  id          Int       @id @default(autoincrement()) @map("id")
+  name        String    @map("name")
+  slug        String    @unique @map("slug")
+  description String?   @map("description")
+  articles    Article[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@map("categories")
+}

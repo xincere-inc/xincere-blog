@@ -1,0 +1,26 @@
+model User {
+  id                      String   @id @default(uuid())
+  firstName               String   @map("first_name")
+  lastName                String?  @map("last_name")
+  email                   String   @unique
+  address                 String?  @default("")
+  gender                  Gender? 
+  role                    Role     @default(user) // User role, default is user
+  country                 String?
+  password                String
+  emailVerified           Boolean  @default(false) @map("email_verified") // Email verification status
+  emailVerificationToken  String?  @unique @map("email_verified_token")        // Email verification token
+  resetPasswordToken      String?   @unique              @map("reset_password_token")      // リセット用トークン
+  resetPasswordMailCount  Int       @default(0)          @map("reset_password_mail_count") // 1時間あたりの送信回数
+  resetPasswordMailTime   DateTime?                      @map("reset_password_mail_time")  // 最終送信時刻
+  createdAt               DateTime  @default(now())      @map("created_at") // Created at
+
+  articles      Article[]
+  comments      Comment[]
+  likes         Like[]
+  media         Media[]
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  deletedAt     DateTime?  @map("deleted_at")
+
+  @@map("users")
+}

@@ -1,0 +1,9 @@
+model ArticleTag {
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId Int     @map("article_id")
+  tag       Tag     @relation(fields: [tagId], references: [id])
+  tagId     Int     @map("tag_id")
+
+  @@id([articleId, tagId])
+  @@map("article_tags")
+}

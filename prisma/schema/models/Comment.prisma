@@ -1,0 +1,16 @@
+model Comment {
+  id        Int       @id @default(autoincrement()) @map("id")
+  article   Article   @relation(fields: [articleId], references: [id])
+  articleId Int       @map("article_id")
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?   @map("user_id")
+  name      String?   @map("name")
+  email     String?   @map("email")
+  content   String    @map("content")
+  status    String    @default("pending") @map("status")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("comments")
+}

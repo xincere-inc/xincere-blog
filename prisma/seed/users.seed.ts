@@ -15,7 +15,6 @@ export async function seedUsers() {
     data: {
       firstName: '太郎',
       lastName: 'admin',
-      username: 'admin太郎',
       email: 'admin@example.com',
       gender: Gender.male,
       role: Role.admin,
@@ -32,7 +31,6 @@ export async function seedUsers() {
     data: {
       firstName: '太郎',
       lastName: 'テスト',
-      username: 'テスト太郎',
       email: 'sample@example.com',
       gender: Gender.male,
       role: Role.user,
@@ -48,7 +46,6 @@ export async function seedUsers() {
     return {
       firstName: fakerJA.person.firstName(),
       lastName: fakerJA.person.lastName(),
-      username: fakerJA.person.fullName(),
       email: fakerJA.internet.email(),
       gender: fakerJA.helpers.arrayElement(Object.values(Gender)),
       role: Role.user,

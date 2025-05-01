@@ -1,0 +1,14 @@
+model Media {
+  id         Int      @id @default(autoincrement()) @map("id")
+  uploader   User     @relation(fields: [uploaderId], references: [id])
+  uploaderId String   @map("uploader_id")
+  fileName   String   @map("file_name")
+  fileUrl    String   @map("file_url")
+  mimeType   String   @map("mime_type")
+  size       Int      @map("size")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  @@map("media")
+}

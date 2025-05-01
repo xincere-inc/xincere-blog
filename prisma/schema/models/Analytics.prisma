@@ -1,0 +1,14 @@
+model Analytics {
+  id            Int      @id @default(autoincrement()) @map("id")
+  article       Article  @relation(fields: [articleId], references: [id])
+  articleId     Int      @unique @map("article_id")
+  viewsCount    Int      @default(0) @map("views_count")
+  likesCount    Int      @default(0) @map("likes_count")
+  commentsCount Int      @default(0) @map("comments_count")
+  lastViewedAt  DateTime? @map("last_viewed_at")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  deletedAt     DateTime? @map("deleted_at")
+
+  @@map("analytics")
+}

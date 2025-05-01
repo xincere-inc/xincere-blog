@@ -1,0 +1,23 @@
+enum Gender {
+  male
+  female
+  other
+}
+
+enum Role {
+  user
+  admin
+}
+
+enum UserRole {
+  ADMIN
+  AUTHOR
+  EDITOR
+  USER
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
