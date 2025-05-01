@@ -32,8 +32,8 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({ articles }) => {
             onClick={() => handleTabChange(tab)}
             className={`px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-t-md transition-colors duration-300 !rounded-button whitespace-nowrap cursor-pointer ${
               activeTab === tab
-                ? 'bg-[#427C2E] text-white'
-                : 'bg-[#E8F0E6] text-gray-700 hover:bg-[#d8e6d2]'
+                ? 'bg-primary text-white'
+                : 'bg-[#E8F0E6 text-gray-700 hover:bg-primary-light'
             }`}
           >
             {tab === 'all' ? 'すべて' : tab}
@@ -56,7 +56,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({ articles }) => {
             </div>
             <div className="p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="inline-block bg-[#E8F0E6] text-[#427C2E] text-xs px-2 py-1 rounded">
+                <span className="inline-block bg-[#E8F0E6] text-primary text-xs px-2 py-1 rounded">
                   {article.category.name}
                 </span>
                 <span className="text-gray-500 text-xs">

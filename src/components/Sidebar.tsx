@@ -29,11 +29,11 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, popularArticles }) => {
           <input
             type="text"
             placeholder="記事を検索"
-            className="w-full pl-10 pr-4 py-2 border border-[#427C2E] rounded-md focus:outline-none focus:ring-2 focus:ring-[#427C2E] focus:border-transparent text-sm"
+            className="w-full pl-10 pr-4 py-2 border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
             value={searchQuery}
             onChange={handleSearchChange}
           />
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#427C2E]">
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary">
             <i className="fas fa-search"></i>
           </div>
         </div>
@@ -42,14 +42,14 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, popularArticles }) => {
       <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
         <h3 className="font-bold text-lg mb-4 border-b pb-2">カテゴリー</h3>
         <ul>
-          {categories.map((category, index) => (
-            <li key={index}>
+          {categories.map((category) => (
+            <li key={category.id}>
               <a
                 href="#"
-                className="flex justify-between items-center py-2 hover:bg-[#E8F0E6] px-2 rounded-md transition-colors duration-300 cursor-pointer"
+                className="flex justify-between items-center py-2 hover:bg-primary-light px-2 rounded-md transition-colors duration-300 cursor-pointer"
               >
                 <span>{category.name}</span>
-                <span className="bg-[#E8F0E6] text-[#427C2E] text-xs px-2 py-1 rounded-full">
+                <span className="bg-primary-light text-primary text-xs px-2 py-1 rounded-full">
                   {category._count.articles}
                 </span>
               </a>
