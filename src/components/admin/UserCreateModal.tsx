@@ -84,32 +84,6 @@ export function UserCreateModal({
               <Input />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12}>
-            <Form.Item
-              label="Username"
-              name="username"
-              rules={[
-                { required: true, message: 'Please input the username!' },
-                {
-                  pattern: /^[a-zA-Z0-9_]+$/,
-                  message:
-                    'Username can only contain letters, numbers, and underscores',
-                },
-                {
-                  validator: (_, value) => {
-                    if (!value || (value.length >= 3 && value.length <= 50)) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(
-                      new Error('Username must be between 3 and 50 characters')
-                    );
-                  },
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
         </Row>
 
         <Row gutter={16}>

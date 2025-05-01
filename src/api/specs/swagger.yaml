@@ -125,7 +125,6 @@ paths:
               required:
                 - firstName
                 - lastName
-                - username
                 - country
                 - email
                 - password
@@ -136,9 +135,6 @@ paths:
                 lastName:
                   type: string
                   example: Doe
-                username:
-                  type: string
-                  example: johndoe
                 country:
                   type: string
                   example: Bangladesh
@@ -283,8 +279,6 @@ paths:
                           type: string
                         country:
                           type: string
-                        username:
-                          type: string
                         address:
                           type: string
                         phone:
@@ -369,10 +363,6 @@ paths:
                   type: string
                   description: The last name of the user.
                   example: Doe
-                username:
-                  type: string
-                  description: The username of the user.
-                  example: johndoe
                 address:
                   type: string
                   description: The address of the user.
@@ -419,9 +409,6 @@ paths:
                       lastName:
                         type: string
                         example: Doe
-                      username:
-                        type: string
-                        example: johndoe
                       address:
                         type: string
                         example: 123 Main St, Springfield, IL
@@ -644,7 +631,6 @@ paths:
               required:
                 - firstName
                 - email
-                - username
                 - password
                 - confirmPassword
                 - gender
@@ -655,9 +641,6 @@ paths:
                 lastName:
                   type: string
                   example: Doe
-                username:
-                  type: string
-                  example: johndoe
                 country:
                   type: string
                   example: Bangladesh

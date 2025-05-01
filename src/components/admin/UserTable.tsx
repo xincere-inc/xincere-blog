@@ -17,9 +17,7 @@ interface User {
   firstName?: string;
   lastName?: string;
   country?: string;
-  username?: string;
   address?: string;
-  phone?: string;
   role?: string;
 }
 
@@ -62,9 +60,7 @@ export default function UserTable() {
               firstName: user.firstName || '',
               lastName: user.lastName || '',
               country: user.country || '',
-              username: user.username || '',
               address: user.address || '',
-              phone: user.phone || '',
               role: user.role || '',
             })
           ) || [];
@@ -117,9 +113,7 @@ export default function UserTable() {
         email: values.email,
         firstName: values.firstName,
         lastName: values.lastName,
-        username: values.username,
         address: values.address,
-        phone: values.phone,
         role: values.role,
         country: values.country,
         password: values.password,
@@ -228,9 +222,7 @@ export default function UserTable() {
     { title: 'Last Name', dataIndex: 'lastName', key: 'lastName' },
     { title: 'Email', dataIndex: 'email', key: 'email' },
     { title: 'Country', dataIndex: 'country', key: 'country' },
-    { title: 'Username', dataIndex: 'username', key: 'username' },
     { title: 'Address', dataIndex: 'address', key: 'address' },
-    { title: 'Phone', dataIndex: 'phone', key: 'phone' },
     { title: 'Role', dataIndex: 'role', key: 'role' },
     {
       title: 'Action',

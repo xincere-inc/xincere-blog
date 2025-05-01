@@ -1,5 +1,4 @@
 import {
-  AdminDeleteUsers400Response,
   AdminDeleteUsersRequest,
   InternalServerError,
   Success,
@@ -21,7 +20,6 @@ export async function DELETE(
     | Success
     | ValidationError
     | InternalServerError
-    | AdminDeleteUsers400Response
   >
 > {
   try {

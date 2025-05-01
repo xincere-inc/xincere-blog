@@ -36,9 +36,9 @@ export async function POST(
     }
 
     // Check if the username already exists
-    const existingUsername = await prisma.user.findUnique({
+    const existingUsername = await prisma.user.findFirst({
       where: {
-        username: parsedBody.username,
+        lastName: parsedBody.lastName || '',
       },
     });
     if (existingUsername) {
@@ -50,7 +50,7 @@ export async function POST(
       );
     }
 
-    const { firstName, lastName, username, email, password, country, gender } =
+    const { firstName, lastName, email, password, country, gender } =
       parsedBody;
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -66,7 +66,6 @@ export async function POST(
         email,
         country,
         gender,
-        username,
         password: hashedPassword,
         emailVerificationToken: verificationToken,
         role: totalUsers === 0 ? 'admin' : 'user',

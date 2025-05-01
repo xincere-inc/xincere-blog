@@ -23,7 +23,6 @@ const SigninForm = () => {
     setLoading(true);
     try {
       const res = await signIn('credentials', {
-        username: formData.username,
         password: formData.password,
         redirect: false,
       });

@@ -45,9 +45,7 @@ export async function POST(
           { firstName: { contains: search, mode: 'insensitive' } },
           { lastName: { contains: search, mode: 'insensitive' } },
           { country: { contains: search, mode: 'insensitive' } },
-          { username: { contains: search, mode: 'insensitive' } },
           { address: { contains: search, mode: 'insensitive' } },
-          { phone: { contains: search, mode: 'insensitive' } },
         ],
       };
 
@@ -69,9 +67,7 @@ export async function POST(
         firstName: true,
         lastName: true,
         country: true,
-        username: true,
         address: true,
-        phone: true,
         role: true,
       },
     });
@@ -90,7 +86,6 @@ export async function POST(
       lastName: user.lastName ?? '',
       country: user.country ?? '',
       address: user.address ?? '',
-      phone: user.phone ?? '',
     }));
 
     return NextResponse.json(

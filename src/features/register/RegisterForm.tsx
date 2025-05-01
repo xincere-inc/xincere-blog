@@ -61,7 +61,6 @@ const RegisterForm = () => {
       const response = await IdoAuth.register({
         firstName: formData.firstName,
         lastName: formData.lastName,
-        username: formData.username,
         email: formData.email,
         password: formData.password,
         country: formData.country,

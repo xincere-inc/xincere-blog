@@ -35,7 +35,6 @@ const credentialsProvider = CredentialsProvider({
       where: {
         OR: [
           { email: credentials.username },
-          { username: credentials.username },
         ],
       },
     });
@@ -59,7 +58,6 @@ const credentialsProvider = CredentialsProvider({
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName ?? '',
-      username: user.username,
       role: user.role,
       emailVerified: user.emailVerified,
     };
