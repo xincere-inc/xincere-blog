@@ -4,8 +4,8 @@ info:
   description: API documentation for Next.js 15 application
   version: 1.0.0
   contact:
-    name: "API Support"
-    email: "support@example.com"
+    name: 'API Support'
+    email: 'support@example.com'
 
 servers:
   - url: http://localhost:3000
@@ -25,7 +25,7 @@ paths:
       operationId: greetUser
       description: Returns a simple greeting message to the user.
       responses:
-        "200":
+        '200':
           description: A greeting message
           content:
             application/json:
@@ -34,7 +34,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Hello, world!"
+                    example: 'Hello, world!'
 
   /api/auth/signup:
     post:
@@ -47,26 +47,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SignupInput"
+              $ref: '#/components/schemas/SignupInput'
       responses:
-        "201":
+        '201':
           description: User registered successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SignupResponse"
-        "400":
+                $ref: '#/components/schemas/SignupResponse'
+        '400':
           description: Invalid email format, missing required fields, or user already exists
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error, e.g., database failure or internal issue
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/auth/verify-email:
     get:
@@ -81,26 +81,26 @@ paths:
           description: The email verification token received in the verification email.
           schema:
             type: string
-            example: "abc123xyz"
+            example: 'abc123xyz'
       responses:
-        "200":
+        '200':
           description: Email successfully verified
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SuccessResponse"
-        "400":
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
           description: Invalid or expired token
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/auth/verify-email-request:
     post:
@@ -113,9 +113,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/VerifyEmailRequestInput"
+              $ref: '#/components/schemas/VerifyEmailRequestInput'
       responses:
-        "200":
+        '200':
           description: Verification email sent successfully.
           content:
             application/json:
@@ -124,14 +124,14 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Verification email sent successfully."
-        "400":
+                    example: 'Verification email sent successfully.'
+        '400':
           description: Email is required.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: Email not found. Redirecting to sign-up.
           content:
             application/json:
@@ -140,13 +140,13 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Email not found. Redirecting to sign-up."
-        "500":
+                    example: 'Email not found. Redirecting to sign-up.'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/auth/change-password:
     post:
@@ -161,9 +161,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ChangePasswordInput"
+              $ref: '#/components/schemas/ChangePasswordInput'
       responses:
-        "200":
+        '200':
           description: Password changed successfully
           content:
             application/json:
@@ -172,25 +172,25 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Password has been changed successfully."
-        "400":
+                    example: 'Password has been changed successfully.'
+        '400':
           description: Invalid old password or weak new password
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
           description: Unauthorized (User not logged in)
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/auth/forgot-password:
     post:
@@ -203,27 +203,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ForgotPasswordRequestInput"
+              $ref: '#/components/schemas/ForgotPasswordRequestInput'
       responses:
-        "200":
+        '200':
           description: Password reset email sent successfully.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SuccessResponse"
-        "400":
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
           description: Bad request, possibly email not found or error in sending the email.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: Email not found.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "429":
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
           description: Too many requests. Please try again later (1 hr).
           content:
             application/json:
@@ -232,13 +232,13 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Too many requests. Please try again later (1 hr)."
-        "500":
+                    example: 'Too many requests. Please try again later (1 hr).'
+        '500':
           description: Internal server error.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/auth/reset-password:
     post:
@@ -251,9 +251,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ResetPasswordInput"
+              $ref: '#/components/schemas/ResetPasswordInput'
       responses:
-        "200":
+        '200':
           description: Password reset successfully
           content:
             application/json:
@@ -262,25 +262,25 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Password reset successfully"
-        "400":
+                    example: 'Password reset successfully'
+        '400':
           description: Invalid or expired token
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "422":
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
           description: Validation error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   schemas:
@@ -294,44 +294,44 @@ components:
         email:
           type: string
           format: email
-          description: "The email address of the user. Must be a valid email format."
-          example: "user@example.com"
+          description: 'The email address of the user. Must be a valid email format.'
+          example: 'user@example.com'
         password:
           type: string
           format: password
           minLength: 8
-          description: "The password for the user. Must be at least 8 characters."
-          example: "Password123!"
+          description: 'The password for the user. Must be at least 8 characters.'
+          example: 'Password123!'
         name:
           type: string
           minLength: 3
-          description: "The name of the user. Must be at least 3 characters long."
-          example: "John Doe"
+          description: 'The name of the user. Must be at least 3 characters long.'
+          example: 'John Doe'
 
     SignupResponse:
       type: object
       properties:
         message:
           type: string
-          description: "Success message indicating user creation."
-          example: "User created successfully. A verification email has been sent."
+          description: 'Success message indicating user creation.'
+          example: 'User created successfully. A verification email has been sent.'
         user:
           type: object
           properties:
             id:
               type: string
               format: uuid
-              description: "Unique identifier for the newly created user."
-              example: "123e4567-e89b-12d3-a456-426614174000"
+              description: 'Unique identifier for the newly created user.'
+              example: '123e4567-e89b-12d3-a456-426614174000'
             email:
               type: string
               format: email
-              description: "The email address of the newly created user."
-              example: "user@example.com"
+              description: 'The email address of the newly created user.'
+              example: 'user@example.com'
             name:
               type: string
-              description: "The name of the newly created user."
-              example: "John Doe"
+              description: 'The name of the newly created user.'
+              example: 'John Doe'
 
     VerifyEmailRequestInput:
       type: object
@@ -341,8 +341,8 @@ components:
         email:
           type: string
           format: email
-          description: "The email address to verify."
-          example: "user@example.com"
+          description: 'The email address to verify.'
+          example: 'user@example.com'
 
     ChangePasswordInput:
       type: object
@@ -354,13 +354,13 @@ components:
           type: string
           format: password
           description: "The user's current password."
-          example: "OldPassword123!"
+          example: 'OldPassword123!'
         newPassword:
           type: string
           format: password
           minLength: 8
-          description: "The new password for the user. Must be at least 8 characters long."
-          example: "NewPassword123!"
+          description: 'The new password for the user. Must be at least 8 characters long.'
+          example: 'NewPassword123!'
 
     ResetPasswordInput:
       type: object
@@ -370,14 +370,14 @@ components:
       properties:
         token:
           type: string
-          description: "Reset token received via email"
-          example: "abc123xyz"
+          description: 'Reset token received via email'
+          example: 'abc123xyz'
         newPassword:
           type: string
           format: password
           minLength: 8
-          description: "New password for the user"
-          example: "NewSecurePassword123!"
+          description: 'New password for the user'
+          example: 'NewSecurePassword123!'
 
     ForgotPasswordRequestInput:
       type: object
@@ -387,23 +387,23 @@ components:
         email:
           type: string
           format: email
-          description: "The email address of the user requesting the password reset."
+          description: 'The email address of the user requesting the password reset.'
 
     SuccessResponse:
       type: object
       properties:
         message:
           type: string
-          description: "Success message."
-          example: "Operation completed successfully."
+          description: 'Success message.'
+          example: 'Operation completed successfully.'
 
     ErrorResponse:
       type: object
       properties:
         error:
           type: string
-          description: "Description of the error encountered."
-          example: "Invalid input provided"
+          description: 'Description of the error encountered.'
+          example: 'Invalid input provided'
         details:
           type: array
           items:
@@ -411,12 +411,12 @@ components:
             properties:
               message:
                 type: string
-                description: "Error message for a specific validation failure."
-                example: "Password must be at least 8 characters."
+                description: 'Error message for a specific validation failure.'
+                example: 'Password must be at least 8 characters.'
               field:
                 type: string
-                description: "The field that failed validation."
-                example: "password"
+                description: 'The field that failed validation.'
+                example: 'password'
 
   securitySchemes:
     bearerAuth:

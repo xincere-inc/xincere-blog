@@ -32,15 +32,8 @@ export async function PUT(
     // Validate input
     const parsed = await updateAdminUserSchema.safeParseAsync(body);
 
-    const {
-      id,
-      email,
-      firstName,
-      lastName,
-      address,
-      role,
-      country,
-    } = parsed.data as any;
+    const { id, email, firstName, lastName, address, role, country } =
+      parsed.data as any;
 
     const userExists = await prisma.user.findUnique({ where: { id } });
 

@@ -1,4 +1,19 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-primary: #427c2e;
+  --color-primary-light: #e8f0e6;
+  --color-primary-dark: #356423;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+}
 
 .input {
   @apply w-full rounded-md border p-2 text-xs transition-all duration-200 ease-in-out placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500;

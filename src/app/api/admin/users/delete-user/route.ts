@@ -16,10 +16,7 @@ export async function DELETE(
   req: Request
 ): Promise<
   NextResponse<
-    | UnAuthorizedError
-    | Success
-    | ValidationError
-    | InternalServerError
+    UnAuthorizedError | Success | ValidationError | InternalServerError
   >
 > {
   try {

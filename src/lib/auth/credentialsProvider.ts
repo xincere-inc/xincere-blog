@@ -33,9 +33,7 @@ const credentialsProvider = CredentialsProvider({
     // Find the user by email or username
     const user = await prisma.user.findFirst({
       where: {
-        OR: [
-          { email: credentials.username },
-        ],
+        OR: [{ email: credentials.username }],
       },
     });
 
