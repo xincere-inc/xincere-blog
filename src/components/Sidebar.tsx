@@ -2,11 +2,7 @@
 
 import React, { useState } from 'react';
 import ContactCTA from './ContactCTA';
-
-interface Category {
-  name: string;
-  count: number;
-}
+import type { Category } from '@prisma/client';
 
 interface Article {
   id: number;
@@ -15,7 +11,7 @@ interface Article {
 }
 
 interface SidebarProps {
-  categories: Category[];
+  categories: (Category & { _count: { articles: number } })[];
   popularArticles: Article[];
 }
 
@@ -54,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, popularArticles }) => {
               >
                 <span>{category.name}</span>
                 <span className="bg-[#E8F0E6] text-[#427C2E] text-xs px-2 py-1 rounded-full">
-                  {category.count}
+                  {category._count.articles}
                 </span>
               </a>
             </li>
