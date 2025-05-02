@@ -4,6 +4,8 @@ import Sidebar from '../components/Sidebar';
 import { popularArticles } from '../data/articleData';
 import { prisma } from '@/lib/prisma';
 import { ArticleStatus } from '@prisma/client';
+import PickUpArticle from '../components/PickUpArticle';
+import H2 from '../components/organisms/h2';
 
 const HomePage = async () => {
   const [articles, categories] = await Promise.all([
@@ -29,6 +31,25 @@ const HomePage = async () => {
       {/* ヒーローセクション */}
       <HeroSection />
 
+      {/* ピックアップ記事 */}
+      <div className="mb-12">
+        <H2 title="PICK UP" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <PickUpArticle
+            imageUrl="https://readdy.ai/api/search-image?query=Professional%20female%20freelancer%20working%20on%20laptop%20in%20modern%20office%20space%20with%20natural%20lighting%2C%20business%20attire%2C%20confident%20pose&width=200&height=300&seq=10&orientation=portrait"
+            authorImageUrl="https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20Asian%20woman%20in%20business%20attire%2C%20neutral%20background&width=40&height=40&seq=11&orientation=squarish"
+            authorName="永田 さおり"
+            title="フリーランスで独立後「粗利3000万を当たり前に稼ぐ」ために必要な5つのこと"
+          />
+          <PickUpArticle
+            imageUrl="https://readdy.ai/api/search-image?query=SEO%20analytics%20dashboard%20on%20computer%20screen%20in%20modern%20office%20setting%2C%20professional%20environment&width=200&height=300&seq=12&orientation=portrait"
+            authorImageUrl="https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20Asian%20man%20in%20business%20attire%2C%20neutral%20background&width=40&height=40&seq=13&orientation=squarish"
+            authorName="田島 光太郎"
+            title="後発のBtoBメディアがコンテンツSEOで勝ち切るために必要だった10のこと"
+            link="https://readdy.ai/home/be8c1c9a-dd36-4a42-bf07-949bb16184d3/178b2350-1f75-4d94-b2e2-d26325a9c972"
+          />
+        </div>
+      </div>
       {/* メインコンテンツ */}
       <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
         {/* 記事一覧エリア */}
