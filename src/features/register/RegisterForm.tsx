@@ -95,11 +95,6 @@ const RegisterForm = () => {
                 type: 'manual',
                 message: error.message,
               });
-            } else if (error.path === 'username') {
-              setError(error.path, {
-                type: 'manual',
-                message: error.message,
-              });
             }
           });
         } else {
@@ -160,30 +155,6 @@ const RegisterForm = () => {
           />
         </div>
       </div>
-
-      {/* Username Field */}
-      <InputField
-        id="username"
-        label="Username"
-        placeholder="Enter your username"
-        register={register('username', {
-          required: 'Username is required',
-          pattern: {
-            value: /^[a-zA-Z0-9_]*$/i,
-            message:
-              'Username must contain only letters, numbers, and underscores',
-          },
-          minLength: {
-            value: 3,
-            message: 'Username must be at least 3 characters long',
-          },
-          maxLength: {
-            value: 50,
-            message: 'Username must be at most 20 characters long',
-          },
-        })}
-        error={errors.username}
-      />
 
       {/* Email Field */}
       <InputField

@@ -47,14 +47,14 @@ const SigninForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <InputField
-        id="username"
-        label="Username or Email"
+        id="email"
+        label="Email"
         type="text"
-        placeholder="Enter username or email"
-        register={register('username', {
-          required: 'Username or Email is required',
+        placeholder="Enter your email"
+        register={register('email', {
+          required: 'Email is required',
         })}
-        error={errors.username}
+        error={errors.email}
       />
       <PasswordField
         id="password"

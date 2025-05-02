@@ -35,21 +35,6 @@ export async function POST(
       );
     }
 
-    // Check if the username already exists
-    const existingUsername = await prisma.user.findFirst({
-      where: {
-        lastName: parsedBody.lastName || '',
-      },
-    });
-    if (existingUsername) {
-      return NextResponse.json(
-        {
-          error: 'Username already exists',
-        },
-        { status: 400 }
-      );
-    }
-
     const { firstName, lastName, email, password, country, gender } =
       parsedBody;
 
