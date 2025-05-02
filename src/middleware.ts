@@ -19,7 +19,7 @@ export default auth(async (req) => {
   );
 
   // Check if the route is allow access with and without authentication
-  const isOPenRoutes = ACCESS_ALL.some((route) =>
+  const isOpenRoutes = ACCESS_ALL.some((route) =>
     nextUrl.pathname.includes(route)
   );
 
@@ -31,7 +31,7 @@ export default auth(async (req) => {
   }
 
   // Allow free access to
-  if (isOPenRoutes) {
+  if (isOpenRoutes) {
     return NextResponse.next();
   }
 

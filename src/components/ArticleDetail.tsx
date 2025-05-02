@@ -3,7 +3,7 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import AuthorCard from '@/components/AuthorCard';
 import ContactCTA from '@/components/ContactCTA';
-import ArticleCard from '@/components/ArticleCard';
+import ArticleCard from '@/components/ArticleIndexCard';
 
 const ArticleDetail = ({
   breadcrumbItems,
