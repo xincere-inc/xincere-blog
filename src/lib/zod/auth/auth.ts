@@ -50,17 +50,16 @@ export const registerSchemaBase: z.ZodType<RegisterRequest> = z
     path: ['confirmPassword'],
   });
 
-export const registerSchema = registerSchemaBase
-  .refine(
-    async ({ email }) => {
-      const isUnique = !(await prisma.user.findUnique({ where: { email } }));
-      return isUnique;
-    },
-    {
-      message: 'Email is already in use',
-      path: ['email'],
-    }
-  )
+export const registerSchema = registerSchemaBase.refine(
+  async ({ email }) => {
+    const isUnique = !(await prisma.user.findUnique({ where: { email } }));
+    return isUnique;
+  },
+  {
+    message: 'Email is already in use',
+    path: ['email'],
+  }
+);
 
 // Define the Zod schema for the sign-in
 export const signInSchema = z.object({

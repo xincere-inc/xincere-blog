@@ -72,25 +72,36 @@ const App: React.FC = () => {
               <h2 className="text-xl font-bold border-l-4 border-[#4D8B50] pl-3 mb-4">
                 2. 収集する情報
               </h2>
-              <p className="mb-4">
-                当社は、次の情報を取得する場合があります。
-              </p>
+              <p className="mb-4">当社は、次の情報を取得する場合があります。</p>
               <div className="overflow-x-auto mb-4">
                 <table className="min-w-full border-collapse border border-gray-300">
                   <thead>
                     <tr className="bg-gray-100">
-                      <th className="border border-gray-300 px-4 py-2 text-left">区分</th>
-                      <th className="border border-gray-300 px-4 py-2 text-left">具体例</th>
+                      <th className="border border-gray-300 px-4 py-2 text-left">
+                        区分
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2 text-left">
+                        具体例
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="border border-gray-300 px-4 py-2">ご利用者が直接提供する情報</td>
-                      <td className="border border-gray-300 px-4 py-2">氏名、電話番号、メールアドレス 等</td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        ご利用者が直接提供する情報
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        氏名、電話番号、メールアドレス 等
+                      </td>
                     </tr>
                     <tr>
-                      <td className="border border-gray-300 px-4 py-2">自動的に生成・取得される情報</td>
-                      <td className="border border-gray-300 px-4 py-2">IPアドレス、端末情報、ブラウザ情報、Cookie、行動履歴、ログ情報 等</td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        自動的に生成・取得される情報
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        IPアドレス、端末情報、ブラウザ情報、Cookie、行動履歴、ログ情報
+                        等
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -119,13 +130,23 @@ const App: React.FC = () => {
                 4. 法的根拠（EEA 等対象の場合）
               </h2>
               <p className="mb-4">
-                GDPR 等が適用される場合、当社は以下の法的根拠に基づき情報を取扱います。
+                GDPR
+                等が適用される場合、当社は以下の法的根拠に基づき情報を取扱います。
               </p>
               <ul className="list-disc pl-6 mb-4 space-y-2">
-                <li><strong>契約の履行</strong>：利用規約に基づくサービス提供</li>
-                <li><strong>同意</strong>：メールマガジン配信、クッキー利用（詳細は第6条）</li>
-                <li><strong>正当な利益</strong>：サービス改善、セキュリティ確保</li>
-                <li><strong>法令遵守</strong>：会計・税務・当局の要請対応</li>
+                <li>
+                  <strong>契約の履行</strong>：利用規約に基づくサービス提供
+                </li>
+                <li>
+                  <strong>同意</strong>
+                  ：メールマガジン配信、クッキー利用（詳細は第6条）
+                </li>
+                <li>
+                  <strong>正当な利益</strong>：サービス改善、セキュリティ確保
+                </li>
+                <li>
+                  <strong>法令遵守</strong>：会計・税務・当局の要請対応
+                </li>
               </ul>
             </section>
 
@@ -138,9 +159,13 @@ const App: React.FC = () => {
               </p>
               <ul className="list-disc pl-6 mb-4 space-y-2">
                 <li>法令に基づく場合</li>
-                <li>人の生命、身体または財産の保護のために必要であり、ご本人の同意を得ることが困難な場合</li>
+                <li>
+                  人の生命、身体または財産の保護のために必要であり、ご本人の同意を得ることが困難な場合
+                </li>
                 <li>公衆衛生の向上、児童の健全育成推進のため特に必要な場合</li>
-                <li>国の機関等への協力のうち、同意取得が業務の遂行に支障を及ぼす場合</li>
+                <li>
+                  国の機関等への協力のうち、同意取得が業務の遂行に支障を及ぼす場合
+                </li>
               </ul>
             </section>
 
@@ -158,7 +183,18 @@ const App: React.FC = () => {
                 7. アクセス解析ツール
               </h2>
               <p className="mb-4">
-                本サービスは Google Analytics 等の解析ツールを利用することがあります。ツール提供者への情報送信内容・利用目的については各提供者のポリシーをご確認ください。Google Analytics の無効化は <a href="https://tools.google.com/dlpage/gaoptout?hl=ja" className="text-[#4D8B50] underline hover:no-underline" target="_blank" rel="noopener noreferrer">こちら</a> からオプトアウト可能です。
+                本サービスは Google Analytics
+                等の解析ツールを利用することがあります。ツール提供者への情報送信内容・利用目的については各提供者のポリシーをご確認ください。Google
+                Analytics の無効化は{' '}
+                <a
+                  href="https://tools.google.com/dlpage/gaoptout?hl=ja"
+                  className="text-[#4D8B50] underline hover:no-underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  こちら
+                </a>{' '}
+                からオプトアウト可能です。
               </p>
             </section>
 
@@ -167,9 +203,18 @@ const App: React.FC = () => {
                 8. オプトアウト方法
               </h2>
               <ul className="list-disc pl-6 mb-4 space-y-2">
-                <li><strong>メールマガジン</strong>：配信メールに記載の手順またはアカウント設定から配信停止が可能です。</li>
-                <li><strong>ターゲティング広告</strong>：クッキー設定の変更、各広告プラットフォームのオプトアウトページで無効化できます。</li>
-                <li><strong>アクセス解析</strong>：前項記載のツール提供者のオプトアウト機能をご利用ください。</li>
+                <li>
+                  <strong>メールマガジン</strong>
+                  ：配信メールに記載の手順またはアカウント設定から配信停止が可能です。
+                </li>
+                <li>
+                  <strong>ターゲティング広告</strong>
+                  ：クッキー設定の変更、各広告プラットフォームのオプトアウトページで無効化できます。
+                </li>
+                <li>
+                  <strong>アクセス解析</strong>
+                  ：前項記載のツール提供者のオプトアウト機能をご利用ください。
+                </li>
               </ul>
             </section>
 
@@ -199,9 +244,16 @@ const App: React.FC = () => {
                 当社は、個人情報の漏えい、滅失または毀損の防止その他安全管理のため、次の措置を講じます。
               </p>
               <ul className="list-disc pl-6 mb-4 space-y-2">
-                <li><strong>物理的安全管理</strong>：入退室管理、施錠保管</li>
-                <li><strong>技術的安全管理</strong>：SSL/TLS、アクセス制御、暗号化、WAF</li>
-                <li><strong>組織的安全管理</strong>：内部規程整備、教育研修、監査</li>
+                <li>
+                  <strong>物理的安全管理</strong>：入退室管理、施錠保管
+                </li>
+                <li>
+                  <strong>技術的安全管理</strong>
+                  ：SSL/TLS、アクセス制御、暗号化、WAF
+                </li>
+                <li>
+                  <strong>組織的安全管理</strong>：内部規程整備、教育研修、監査
+                </li>
               </ul>
             </section>
 

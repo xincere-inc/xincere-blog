@@ -31,7 +31,7 @@ const AuthorCard = ({
             <div className="font-bold hover:text-primary transition-colors duration-300">
               {name}
             </div>
-            </Link>
+          </Link>
         ) : (
           <div className="font-bold">{name}</div>
         )}

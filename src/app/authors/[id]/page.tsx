@@ -3,7 +3,6 @@
 import React from 'react';
 
 const App: React.FC = () => {
-
   return (
     <div className="min-h-screen flex flex-col">
       {/* ヘッダー */}

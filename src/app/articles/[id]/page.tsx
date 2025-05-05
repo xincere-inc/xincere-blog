@@ -225,7 +225,10 @@ const ArticleDetailPage = () => {
           </div>
         </div>
         {/* 著者情報（モバイル表示用） */}
-        <Link href="/authors/1" className="lg:hidden bg-white rounded-lg shadow-sm p-4 mb-8 block">
+        <Link
+          href="/authors/1"
+          className="lg:hidden bg-white rounded-lg shadow-sm p-4 mb-8 block"
+        >
           <div className="flex items-center">
             <Image
               src="https://readdy.ai/api/search-image?query=Professional%2520headshot%2520of%2520Asian%2520man%2520in%2520business%2520attire%252C%2520neutral%2520background%252C%2520high%2520quality%2520portrait%2520with%2520soft%2520lighting%2520and%2520shallow%2520depth%2520of%2520field&width=80&height=80&seq=14&orientation=squarish"
@@ -327,7 +330,10 @@ const ArticleDetailPage = () => {
         {/* 著者情報（デスクトップ表示用） */}
         <div className="hidden lg:block bg-white p-4 rounded-lg shadow-sm mb-6">
           <h3 className="font-bold text-lg mb-4 border-b pb-2">著者について</h3>
-          <Link href="/authors/1" className="flex flex-col items-center text-center mb-4 block">
+          <Link
+            href="/authors/1"
+            className="flex flex-col items-center text-center mb-4 block"
+          >
             <Image
               src="https://readdy.ai/api/search-image?query=Professional%2520headshot%2520of%2520Asian%2520man%2520in%2520business%2520attire%252C%2520neutral%2520background%252C%2520high%2520quality%2520portrait%2520with%2520soft%2520lighting%2520and%2520shallow%2520depth%2520of%2520field&width=120&height=120&seq=19&orientation=squarish"
               alt="田島光太郎"
