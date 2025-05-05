@@ -1,6 +1,6 @@
 model Article {
   id           Int            @id @default(autoincrement()) @map("id")
-  author       User           @relation(fields: [authorId], references: [id])
+  author       Author         @relation(fields: [authorId], references: [id])
   authorId     String         @map("author_id")
   category     Category       @relation(fields: [categoryId], references: [id])
   categoryId   Int            @map("category_id")

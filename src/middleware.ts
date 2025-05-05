@@ -27,7 +27,7 @@ export default auth(async (req) => {
 
   if (session?.expires && Date.now() > new Date(session.expires).getTime()) {
     await signOut();
-    return NextResponse.redirect(new URL('/signin', nextUrl)); // Redirect to /signin after sign-out
+    return NextResponse.redirect(new URL('/', nextUrl)); // Redirect to /signin after sign-out
   }
 
   // Allow free access to
@@ -48,7 +48,7 @@ export default auth(async (req) => {
   // Redirect unauthenticated users trying to access protected routes
   if (!isAuthenticated && !isPublicRoute) {
     console.log('Unauthenticated user attempting to access a protected route.');
-    return NextResponse.redirect(new URL('/signin', nextUrl));
+    return NextResponse.redirect(new URL('/', nextUrl));
   }
 
   if (nextUrl.pathname.startsWith('/admin')) {

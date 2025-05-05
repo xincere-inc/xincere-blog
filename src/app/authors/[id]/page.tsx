@@ -1,13 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 
 const App: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
 
   return (
     <div className="min-h-screen flex flex-col">

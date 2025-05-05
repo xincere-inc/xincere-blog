@@ -15,7 +15,6 @@ model User {
   resetPasswordMailTime   DateTime?                      @map("reset_password_mail_time")  // 最終送信時刻
   createdAt               DateTime  @default(now())      @map("created_at") // Created at
 
-  articles      Article[]
   comments      Comment[]
   likes         Like[]
   media         Media[]

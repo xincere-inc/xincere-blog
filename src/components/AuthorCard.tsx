@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface AuthorCardProps {
   name: string;
@@ -26,11 +27,11 @@ const AuthorCard = ({
       />
       <div>
         {profileUrl ? (
-          <a href={profileUrl} className="block">
+          <Link href="/authors/1" className="block">
             <div className="font-bold hover:text-primary transition-colors duration-300">
               {name}
             </div>
-          </a>
+            </Link>
         ) : (
           <div className="font-bold">{name}</div>
         )}

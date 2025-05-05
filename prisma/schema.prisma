@@ -46,7 +46,7 @@ model Analytics {
 
 model Article {
   id           Int           @id @default(autoincrement()) @map("id")
-  author       User          @relation(fields: [authorId], references: [id])
+  author       Author        @relation(fields: [authorId], references: [id])
   authorId     String        @map("author_id")
   category     Category      @relation(fields: [categoryId], references: [id])
   categoryId   Int           @map("category_id")
@@ -79,6 +79,24 @@ model ArticleTag {
 
   @@id([articleId, tagId])
   @@map("article_tags")
+}
+
+//
+// authors.prisma
+//
+
+model Author {
+  id        String   @id @default(uuid()) @map("id")
+  name      String   @map("name")
+  title     String   @map("title")
+  bio       String   @map("bio")
+  avatarUrl String?  @map("avatar_url")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  articles Article[]
+
+  @@map("authors") // テーブル名もスネークケースに変更
 }
 
 //
@@ -233,7 +251,6 @@ model User {
   resetPasswordMailTime  DateTime? @map("reset_password_mail_time") // 最終送信時刻
   createdAt              DateTime  @default(now()) @map("created_at") // Created at
 
-  articles  Article[]
   comments  Comment[]
   likes     Like[]
   media     Media[]
