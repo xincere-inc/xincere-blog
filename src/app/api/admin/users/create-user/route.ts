@@ -36,7 +36,6 @@ export async function POST(
       password,
       firstName,
       lastName,
-      username,
       address,
       phone,
       role,

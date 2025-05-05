@@ -289,7 +289,10 @@ components:
       required:
         - email
         - password
-        - name
+        - firstName
+        - lastName
+        - country
+        - gender
       properties:
         email:
           type: string
@@ -302,11 +305,28 @@ components:
           minLength: 8
           description: 'The password for the user. Must be at least 8 characters.'
           example: 'Password123!'
-        name:
+        firstName:
           type: string
+          format: firstName
           minLength: 3
-          description: 'The name of the user. Must be at least 3 characters long.'
-          example: 'John Doe'
+          description: 'The firstName for the user. Must be at least 3 characters.'
+          example: 'john'
+        lastName:
+          type: string
+          format: lastName
+          minLength: 3
+          description: 'The last for the user. Must be at least 3 characters.'
+          example: 'john'
+        country:
+          type: string
+          format: country
+          description: 'The country for the user'
+          example: 'japan'
+        gender:
+          type: string
+          format: gender
+          description: 'The gender for the user'
+          example: 'male'
 
     SignupResponse:
       type: object
@@ -328,10 +348,7 @@ components:
               format: email
               description: 'The email address of the newly created user.'
               example: 'user@example.com'
-            name:
-              type: string
-              description: 'The name of the newly created user.'
-              example: 'John Doe'
+            
 
     VerifyEmailRequestInput:
       type: object
