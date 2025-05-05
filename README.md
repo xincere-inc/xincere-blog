@@ -1,4 +1,4 @@
-```# Next.js Fullstack Base
+# Next.js Fullstack Base
 
 [![Node Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)
 

@@ -1,6 +1,6 @@
-import { PrismaClient, Gender, Role } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
 import { fakerJA } from '@faker-js/faker';
+import { Gender, PrismaClient, Role } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -10,7 +10,7 @@ export async function seedUsers() {
   await prisma.article.deleteMany({});
   await prisma.user.deleteMany({});
 
-  const adminPassword = await bcrypt.hash('admin12345', 10);
+  const adminPassword = await bcrypt.hash('Admin12345@', 10);
   await prisma.user.create({
     data: {
       firstName: '太郎',
@@ -26,7 +26,7 @@ export async function seedUsers() {
     },
   });
 
-  const hashedPassword = await bcrypt.hash('test12345', 10);
+  const hashedPassword = await bcrypt.hash('Test12345@', 10);
   await prisma.user.create({
     data: {
       firstName: '太郎',

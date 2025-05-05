@@ -23,13 +23,16 @@ const SigninForm = () => {
     setLoading(true);
     try {
       const res = await signIn('credentials', {
+        email: formData.email,
         password: formData.password,
         redirect: false,
       });
 
-      console.log(res);
-
       if (!res?.error) {
+        toast.success('Sign in successful', {
+          position: 'bottom-right',
+          autoClose: 2000, // Auto-close after 2 seconds
+        });
         // Redirect to dashboard or any other page
         router.push('/dashboard');
       } else {
