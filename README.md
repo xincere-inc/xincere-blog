@@ -45,6 +45,7 @@ Ensure the following are installed on your system:
 
    ```bash
    git clone https://github.com/xincere-inc/nextjs-fullstack-base
+
    cd nextjs-fullstack-base
    ```
 
@@ -75,6 +76,12 @@ Ensure the following are installed on your system:
    - `SMTP_USERNAME`: Secret key for `smtp`.
    - `SMTP_PASSWORD`: Secret key for `smtp`.
 
+   ## Running Database Migrations Locally
+
+4. **To apply database migrations locally:**
+      ```bash
+      npx prisma migrate dev
+      ```
 ---
 
 ## Usage
@@ -87,7 +94,8 @@ Start the application in development mode:
 docker-compose up --build
 ```
 
-- Access the app at [http://localhost:3000](http://localhost:3000).
+
+- Access the app at [http://localhost:3000](http://localhost:3000)
 
 Stop the containers:
 
@@ -100,15 +108,16 @@ docker-compose down
 1. Build the production Docker image:
 
    ```bash
-   docker build -t nextjs-app .
+   docker build -t nextjs-app
    ```
+   
 
 2. Run the production container:
 
    ```bash
    docker run -p 3000:3000 --env NODE_ENV=production nextjs-app
    ```
-
+   
 ---
 
 ## Testing
@@ -118,6 +127,7 @@ Run unit tests with:
 ```bash
 npm test
 ```
+
 
 Run tests in watch mode:
 
@@ -137,18 +147,16 @@ npm run test:coverage
 
 ### Deployment
 
-1. Ensure the `.env.production` file is configured with production environment variables.
+1. Ensure the .env.production file is configured with production environment variables.
 2. Build and deploy the Docker image to your preferred cloud provider.
 
 ### CI/CD
 
-This project uses GitHub Actions for CI/CD. The workflow file is located at `.github/workflows/ci.yml`.
+This project uses GitHub Actions for CI/CD. The workflow file is located at .github/workflows/ci.yml.
 
 ---
-
 ## Directory Structure
-
-```plaintext
+```
 .
 ├── prisma/                  # Contains Prisma schema and migration files
 │   ├── migrations/          # Auto-generated migration files by Prisma
@@ -177,18 +185,26 @@ This project uses GitHub Actions for CI/CD. The workflow file is located at `.gi
 
 ---
 
+## Admin Page Login Info
+
+
+
+> *Note:* Go to the /register first and register an user, the first registered user will be the admin user. Then go to the /signin page and login the newly created user. Rest of the user will be as usual normal user, that means the first registered is the admin user.
+
+---
+
 ## Contributing
 
 We welcome contributions! Please follow these steps:
 
 1. Fork the repository.
-2. Create a new branch: `git checkout -b feature/your-feature-name`.
-3. Commit your changes: `git commit -m 'Add some feature'`.
-4. Push to the branch: `git push origin feature/your-feature-name`.
+2. Create a new branch: git checkout -b feature/your-feature-name.
+3. Commit your changes: git commit -m 'Add some feature'.
+4. Push to the branch: git push origin feature/your-feature-name.
 5. Open a pull request.
 
 ---
 
 ## License
 
-This project is licensed under the **MIT License**. See the [LICENSE](./LICENSE) file for details.
+This project is licensed under the *MIT License*. See the [LICENSE](./LICENSE) file for details.
