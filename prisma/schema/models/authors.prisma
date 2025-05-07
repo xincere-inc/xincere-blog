@@ -1,0 +1,13 @@
+model Author {
+  id          String   @id @default(uuid()) @map("id")
+  name        String   @map("name")
+  title       String   @map("title")
+  bio         String   @map("bio")
+  avatarUrl   String?  @map("avatar_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt       @map("updated_at")
+
+  @@map("authors") // テーブル名もスネークケースに変更
+
+  articles      Article[]
+}

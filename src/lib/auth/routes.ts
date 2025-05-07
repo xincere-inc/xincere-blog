@@ -1,6 +1,14 @@
 export const ROOT = '/';
-export const PUBLIC_ROUTES = ['/signin', '/register', '/verify-email', '/forget-password', '/reset-password'];
+export const PUBLIC_ROUTES = [
+  '/signin',
+  '/register',
+  '/verify-email',
+  '/forget-password',
+  '/reset-password',
+];
 export const ACCESS_ALL = [
+  '/privacy',
+  '/contacts',
   '/authors',
   '/articles',
   '/api-docs',

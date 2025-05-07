@@ -19,14 +19,6 @@ export const registerSchemaBase: z.ZodType<RegisterRequest> = z
       })
       .optional(),
 
-    username: z
-      .string({ required_error: 'Username is required' })
-      .min(3, { message: 'Username must be at least 3 characters' })
-      .max(50, { message: 'Username must be at most 50 characters' })
-      .regex(/^[a-zA-Z0-9_]*$/, {
-        message: 'Username must contain only letters, numbers, and underscores',
-      }),
-
     email: z
       .string({ required_error: 'Email is required' })
       .email({ message: 'Invalid email address' }),
@@ -58,31 +50,20 @@ export const registerSchemaBase: z.ZodType<RegisterRequest> = z
     path: ['confirmPassword'],
   });
 
-export const registerSchema = registerSchemaBase
-  .refine(
-    async ({ email }) => {
-      const isUnique = !(await prisma.user.findUnique({ where: { email } }));
-      return isUnique;
-    },
-    {
-      message: 'Email is already in use',
-      path: ['email'],
-    }
-  )
-  .refine(
-    async ({ username }) => {
-      const isUnique = !(await prisma.user.findUnique({ where: { username } }));
-      return isUnique;
-    },
-    {
-      message: 'Username is already taken',
-      path: ['username'],
-    }
-  );
+export const registerSchema = registerSchemaBase.refine(
+  async ({ email }) => {
+    const isUnique = !(await prisma.user.findUnique({ where: { email } }));
+    return isUnique;
+  },
+  {
+    message: 'Email is already in use',
+    path: ['email'],
+  }
+);
 
 // Define the Zod schema for the sign-in
 export const signInSchema = z.object({
-  username: z.string({ required_error: 'Username is required' }),
+  email: z.string({ required_error: 'Email is required' }),
   password: z.string({ required_error: 'Password is required' }),
 });
 

@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { seedUsers } from './seed/users.seed.ts';
 import { seedCategories } from './seed/categories.seed.ts';
 import { seedArticles } from './seed/articles.seed.ts';
+import { seedAuthors } from './seed/authors.seed.ts';
 
 const prisma = new PrismaClient();
 
@@ -9,6 +10,7 @@ async function main() {
   try {
     console.log('Starting seed process...');
 
+    await seedAuthors();
     await seedUsers();
     await seedCategories();
     await seedArticles();

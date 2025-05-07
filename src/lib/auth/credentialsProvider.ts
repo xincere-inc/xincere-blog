@@ -6,18 +6,18 @@ import { signInSchema } from '../zod/auth/auth';
 const credentialsProvider = CredentialsProvider({
   name: 'Credentials',
   credentials: {
-    username: {},
+    email: {},
     password: {},
   },
   async authorize(credentials) {
     console.log(credentials, 'credentials');
-    if (!credentials?.username || !credentials?.password) {
+    if (!credentials?.email || !credentials?.password) {
       throw new Error('Missing email or password');
     }
 
     // Validate input using Zod schema
     const parsedBody = signInSchema.safeParse({
-      username: credentials.username,
+      email: credentials.email,
       password: credentials.password,
     });
 
@@ -30,10 +30,10 @@ const credentialsProvider = CredentialsProvider({
       throw new Error(JSON.stringify(errorResponse));
     }
 
-    // Find the user by email or username
+    // Find the user by email
     const user = await prisma.user.findFirst({
       where: {
-        OR: [{ email: credentials.username }],
+        OR: [{ email: credentials.email }],
       },
     });
 

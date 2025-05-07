@@ -128,7 +128,6 @@ Run unit tests with:
 npm test
 ```
 
-
 Run tests in watch mode:
 
 ```bash
