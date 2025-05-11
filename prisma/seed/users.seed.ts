@@ -10,7 +10,7 @@ export async function seedUsers() {
   await prisma.article.deleteMany({});
   await prisma.user.deleteMany({});
 
-  const adminPassword = await bcrypt.hash('Admin12345@', 10);
+  const adminPassword = await bcrypt.hash('admin12345', 10);
   await prisma.user.create({
     data: {
       firstName: '太郎',
@@ -26,7 +26,7 @@ export async function seedUsers() {
     },
   });
 
-  const hashedPassword = await bcrypt.hash('Test12345@', 10);
+  const hashedPassword = await bcrypt.hash('test12345', 10);
   await prisma.user.create({
     data: {
       firstName: '太郎',
