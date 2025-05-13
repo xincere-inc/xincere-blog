@@ -41,9 +41,6 @@ export async function POST(
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = uuidv4();
 
-    // Get the total number of users in the database
-    const totalUsers = await prisma.user.count();
-
     await prisma.user.create({
       data: {
         firstName,
@@ -53,7 +50,7 @@ export async function POST(
         gender,
         password: hashedPassword,
         emailVerificationToken: verificationToken,
-        role: totalUsers === 0 ? 'admin' : 'user',
+        role: 'user',
       },
     });
 
