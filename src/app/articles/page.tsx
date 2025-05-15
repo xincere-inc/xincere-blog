@@ -111,19 +111,21 @@ export default function ArticlesPage() {
                       {article.status}
                     </span>
                   </td>
-                  <td className="p-4 flex space-x-2">
-                    <Link
-                      href={`/articles/edit/${article.id}`}
-                      className="text-indigo-600 hover:text-indigo-800 font-medium"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(article.id!)}
-                      className="text-red-600 hover:text-red-800 font-medium"
-                    >
-                      Delete
-                    </button>
+                  <td className="p-4">
+                    <div className="flex space-x-2 justify-center">
+                      <Link
+                        href={`/articles/edit/${article.id}`}
+                        className="text-indigo-600 hover:text-indigo-800 font-medium"
+                      >
+                        Edit
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(article.id!)}
+                        className="text-red-600 hover:text-red-800 font-medium"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
