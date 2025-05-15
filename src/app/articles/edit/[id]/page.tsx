@@ -332,17 +332,21 @@ export default function ArticleEditPage() {
               Type a tag and press Enter or comma to add
             </p>
           </div>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 w-full justify-center sm:justify-start">
             <button
               type="submit"
-              className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+              className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition
+              sm:w-auto w-full
+              "
             >
               Save
             </button>
             <button
               type="button"
               onClick={() => router.push('/articles')}
-              className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition"
+              className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition
+              sm:w-auto w-full
+              "
             >
               Cancel
             </button>
