@@ -48,13 +48,13 @@ export default function ArticlesPage() {
   return (
     <div className="container mx-auto px-6 py-8">
       <div className="bg-white shadow-lg rounded-lg p-6">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex xs:flex-row justify-between xs:items-center mb-6 gap-4">
           <h1 className="text-3xl font-bold text-gray-800">Articles</h1>
           <Link
             href="/articles/edit/new"
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition text-center  max-w-[120px] w-full"
           >
-            + New Article
+            Add Article
           </Link>
         </div>
         <div className="mb-6">
@@ -89,16 +89,21 @@ export default function ArticlesPage() {
                 <th className="p-4 text-left font-semibold">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-left">
               {filteredArticles.map((article, index) => (
                 <tr
                   key={article.id}
                   className={`border-b ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-indigo-100 transition`}
                 >
-                  <td className="p-4">{article.title}</td>
-                  <td className="p-4">{article.authorId}</td>
-                  <td className="p-4">{article.categoryId}</td>
-                  <td className="p-4">
+                  <td
+                    className="p-4 text-left truncate overflow-hidden text-ellipsis max-w-[150px] xs:max-w-[200px] sm:max-w-[250px]"
+                    title={article.title}
+                  >
+                    {article.title}
+                  </td>
+                  <td className="p-4 text-left">{article.authorId}</td>
+                  <td className="p-4 text-left">{article.categoryId}</td>
+                  <td className="p-4 text-left">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
                         article.status === ArticleStatus.PUBLISHED
@@ -111,8 +116,8 @@ export default function ArticlesPage() {
                       {article.status}
                     </span>
                   </td>
-                  <td className="p-4">
-                    <div className="flex space-x-2 justify-center">
+                  <td className="p-4 text-left">
+                    <div className="flex space-x-2">
                       <Link
                         href={`/articles/edit/${article.id}`}
                         className="text-indigo-600 hover:text-indigo-800 font-medium"
