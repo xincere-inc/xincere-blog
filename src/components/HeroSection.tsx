@@ -17,7 +17,11 @@ const HeroSection = () => {
             <i className="fas fa-download mr-2"></i>
             会社案内ダウンロード
           </div>
-          <a href="https://corp.xincere.jp" target="_blank" className="bg-white text-primary px-6 py-3 rounded-md hover:bg-gray-50 transition-colors duration-300 border border-xincereGreen !rounded-button whitespace-nowrap cursor-pointer h-[50px]">
+          <a
+            href="https://corp.xincere.jp"
+            target="_blank"
+            className="bg-white text-primary px-6 py-3 rounded-md hover:bg-gray-50 transition-colors duration-300 border border-xincereGreen !rounded-button whitespace-nowrap cursor-pointer h-[50px]"
+          >
             コーポレートサイトを見る
           </a>
         </div>
