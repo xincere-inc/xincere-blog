@@ -329,7 +329,7 @@ export default function ArticleEditPage() {
               }}
             />
             <p className="text-sm text-gray-500 mt-1">
-              Type a tag and press Enter or comma to add
+              Type a tag and press Enter to add
             </p>
           </div>
           <div className="flex space-x-4 w-full justify-center sm:justify-start">
