@@ -99,6 +99,19 @@ model Comment {
   @@map("comments")
 }
 
+model Contact {
+  id            Int       @id @default(autoincrement())
+  companyName   String
+  contactName   String
+  email         String
+  phone         String
+  inquiry       String
+  privacyPolicy Boolean
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@map("contacts")
+}
+
 model Like {
   id        Int      @id @default(autoincrement()) @map("id")
   article   Article  @relation(fields: [articleId], references: [id])

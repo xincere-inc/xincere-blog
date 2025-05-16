@@ -5,6 +5,5 @@ export interface User {
   lastName?: string;
   country?: string;
   address?: string;
-  phone?: string;
   role?: string;
 }

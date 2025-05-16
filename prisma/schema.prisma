@@ -22,7 +22,7 @@ generator erd {
 }
 
 //
-// analytics.prisma
+// Analytics.prisma
 //
 
 model Analytics {
@@ -41,7 +41,7 @@ model Analytics {
 }
 
 //
-// article.prisma
+// Article.prisma
 //
 
 model Article {
@@ -68,7 +68,7 @@ model Article {
 }
 
 //
-// articleTag.prisma
+// ArticleTag.prisma
 //
 
 model ArticleTag {
@@ -100,7 +100,7 @@ model Author {
 }
 
 //
-// category.prisma
+// Category.prisma
 //
 
 model Category {
@@ -117,7 +117,7 @@ model Category {
 }
 
 //
-// comment.prisma
+// Comment.prisma
 //
 
 model Comment {
@@ -135,6 +135,23 @@ model Comment {
   deletedAt DateTime? @map("deleted_at")
 
   @@map("comments")
+}
+
+//
+// Contact.prisma
+//
+
+model Contact {
+  id            Int      @id @default(autoincrement())
+  companyName   String
+  contactName   String
+  email         String
+  phone         String
+  inquiry       String
+  privacyPolicy Boolean
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("contacts")
 }
 
 //
@@ -166,7 +183,7 @@ enum ArticleStatus {
 }
 
 //
-// like.prisma
+// Like.prisma
 //
 
 model Like {
@@ -183,7 +200,7 @@ model Like {
 }
 
 //
-// media.prisma
+// Media.prisma
 //
 
 model Media {
@@ -202,7 +219,7 @@ model Media {
 }
 
 //
-// siteSetting.prisma
+// SiteSetting.prisma
 //
 
 model SiteSetting {
@@ -216,7 +233,7 @@ model SiteSetting {
 }
 
 //
-// tag.prisma
+// Tag.prisma
 //
 
 model Tag {
@@ -231,7 +248,7 @@ model Tag {
 }
 
 //
-// user.prisma
+// User.prisma
 //
 
 model User {
