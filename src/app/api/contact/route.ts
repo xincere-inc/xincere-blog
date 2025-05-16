@@ -4,11 +4,11 @@ import {
   Success,
   ValidationError,
 } from '@/api/client';
-import { prisma } from '@/lib/prisma';
 import { sendEmail } from '@/lib/utils/send-email';
 import { contactSchema } from '@/lib/zod/contact/contact';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { prisma } from './../../../lib/prisma';
 
 export async function POST(
   req: Request
@@ -47,6 +47,13 @@ export async function POST(
     });
 
     if (!emailResponse.success) {
+      // Delete the submission if email sending fails
+      await prisma.contact.delete({
+        where: {
+          id: submission.id,
+        },
+      });
+
       return NextResponse.json(
         { error: 'Error sending confirmation email' },
         { status: 500 }
