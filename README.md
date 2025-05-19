@@ -1,32 +1,31 @@
-# Next.js Prisma PostgreSQL Application
+# Next.js Fullstack Base
 
-This is a **Next.js** project using **Prisma** as the ORM and **PostgreSQL** as the database. The project is containerized with **Docker** for both development and production environments.
+[![Node Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)
+
+This is a **Next.js** fullstack application using **PostgreSQL** as the database and containerized with **Docker** for both development and production environments.
 
 ## Table of Contents
 
-- [Features](#features)
+- [Tech Stack](#tech-stack)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Docker Setup](#docker-setup)
-- [Database Migrations](#database-migrations)
-- [Running the Application](#running-the-application)
-- [Prisma](#prisma)
-- [Environment Variables](#environment-variables)
-- [Project Structure](#project-structure)
-- [Scripts](#scripts)
+- [Usage](#usage)
+- [Testing](#testing)
+- [Deployment/CI](#deploymentci)
+- [Directory Structure](#directory-structure)
+- [Contributing](#contributing)
 - [License](#license)
 
 ---
 
-## Features
+## Tech Stack
 
 - **Next.js** for server-side rendering (SSR) and static site generation (SSG).
-- **Prisma** ORM for type-safe database interactions.
 - **PostgreSQL** as the relational database.
-- Docker for containerization and easy setup.
-- Prisma for database schema migrations and client generation.
-- Environment-based logging for better debugging and monitoring.
-- Secure and scalable architecture.
+- **Docker** for containerization.
+- **Prisma** ORM for type-safe database interactions.
+- **TypeScript** for static typing.
+- **Jest** for testing.
 
 ---
 
@@ -34,9 +33,9 @@ This is a **Next.js** project using **Prisma** as the ORM and **PostgreSQL** as 
 
 Ensure the following are installed on your system:
 
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- [Node.js (LTS version)](https://nodejs.org/en/download/) (for local development)
+- [Docker](https://docs.docker.com/get-docker/) (≥ 20.10)
+- [Docker Compose](https://docs.docker.com/compose/install/) (≥ 2.0)
+- [Node.js](https://nodejs.org/) (≥ 16.0.0)
 
 ---
 
@@ -46,6 +45,7 @@ Ensure the following are installed on your system:
 
    ```bash
    git clone https://github.com/xincere-inc/nextjs-fullstack-base
+
    cd nextjs-fullstack-base
    ```
 
@@ -60,50 +60,58 @@ Ensure the following are installed on your system:
    Create a `.env.local` file in the root directory with the following content:
 
    ```env
-   DATABASE_URL=postgresql://postgres:password@localhost:5432/xincere_blog
+   DATABASE_URL=postgresql://postgres:password@localhost:5432/nextjs_app
    NODE_ENV=development
    NEXT_PUBLIC_API_URL=http://localhost:3000
    NEXTAUTH_SECRET=your-secret-key
+
+   SMTP_USERNAME=
+   SMTP_PASSWORD=
    ```
 
    - `DATABASE_URL`: PostgreSQL connection string.
    - `NODE_ENV`: `development` or `production`.
    - `NEXT_PUBLIC_API_URL`: Frontend URL.
    - `NEXTAUTH_SECRET`: Secret key for `next-auth`.
+   - `SMTP_USERNAME`: Secret key for `smtp`.
+   - `SMTP_PASSWORD`: Secret key for `smtp`.
+
+   ## Running Database Migrations Locally
+
+4. **To apply database migrations locally:**
+   ```bash
+   npx prisma migrate dev
+   ```
 
 ---
 
-## Docker Setup
+## Usage
 
-Docker manages the application and PostgreSQL database containers.
+### Development
 
-### Development Environment
-
-Start the containers for development:
+Start the application in development mode:
 
 ```bash
 docker-compose up --build
 ```
 
-- Builds Docker images for the Next.js app and PostgreSQL.
-- Applies database migrations automatically.
-- Launches Next.js on [http://localhost:3000](http://localhost:3000).
+- Access the app at [http://localhost:3000](http://localhost:3000)
 
-### Stop Containers
+Stop the containers:
 
 ```bash
 docker-compose down
 ```
 
-### Production Environment
+### Production
 
-1. **Build the Docker Image:**
+1. Build the production Docker image:
 
    ```bash
-   docker build -t nextjs-app .
+   docker build -t nextjs-app
    ```
 
-2. **Run the Production Container:**
+2. Run the production container:
 
    ```bash
    docker run -p 3000:3000 --env NODE_ENV=production nextjs-app
@@ -111,137 +119,90 @@ docker-compose down
 
 ---
 
-## Database Migrations
+## Testing
 
-Manage Prisma migrations with the following commands:
-
-### Apply Migrations
+Run unit tests with:
 
 ```bash
-npm run db:migrate
+npm test
 ```
 
-Or with Docker:
+Run tests in watch mode:
 
 ```bash
-docker-compose run web npm run db:migrate
+npm run test:watch
 ```
 
-### Generate Prisma Client
-
-After updating the Prisma schema:
+Generate a coverage report:
 
 ```bash
-npx prisma generate
-```
-
-### Prisma Studio
-
-Open Prisma Studio for database management:
-
-```bash
-npx prisma studio
+npm run test:coverage
 ```
 
 ---
 
-## Project Structure
+## Deployment/CI
 
-```plaintext
+### Deployment
+
+1. Ensure the .env.production file is configured with production environment variables.
+2. Build and deploy the Docker image to your preferred cloud provider.
+
+### CI/CD
+
+This project uses GitHub Actions for CI/CD. The workflow file is located at .github/workflows/ci.yml.
+
+---
+
+## Directory Structure
+
+```
 .
-├── prisma/                  # Prisma schema and migrations
-│   ├── migrations/          # Migration files
-│   └── schema.prisma        # Prisma schema definition
-├── public/                  # Public assets
-├── src/                     # Source code
-│   ├── app/                 # Next.js app pages
-│   ├── components/          # UI components
-│   └── lib/                 # Libraries and setup files
-│       └── prisma.ts        # Prisma client setup
-├── .env.local               # Environment variables
-├── Dockerfile               # Dockerfile for Next.js app
-├── docker-compose.yml       # Docker configuration
-├── package.json             # Dependencies and scripts
-├── tsconfig.json            # TypeScript configuration
-└── README.md                # Project documentation
+├── prisma/                  # Contains Prisma schema and migration files
+│   ├── migrations/          # Auto-generated migration files by Prisma
+│   └── schema.prisma        # Main Prisma schema definition
+├── public/                  # Static assets served directly (e.g., images, icons)
+├── src/                     # Application source code
+│   ├── app/                 # Next.js App Router structure (pages, layout, etc.)
+│   ├── components/          # Reusable React UI components
+│   └── lib/                 # Utility libraries and configuration files
+│       └── prisma.ts        # Prisma client instance setup
+├── .env.local               # Local environment variable overrides (not committed)
+├── .gitignore               # Specifies intentionally untracked files to ignore
+├── .prettierignore          # Files to exclude from Prettier formatting
+├── .prettierrc              # Prettier configuration file
+├── .tool-versions           # Specifies versions for tools (used by asdf)
+├── docker-compose.yml       # Docker Compose configuration for local setup
+├── Dockerfile               # Dockerfile for building the Next.js app container
+├── eslint.config.js         # ESLint configuration for code linting
+├── next.config.js           # Next.js configuration file
+├── postcss.config.js        # PostCSS configuration (used by Tailwind CSS)
+├── package.json             # Project dependencies, scripts, and metadata
+├── tailwind.config.js       # Tailwind CSS configuration file
+├── tsconfig.json            # TypeScript compiler configuration
+└── README.md                # Project overview, setup instructions, and documentation
 ```
 
 ---
 
-## Scripts
+## Admin Page Login Info
 
-### Development
+> _Note:_ Go to the /register first and register an user, the first registered user will be the admin user. Then go to the /signin page and login the newly created user. Rest of the user will be as usual normal user, that means the first registered is the admin user.
 
-```bash
-npm run dev
-```
+---
 
-Starts Next.js with hot-reloading.
+## Contributing
 
-### Production Build
+We welcome contributions! Please follow these steps:
 
-```bash
-npm run build
-npm start
-```
-
-Builds and starts the production server.
-
-### Prisma Commands
-
-- **Generate Prisma Client:**
-
-  ```bash
-  npx prisma generate
-  ```
-
-- **Create New Migration:**
-
-  ```bash
-  npx prisma migrate dev --name init
-  ```
-
-- **Apply Migrations:**
-
-  ```bash
-  npm run db:migrate
-  ```
-
-- **Open Prisma Studio:**
-
-  ```bash
-  npx prisma studio
-  ```
-
-### Generate TypeScript Types from Swagger
-
-```bash
-npm run generate:types
-```
-
-# Generates TypeScript types from the Swagger/OpenAPI documentation (`swagger.yaml`) and saves them to `src/types/api.ts`.
-
-## Docker Compose Overview
-
-### Services
-
-- **web**: Next.js application
-
-  - Applies database migrations on startup.
-  - Exposed on port `3000`.
-
-- **db**: PostgreSQL
-  - Username: `postgres`
-  - Password: `password`
-  - Exposed on port `5432`.
-
-### Volumes
-
-- `pg_data`: Persists PostgreSQL data.
-- `/app/node_modules`: Caches dependencies to speed up builds.
+1. Fork the repository.
+2. Create a new branch: git checkout -b feature/your-feature-name.
+3. Commit your changes: git commit -m 'Add some feature'.
+4. Push to the branch: git push origin feature/your-feature-name.
+5. Open a pull request.
 
 ---
 
 ## License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the _MIT License_. See the [LICENSE](./LICENSE) file for details.

@@ -10,7 +10,6 @@ const credentialsProvider = CredentialsProvider({
     password: {},
   },
   async authorize(credentials) {
-    console.log(credentials, 'credentials');
     if (!credentials?.email || !credentials?.password) {
       throw new Error('Missing email or password');
     }

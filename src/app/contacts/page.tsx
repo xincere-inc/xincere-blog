@@ -1,5 +1,6 @@
 'use client';
 
+import IdoContact from '@/api/IdoContact';
 import React, { useState } from 'react';
 const App: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const App: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showAccordion, setShowAccordion] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
 
   const handlePrivacyClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -79,24 +81,44 @@ const App: React.FC = () => {
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
-      // Simulate form submission
-      setTimeout(() => {
-        setIsSubmitting(false);
-        setIsSubmitted(true);
-        // Reset form
-        setFormData({
-          companyName: '',
-          contactName: '',
-          email: '',
-          phone: '',
-          inquiry: '',
-          privacyPolicy: false,
+      setSubmissionError(null);
+
+      try {
+        const response = await IdoContact.submitContactForm({
+          companyName: formData.companyName,
+          contactName: formData.contactName,
+          email: formData.email,
+          phone: formData.phone,
+          inquiry: formData.inquiry,
+          privacyPolicy: formData.privacyPolicy,
         });
-      }, 1500);
+
+        if (response.status === 200) {
+          setIsSubmitted(true);
+          setFormData({
+            companyName: '',
+            contactName: '',
+            email: '',
+            phone: '',
+            inquiry: '',
+            privacyPolicy: false,
+          });
+        }
+      } catch (error: any) {
+        if (error.response) {
+          setSubmissionError(
+            error.response.data?.error || 'フォームの送信に失敗しました。'
+          );
+        } else {
+          setSubmissionError('サーバーとの通信に問題が発生しました。');
+        }
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
   return (
@@ -388,6 +410,9 @@ const App: React.FC = () => {
             ) : (
               <form onSubmit={handleSubmit}>
                 <h2 className="text-2xl font-bold mb-6">お問い合わせ情報</h2>
+                {submissionError && (
+                  <p className="text-red-500 text-sm mb-4">{submissionError}</p>
+                )}
                 <div className="space-y-4 mb-6">
                   <div>
                     <label
