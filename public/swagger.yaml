@@ -1,0 +1,441 @@
+openapi: 3.0.0
+info:
+  title: Next.js API
+  description: API documentation for Next.js 15 application
+  version: 1.0.0
+  contact:
+    name: 'API Support'
+    email: 'support@example.com'
+
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
+tags:
+  - name: Greeting
+    description: Operations related to greeting functionality.
+  - name: Auth
+    description: Operations related to authentication and user management.
+
+paths:
+  /api/hello:
+    get:
+      summary: Greet the user
+      tags: [Greeting]
+      operationId: greetUser
+      description: Returns a simple greeting message to the user.
+      responses:
+        '200':
+          description: A greeting message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Hello, world!'
+
+  /api/auth/signup:
+    post:
+      summary: Register a new user
+      tags: [Auth]
+      operationId: registerUser
+      description: Registers a new user by providing their email, password, and name. A verification email will be sent upon successful registration.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupInput'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignupResponse'
+        '400':
+          description: Invalid email format, missing required fields, or user already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error, e.g., database failure or internal issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/verify-email:
+    get:
+      summary: Verify user email using the verification token
+      tags: [Auth]
+      operationId: verifyEmail
+      description: Verifies the user's email address using a token sent to their email. This confirms the user's registration.
+      parameters:
+        - name: token
+          in: query
+          required: true
+          description: The email verification token received in the verification email.
+          schema:
+            type: string
+            example: 'abc123xyz'
+      responses:
+        '200':
+          description: Email successfully verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/verify-email-request:
+    post:
+      summary: Verify if the email exists and send a verification email
+      tags: [Auth]
+      operationId: verifyEmailRequest
+      description: Checks if the provided email exists in the system and sends a verification email if it does.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailRequestInput'
+      responses:
+        '200':
+          description: Verification email sent successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Verification email sent successfully.'
+        '400':
+          description: Email is required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Email not found. Redirecting to sign-up.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Email not found. Redirecting to sign-up.'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/change-password:
+    post:
+      summary: Change user password
+      tags: [Auth]
+      operationId: changePassword
+      description: Allows a logged-in user to change their password by providing the old password and a new password.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordInput'
+      responses:
+        '200':
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Password has been changed successfully.'
+        '400':
+          description: Invalid old password or weak new password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized (User not logged in)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/forgot-password:
+    post:
+      summary: Sends a password reset email to the user.
+      description: Sends an email to the user with a link to reset their password. The user must provide their registered email address.
+      tags: [Auth]
+      operationId: sendPasswordResetEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequestInput'
+      responses:
+        '200':
+          description: Password reset email sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request, possibly email not found or error in sending the email.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Email not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests. Please try again later (1 hr).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Too many requests. Please try again later (1 hr).'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/reset-password:
+    post:
+      tags: [Auth]
+      summary: Reset password
+      description: Resets the user's password using a valid reset token. The user must provide the token and a new password.
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordInput'
+      responses:
+        '200':
+          description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Password reset successfully'
+        '400':
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    SignupInput:
+      type: object
+      required:
+        - email
+        - password
+        - firstName
+        - lastName
+        - country
+        - gender
+      properties:
+        email:
+          type: string
+          format: email
+          description: 'The email address of the user. Must be a valid email format.'
+          example: 'user@example.com'
+        password:
+          type: string
+          format: password
+          minLength: 8
+          description: 'The password for the user. Must be at least 8 characters.'
+          example: 'Password123!'
+        firstName:
+          type: string
+          format: firstName
+          minLength: 3
+          description: 'The firstName for the user. Must be at least 3 characters.'
+          example: 'john'
+        lastName:
+          type: string
+          format: lastName
+          minLength: 3
+          description: 'The last for the user. Must be at least 3 characters.'
+          example: 'john'
+        country:
+          type: string
+          format: country
+          description: 'The country for the user'
+          example: 'japan'
+        gender:
+          type: string
+          format: gender
+          description: 'The gender for the user'
+          example: 'male'
+
+    SignupResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 'Success message indicating user creation.'
+          example: 'User created successfully. A verification email has been sent.'
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: 'Unique identifier for the newly created user.'
+              example: '123e4567-e89b-12d3-a456-426614174000'
+            email:
+              type: string
+              format: email
+              description: 'The email address of the newly created user.'
+              example: 'user@example.com'
+
+    VerifyEmailRequestInput:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: 'The email address to verify.'
+          example: 'user@example.com'
+
+    ChangePasswordInput:
+      type: object
+      required:
+        - oldPassword
+        - newPassword
+      properties:
+        oldPassword:
+          type: string
+          format: password
+          description: "The user's current password."
+          example: 'OldPassword123!'
+        newPassword:
+          type: string
+          format: password
+          minLength: 8
+          description: 'The new password for the user. Must be at least 8 characters long.'
+          example: 'NewPassword123!'
+
+    ResetPasswordInput:
+      type: object
+      required:
+        - token
+        - newPassword
+      properties:
+        token:
+          type: string
+          description: 'Reset token received via email'
+          example: 'abc123xyz'
+        newPassword:
+          type: string
+          format: password
+          minLength: 8
+          description: 'New password for the user'
+          example: 'NewSecurePassword123!'
+
+    ForgotPasswordRequestInput:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: 'The email address of the user requesting the password reset.'
+
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 'Success message.'
+          example: 'Operation completed successfully.'
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: 'Description of the error encountered.'
+          example: 'Invalid input provided'
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                description: 'Error message for a specific validation failure.'
+                example: 'Password must be at least 8 characters.'
+              field:
+                type: string
+                description: 'The field that failed validation.'
+                example: 'password'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

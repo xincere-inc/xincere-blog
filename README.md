@@ -79,9 +79,10 @@ Ensure the following are installed on your system:
    ## Running Database Migrations Locally
 
 4. **To apply database migrations locally:**
-      ```bash
-      npx prisma migrate dev
-      ```
+   ```bash
+   npx prisma migrate dev
+   ```
+
 ---
 
 ## Usage
@@ -93,7 +94,6 @@ Start the application in development mode:
 ```bash
 docker-compose up --build
 ```
-
 
 - Access the app at [http://localhost:3000](http://localhost:3000)
 
@@ -110,14 +110,13 @@ docker-compose down
    ```bash
    docker build -t nextjs-app
    ```
-   
 
 2. Run the production container:
 
    ```bash
    docker run -p 3000:3000 --env NODE_ENV=production nextjs-app
    ```
-   
+
 ---
 
 ## Testing
@@ -154,7 +153,9 @@ npm run test:coverage
 This project uses GitHub Actions for CI/CD. The workflow file is located at .github/workflows/ci.yml.
 
 ---
+
 ## Directory Structure
+
 ```
 .
 ├── prisma/                  # Contains Prisma schema and migration files
@@ -186,9 +187,7 @@ This project uses GitHub Actions for CI/CD. The workflow file is located at .git
 
 ## Admin Page Login Info
 
-
-
-> *Note:* Go to the /register first and register an user, the first registered user will be the admin user. Then go to the /signin page and login the newly created user. Rest of the user will be as usual normal user, that means the first registered is the admin user.
+> _Note:_ Go to the /register first and register an user, the first registered user will be the admin user. Then go to the /signin page and login the newly created user. Rest of the user will be as usual normal user, that means the first registered is the admin user.
 
 ---
 
@@ -206,4 +205,4 @@ We welcome contributions! Please follow these steps:
 
 ## License
 
-This project is licensed under the *MIT License*. See the [LICENSE](./LICENSE) file for details.
+This project is licensed under the _MIT License_. See the [LICENSE](./LICENSE) file for details.

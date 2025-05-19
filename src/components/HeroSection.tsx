@@ -12,14 +12,18 @@ const HeroSection = () => {
           <br />
           システム開発やAI推進に関する実践的な情報をお届けします。
         </p>
-        <div className="flex gap-4">
-          <div className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-dark transition-colors duration-300 flex items-center !rounded-button whitespace-nowrap cursor-pointer">
+        <div className="flex gap-4 flex-wrap">
+          <div className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-dark transition-colors duration-300 flex items-center !rounded-button whitespace-nowrap cursor-pointer h-[50px]">
             <i className="fas fa-download mr-2"></i>
             会社案内ダウンロード
           </div>
-          <button className="bg-white text-primary px-6 py-3 rounded-md hover:bg-gray-50 transition-colors duration-300 border border-xincereGreen !rounded-button whitespace-nowrap cursor-pointer">
+          <a
+            href="https://corp.xincere.jp"
+            target="_blank"
+            className="bg-white text-primary px-6 py-3 rounded-md hover:bg-gray-50 transition-colors duration-300 border border-xincereGreen !rounded-button whitespace-nowrap cursor-pointer h-[50px]"
+          >
             コーポレートサイトを見る
-          </button>
+          </a>
         </div>
       </div>
     </div>
