@@ -348,7 +348,6 @@ components:
               format: email
               description: 'The email address of the newly created user.'
               example: 'user@example.com'
-            
 
     VerifyEmailRequestInput:
       type: object
