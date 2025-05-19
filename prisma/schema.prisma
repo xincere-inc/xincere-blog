@@ -22,7 +22,7 @@ generator erd {
 }
 
 //
-// Analytics.prisma
+// analytics.prisma
 //
 
 model Analytics {
@@ -45,30 +45,31 @@ model Analytics {
 //
 
 model Article {
-  id           Int           @id @default(autoincrement()) @map("id")
-  author       Author        @relation(fields: [authorId], references: [id])
-  authorId     String        @map("author_id")
-  category     Category      @relation(fields: [categoryId], references: [id])
-  categoryId   Int           @map("category_id")
-  title        String        @map("title")
-  slug         String        @unique @map("slug")
-  summary      String        @map("summary")
-  content      String        @map("content")
-  thumbnailUrl String?       @map("thumbnail_url")
-  status       ArticleStatus @map("status")
-  tags         ArticleTag[]
-  comments     Comment[]
-  likes        Like[]
-  analytics    Analytics?
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
-  deletedAt    DateTime?     @map("deleted_at")
+  id              Int           @id @default(autoincrement()) @map("id")
+  author          Author        @relation(fields: [authorId], references: [id])
+  authorId        String        @map("author_id")
+  category        Category      @relation(fields: [categoryId], references: [id])
+  categoryId      Int           @map("category_id")
+  title           String        @map("title")
+  slug            String        @unique @map("slug")
+  summary         String        @map("summary")
+  content         String        @map("content")
+  markdownContent String        @map("markdown_content")
+  thumbnailUrl    String?       @map("thumbnail_url")
+  status          ArticleStatus @map("status")
+  tags            ArticleTag[]
+  comments        Comment[]
+  likes           Like[]
+  analytics       Analytics?
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  deletedAt       DateTime?     @map("deleted_at")
 
   @@map("articles")
 }
 
 //
-// ArticleTag.prisma
+// articleTag.prisma
 //
 
 model ArticleTag {
@@ -100,7 +101,7 @@ model Author {
 }
 
 //
-// Category.prisma
+// category.prisma
 //
 
 model Category {
@@ -117,7 +118,7 @@ model Category {
 }
 
 //
-// Comment.prisma
+// comment.prisma
 //
 
 model Comment {
@@ -183,7 +184,7 @@ enum ArticleStatus {
 }
 
 //
-// Like.prisma
+// like.prisma
 //
 
 model Like {
@@ -200,7 +201,7 @@ model Like {
 }
 
 //
-// Media.prisma
+// media.prisma
 //
 
 model Media {
@@ -219,7 +220,7 @@ model Media {
 }
 
 //
-// SiteSetting.prisma
+// siteSetting.prisma
 //
 
 model SiteSetting {
@@ -233,7 +234,7 @@ model SiteSetting {
 }
 
 //
-// Tag.prisma
+// tag.prisma
 //
 
 model Tag {
@@ -248,7 +249,7 @@ model Tag {
 }
 
 //
-// User.prisma
+// user.prisma
 //
 
 model User {
