@@ -59,7 +59,6 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggleSidebar }) => {
           onClick={toggleSidebar}
           style={{ fontSize: '18px', marginRight: '16px' }}
         />
-        <h2 style={{ margin: 0 }}>Admin Dashboard</h2>
       </div>
 
       {/* Right Side: Icons & User Menu */}

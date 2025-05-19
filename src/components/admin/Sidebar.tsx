@@ -2,6 +2,7 @@ import {
   DashboardOutlined,
   SettingOutlined,
   UserOutlined,
+  ZhihuOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import Link from 'next/link';
@@ -29,6 +30,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       label: <Link href="/admin/users">Users</Link>,
     },
     {
+      key: '/articles',
+      icon: <ZhihuOutlined />,
+      label: <Link href="/admin/articles">記事</Link>,
+    },
+    {
       key: '/settings',
       icon: <SettingOutlined />,
       label: <Link href="/admin/#">Settings</Link>,
@@ -50,7 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       }}
     >
       <div className="logo text-white text-center font-bold p-4">
-        Admin Panel
+        XBlog
       </div>
       <Menu
         theme="dark"
