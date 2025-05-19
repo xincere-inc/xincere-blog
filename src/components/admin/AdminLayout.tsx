@@ -13,7 +13,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>

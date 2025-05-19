@@ -1,11 +1,11 @@
-import HeroSection from '../components/HeroSection';
-import ArticleGrid from '../components/ArticleGrid';
-import Sidebar from '../components/Sidebar';
-import { popularArticles } from '../data/articleData';
+import HeroSection from 'src/components/HeroSection';
+import ArticleGrid from 'src/components/ArticleGrid';
+import Sidebar from 'src/components/Sidebar';
+import { popularArticles } from 'src/data/articleData';
 import { prisma } from '@/lib/prisma';
 import { ArticleStatus } from '@prisma/client';
-import PickUpArticle from '../components/PickUpArticle';
-import H2 from '../components/organisms/h2';
+import PickUpArticle from 'src/components/PickUpArticle';
+import H2 from 'src/components/organisms/h2';
 
 const HomePage = async () => {
   const [articles, categories] = await Promise.all([

@@ -42,6 +42,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggleSidebar }) => {
 
   return (
     <Header
+      className="overflow-scroll"
       style={{
         background: '#fff',
         padding: '0 16px',
