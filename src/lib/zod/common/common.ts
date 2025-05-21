@@ -21,3 +21,14 @@ export const paginationWithSearchSchema = z.object({
     }),
   search: z.string().optional(), // Optional search keyword field
 });
+
+/**
+ * Schema to validate an object containing an array of numeric IDs.
+ * Ensures each ID is a positive integer and that at least one ID is provided.
+ * Useful for endpoints that require bulk operations on resources identified by numeric IDs.
+ */
+export const validateIDsSchema = z.object({
+  ids: z
+    .array(z.number().int().positive())
+    .min(1, 'At least one valid numeric ID is required'),
+});

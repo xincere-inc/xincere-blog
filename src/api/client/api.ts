@@ -40,6 +40,49 @@ import {
 } from './base';
 
 /**
+ * @export
+ * @interface AdminCreateArticleRequest
+ */
+export interface AdminCreateArticleRequest {
+  title: string;
+  slug: string;
+  summary: string;
+  content: string;
+  markdownContent: string;
+  thumbnailUrl?: string;
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  authorId: string;
+  categoryId: number;
+  tags?: string[];
+}
+
+/**
+ * @export
+ * @interface AdminUpdateArticleRequest
+ */
+export interface AdminUpdateArticleRequest {
+  id: number;
+  title?: string;
+  slug?: string;
+  summary?: string;
+  content?: string;
+  markdownContent?: string;
+  thumbnailUrl?: string;
+  status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  authorId?: string;
+  categoryId?: number;
+  tags?: string[];
+}
+
+/**
+ * @export
+ * @interface AdminDeleteArticlesRequest
+ */
+export interface AdminDeleteArticlesRequest {
+  ids: number[];
+}
+
+/**
  *
  * @export
  * @interface AdminCreateUser400Response
