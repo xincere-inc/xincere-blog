@@ -11,85 +11,100 @@ import { adminCreateArticleSchema } from '@/lib/zod/admin/article-management/art
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
+type CreateResponse =
+  | UnAuthorizedError
+  | Created
+  | ValidationError
+  | InternalServerError;
+
 export async function POST(
   req: Request
-): Promise<
-  NextResponse<
-    UnAuthorizedError | Created | ValidationError | InternalServerError
-  >
-> {
+): Promise<NextResponse<CreateResponse>> {
+  const unauthorized = await authorizeAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
-    // Check for admin authorization
-    const adminAuthError = await authorizeAdmin();
-    if (adminAuthError) {
-      return adminAuthError;
-    }
+    const body: AdminCreateArticleRequest = await req.json();
+    const validated = await adminCreateArticleSchema.parseAsync(body);
 
-    const body = await req.json();
-    const parsedBody = await adminCreateArticleSchema.parseAsync(body);
+    const { slug, tags, ...articleData } = validated;
 
-    const {
-      authorId,
-      categoryId,
-      title,
-      slug,
-      summary,
-      content,
-      markdownContent,
-      thumbnailUrl,
-      status,
-    } = parsedBody;
-
-    const existingArticle = await prisma.article.findUnique({
-      where: { slug },
-    });
-
-    if (existingArticle) {
+    const duplicate = await prisma.article.findUnique({ where: { slug } });
+    if (duplicate) {
       return NextResponse.json(
         { error: `Article already exists with this slug: ${slug}` },
         { status: 400 }
       );
     }
 
-    await prisma.article.create({
+    const createdArticle = await prisma.article.create({
       data: {
-        authorId,
-        categoryId,
-        title,
+        ...articleData,
         slug,
-        summary,
-        content,
-        markdownContent,
-        thumbnailUrl,
-        status,
       },
     });
+
+    if (tags && tags.length > 0) {
+      const existingTags = await prisma.tag.findMany({
+        where: { name: { in: tags } },
+        select: { id: true, name: true },
+      });
+
+      const existingTagNames = existingTags.map((t) => t.name);
+      const newTagNames = tags.filter(
+        (name) => !existingTagNames.includes(name)
+      );
+
+      if (newTagNames.length > 0) {
+        const newTags = await prisma.$transaction(
+          newTagNames.map((name) => prisma.tag.create({ data: { name } }))
+        );
+        existingTags.push(...newTags);
+      }
+
+      // Now link tags to the article
+      const articleTags = existingTags.map((tag) => ({
+        articleId: createdArticle.id,
+        tagId: tag.id,
+      }));
+
+      await prisma.articleTag.createMany({
+        data: articleTags,
+        skipDuplicates: true,
+      });
+    }
 
     return NextResponse.json(
       { message: 'Article created successfully.' },
       { status: 201 }
     );
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Validation error',
-          errors: error.errors.map((err) => ({
-            path: err.path[0],
-            message: err.message,
-          })),
-        },
-        { status: 400 }
-      );
-    } else {
-      console.error('Error during create article:', error);
-      return NextResponse.json(
-        {
-          error: 'Internal server error',
-          message: 'Error during create article',
-        },
-        { status: 500 }
-      );
-    }
+    return handlePostError(error);
   }
+}
+
+function handlePostError(
+  error: unknown
+): NextResponse<ValidationError | InternalServerError> {
+  if (error instanceof z.ZodError) {
+    return NextResponse.json(
+      {
+        error: 'Validation error',
+        errors: error.errors.map((err) => ({
+          path: err.path.join('.'),
+          message: err.message,
+        })),
+      },
+      { status: 400 }
+    );
+  }
+
+  console.error('Error during create article:', error);
+  return NextResponse.json(
+    {
+      error: 'Internal server error',
+      message: 'Error during create article',
+    },
+    { status: 500 }
+  );
 }
