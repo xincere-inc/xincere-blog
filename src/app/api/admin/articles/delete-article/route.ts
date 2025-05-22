@@ -11,73 +11,72 @@ import { validateIDsSchema } from '@/lib/zod/common/common';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
+type DeleteResponse =
+  | UnAuthorizedError
+  | Success
+  | ValidationError
+  | InternalServerError;
+
 export async function DELETE(
   req: Request
-): Promise<
-  NextResponse<
-    UnAuthorizedError | Success | ValidationError | InternalServerError
-  >
-> {
+): Promise<NextResponse<DeleteResponse>> {
+  const unauthorized = await authorizeAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
-    // Check for admin authorization
-    const adminAuthError = await authorizeAdmin();
-    if (adminAuthError) {
-      return adminAuthError;
-    }
-
     const body: AdminDeleteArticlesRequest = await req.json();
-    const { ids } = body;
+    const validation = await validateIDsSchema.safeParseAsync({
+      ids: body.ids,
+    });
 
-    const parsedBody = await validateIDsSchema.safeParseAsync({ ids });
-    if (!parsedBody.success) {
-      return NextResponse.json(
-        {
-          error: 'Validation error',
-          errors: parsedBody.error.errors.map((error) => ({
-            path: error.path.join('.'),
-            message: error.message,
-          })),
-        },
-        { status: 400 }
-      );
+    if (!validation.success) {
+      return validationErrorResponse(validation.error);
     }
 
-    const deleteResult = await prisma.article.deleteMany({
-      where: {
-        id: {
-          in: ids,
-        },
-      },
+    const deleted = await prisma.article.deleteMany({
+      where: { id: { in: body.ids } },
     });
 
     return NextResponse.json(
       {
-        message: `Deleted ${deleteResult.count} article(s).`,
-        count: deleteResult.count,
+        message: `Deleted ${deleted.count} article(s).`,
+        count: deleted.count,
       },
       { status: 200 }
     );
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Validation error',
-          errors: error.errors.map((error) => ({
-            path: error.path.join('.'),
-            message: error.message,
-          })),
-        },
-        { status: 400 }
-      );
-    } else {
-      console.error('Error during article deletion:', error);
-      return NextResponse.json(
-        {
-          error: 'Internal server error',
-          message: 'Error during article deletion',
-        },
-        { status: 500 }
-      );
-    }
+    return handleUnexpectedError(error);
   }
+}
+
+function validationErrorResponse(
+  error: z.ZodError
+): NextResponse<ValidationError> {
+  return NextResponse.json(
+    {
+      error: 'Validation error',
+      errors: error.errors.map((err) => ({
+        path: err.path.join('.'),
+        message: err.message,
+      })),
+    },
+    { status: 400 }
+  );
+}
+
+function handleUnexpectedError(
+  error: unknown
+): NextResponse<InternalServerError | ValidationError> {
+  if (error instanceof z.ZodError) {
+    return validationErrorResponse(error);
+  }
+
+  console.error('Error during article deletion:', error);
+  return NextResponse.json(
+    {
+      error: 'Internal server error',
+      message: 'Error during article deletion',
+    },
+    { status: 500 }
+  );
 }
