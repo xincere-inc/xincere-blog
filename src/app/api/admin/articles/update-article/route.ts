@@ -16,10 +16,7 @@ export async function PUT(
   req: Request
 ): Promise<
   NextResponse<
-    | Success 
-    | ValidationError 
-    | InternalServerError 
-    | UnAuthorizedError
+    Success | ValidationError | InternalServerError | UnAuthorizedError
   >
 > {
   try {
@@ -94,7 +91,8 @@ export async function PUT(
     if (summary) updatedFields.summary = summary;
     if (content) updatedFields.content = content;
     if (markdownContent) updatedFields.markdownContent = markdownContent;
-    if (typeof thumbnailUrl !== 'undefined') updatedFields.thumbnailUrl = thumbnailUrl;
+    if (typeof thumbnailUrl !== 'undefined')
+      updatedFields.thumbnailUrl = thumbnailUrl;
     if (status) updatedFields.status = status;
     if (categoryId) updatedFields.categoryId = categoryId;
     if (authorId) updatedFields.authorId = authorId;
