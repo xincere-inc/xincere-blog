@@ -40,6 +40,101 @@ import {
 } from './base';
 
 /**
+ * @export
+ * @interface AdminCreateArticleRequest
+ */
+export interface AdminCreateArticleRequest {
+  title: string;
+  slug: string;
+  summary: string;
+  content: string;
+  markdownContent: string;
+  thumbnailUrl?: string;
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  authorId: string;
+  categoryId: number;
+  tags?: string[];
+}
+
+/**
+ * @export
+ * @interface AdminUpdateArticleRequest
+ */
+export interface AdminUpdateArticleRequest {
+  id: number;
+  title?: string;
+  slug?: string;
+  summary?: string;
+  content?: string;
+  markdownContent?: string;
+  thumbnailUrl?: string;
+  status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  authorId?: string;
+  categoryId?: number;
+  tags?: string[];
+}
+
+/**
+ * @export
+ * @interface AdminDeleteArticlesRequest
+ */
+export interface AdminDeleteArticlesRequest {
+  ids: number[];
+}
+
+/**
+ *
+ * @export
+ * @interface AdminGetArticlesRequest
+ */
+export interface AdminGetArticlesRequest {
+  page: number;
+  limit: number;
+  search?: string;
+}
+
+/**
+ *
+ * @export
+ * @interface AdminArticlePreview
+ */
+export interface AdminArticlePreview {
+  id: number;
+  title: string;
+  slug: string;
+  summary: string;
+  thumbnailUrl?: string;
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  createdAt: string;
+  updatedAt: string;
+  author: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  category: {
+    id: number;
+    name: string;
+  };
+}
+
+/**
+ *
+ * @export
+ * @interface AdminGetArticles200Response
+ */
+export interface AdminGetArticles200Response {
+  data: AdminArticlePreview[];
+  pagination: {
+    page: number;
+    limit: number;
+    showPerPage: number;
+    totalArticles: number;
+    totalPages: number;
+  };
+}
+
+/**
  *
  * @export
  * @interface AdminCreateUser400Response

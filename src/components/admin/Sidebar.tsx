@@ -55,9 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         overflow: 'auto', // Allow scrolling if content overflows
       }}
     >
-      <div className="logo text-white text-center font-bold p-4">
-        XBlog
-      </div>
+      <div className="logo text-white text-center font-bold p-4">XBlog</div>
       <Menu
         theme="dark"
         defaultSelectedKeys={['1']}
