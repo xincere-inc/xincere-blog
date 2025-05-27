@@ -14,7 +14,11 @@ import { z } from 'zod';
 
 export async function PUT(
   req: Request
-): Promise<NextResponse<Success | ValidationError | InternalServerError | UnAuthorizedError>> {
+): Promise<
+  NextResponse<
+    Success | ValidationError | InternalServerError | UnAuthorizedError
+  >
+> {
   try {
     const authError = await authorizeAdmin();
     if (authError) return authError;
@@ -23,7 +27,9 @@ export async function PUT(
     const { success, data, errorResponse } = await validateRequestBody(body);
     if (!success) return errorResponse;
 
-    const article = await prisma.article.findUnique({ where: { id: parsed.data.id } });
+    const article = await prisma.article.findUnique({
+      where: { id: parsed.data.id },
+    });
     if (!article) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
