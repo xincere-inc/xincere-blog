@@ -14,127 +14,126 @@ import { z } from 'zod';
 
 export async function PUT(
   req: Request
-): Promise<
-  NextResponse<
-    Success | ValidationError | InternalServerError | UnAuthorizedError
-  >
-> {
+): Promise<NextResponse<Success | ValidationError | InternalServerError | UnAuthorizedError>> {
   try {
-    const adminAuthError = await authorizeAdmin();
-    if (adminAuthError) {
-      return adminAuthError;
-    }
+    const authError = await authorizeAdmin();
+    if (authError) return authError;
 
     const body: AdminUpdateArticleRequest = await req.json();
+    const { success, data, errorResponse } = await validateRequestBody(body);
+    if (!success) return errorResponse;
 
-    const parsed = await adminUpdateArticleSchema.safeParseAsync(body);
-    if (!parsed.success) {
-      return NextResponse.json(
-        {
-          error: 'Validation error',
-          errors: parsed.error.errors.map((error) => ({
-            path: error.path.join('.'),
-            message: error.message,
-          })),
-        },
-        { status: 400 }
-      );
-    }
-
-    const {
-      id,
-      title,
-      slug,
-      summary,
-      content,
-      markdownContent,
-      thumbnailUrl,
-      status,
-      categoryId,
-      authorId,
-    } = parsed.data;
-
-    const articleExists = await prisma.article.findUnique({ where: { id } });
-    if (!articleExists) {
+    const article = await prisma.article.findUnique({ where: { id: parsed.data.id } });
+    if (!article) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
-    if (slug) {
-      const slugConflict = await prisma.article.findFirst({
-        where: {
-          slug,
-          NOT: { id },
-        },
-      });
-      if (slugConflict) {
-        return NextResponse.json(
-          { error: 'Slug already taken by another article' },
-          { status: 400 }
-        );
-      }
-    }
-
-    const updatedFields: Partial<{
-      title: string;
-      slug: string;
-      summary: string;
-      content: string;
-      markdownContent: string;
-      thumbnailUrl: string | null;
-      status: ArticleStatus;
-      categoryId: number;
-      authorId: string;
-    }> = {};
-
-    if (title) updatedFields.title = title;
-    if (slug) updatedFields.slug = slug;
-    if (summary) updatedFields.summary = summary;
-    if (content) updatedFields.content = content;
-    if (markdownContent) updatedFields.markdownContent = markdownContent;
-    if (typeof thumbnailUrl !== 'undefined')
-      updatedFields.thumbnailUrl = thumbnailUrl;
-    if (status) updatedFields.status = status;
-    if (categoryId) updatedFields.categoryId = categoryId;
-    if (authorId) updatedFields.authorId = authorId;
-
-    const updatedArticle = await prisma.article.update({
-      where: { id },
-      data: updatedFields,
-    });
-
-    return NextResponse.json(
-      {
-        message: 'Article updated successfully',
-        article: {
-          id: updatedArticle.id,
-          title: updatedArticle.title,
-          slug: updatedArticle.slug,
-          status: updatedArticle.status,
-        },
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    if (error instanceof z.ZodError) {
+    if (await isSlugConflict(parsed.data.id, parsed.data.slug)) {
       return NextResponse.json(
-        {
-          error: 'Validation error',
-          errors: error.errors.map((error) => ({
-            path: error.path[0],
-            message: error.message,
-          })),
-        },
+        { error: 'Slug already taken by another article' },
         { status: 400 }
       );
     }
 
-    console.error('Error during update article:', error);
+    const updatedArticle = await prisma.article.update({
+      where: { id: parsed.data.id },
+      data: buildUpdatePayload(parsed.data),
+    });
+
+    const responsePayload = {
+      message: 'Article updated successfully',
+      article: {
+        id: updatedArticle.id,
+        title: updatedArticle.title,
+        slug: updatedArticle.slug,
+        status: updatedArticle.status,
+      },
+    };
+
+    return NextResponse.json(responsePayload, { status: 200 });
+  } catch (error) {
+    return handleUnexpectedError(error);
+  }
+}
+
+async function validateRequestBody(body: AdminUpdateArticleRequest) {
+  const result = await adminUpdateArticleSchema.safeParseAsync(body);
+  if (!result.success) {
+    const errorResponse = NextResponse.json(
+      {
+        error: 'Validation error',
+        errors: result.error.errors.map((e) => ({
+          path: e.path.join('.'),
+          message: e.message,
+        })),
+      },
+      { status: 400 }
+    );
+    return { success: false, errorResponse };
+  }
+
+  return { success: true, data: result.data };
+}
+
+async function isSlugConflict(id: number, slug?: string) {
+  if (!slug) return false;
+
+  const existing = await prisma.article.findFirst({
+    where: {
+      slug,
+      NOT: { id },
+    },
+  });
+
+  return !!existing;
+}
+
+function buildUpdatePayload(data: AdminUpdateArticleRequest) {
+  const {
+    title,
+    slug,
+    summary,
+    content,
+    markdownContent,
+    thumbnailUrl,
+    status,
+    categoryId,
+    authorId,
+  } = data;
+
+  return {
+    ...(title && { title }),
+    ...(slug && { slug }),
+    ...(summary && { summary }),
+    ...(content && { content }),
+    ...(markdownContent && { markdownContent }),
+    ...(typeof thumbnailUrl !== 'undefined' && { thumbnailUrl }),
+    ...(status && { status }),
+    ...(categoryId && { categoryId }),
+    ...(authorId && { authorId }),
+  };
+}
+
+function handleUnexpectedError(error: unknown) {
+  if (error instanceof z.ZodError) {
     return NextResponse.json(
       {
-        error: 'Internal server error',
-        message: 'Error during update article',
+        error: 'Validation error',
+        errors: error.errors.map((e) => ({
+          path: e.path.join('.'),
+          message: e.message,
+        })),
       },
-      { status: 500 }
+      { status: 400 }
     );
   }
+
+  console.error('Error during update article:', error);
+  return NextResponse.json(
+    {
+      error: 'Internal server error',
+      message: 'Error during update article',
+    },
+    { status: 500 }
+  );
 }
