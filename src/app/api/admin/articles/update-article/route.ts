@@ -24,8 +24,8 @@ export async function PUT(
     if (authError) return authError;
 
     const body: AdminUpdateArticleRequest = await req.json();
-    const { success, data, errorResponse } = await validateRequestBody(body);
-    if (!success) return errorResponse;
+    const parsed = await validateRequestBody(body);
+    if (!parsed.success) return parsed.errorResponse;
 
     const article = await prisma.article.findUnique({
       where: { id: parsed.data.id },
