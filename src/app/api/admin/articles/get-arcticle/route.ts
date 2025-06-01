@@ -74,7 +74,6 @@ export async function POST(
     const totalArticles = await prisma.article.count({ where: whereCondition });
     const totalPages = Math.ceil(totalArticles / limit);
 
-    // 5. Normalize response data
     const formatted = articles.map((article) => ({
       id: article.id,
       title: article.title,
@@ -95,7 +94,6 @@ export async function POST(
       },
     }));
 
-    // 6. Return response
     return NextResponse.json(
       {
         data: formatted,
