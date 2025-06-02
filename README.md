@@ -187,7 +187,17 @@ This project uses GitHub Actions for CI/CD. The workflow file is located at .git
 
 ## Admin Page Login Info
 
-> _Note:_ Go to the /register first and register an user, the first registered user will be the admin user. Then go to the /signin page and login the newly created user. Rest of the user will be as usual normal user, that means the first registered is the admin user.
+To access the admin page, follow these steps:
+
+1. **Access the sign-in page:**
+   Navigate to [http://localhost:3000/signin](http://localhost:3000/signin)
+
+2. **Login with admin credentials:**
+   - Email: `admin@example.com`
+   - Password: `admin12345`
+
+3. **Access the admin dashboard:**
+   Navigate to [http://localhost:3000/admin](http://localhost:3000/admin)
 
 ---
 
