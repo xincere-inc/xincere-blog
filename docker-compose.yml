@@ -26,6 +26,16 @@ services:
     volumes:
       - minio_data:/data
 
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nextjs_app
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+
 volumes:
   pg_data:
   minio_data:
