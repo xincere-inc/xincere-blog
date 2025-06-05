@@ -38,7 +38,7 @@ export function UserEditModal({
         form.resetFields();
       }}
       footer={null}
-      destroyOnClose
+      destroyOnHidden
       centered
       style={{ margin: '20px 0px' }}
       width={800}

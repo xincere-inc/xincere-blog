@@ -34,6 +34,8 @@ export async function POST(
     // Destructure the validated pagination and search data
     const { page, limit, search } = parsedBody;
 
+    console.log(parsedBody);
+
     // Build the search condition
     let whereCondition: any = {};
 

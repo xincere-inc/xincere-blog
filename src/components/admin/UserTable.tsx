@@ -48,7 +48,7 @@ export default function UserTable() {
         limit: pageSize,
         search,
       });
-      console.log('get data', response?.data?.data?.length);
+      console.log('get data', response);
 
       if (response.status === 200) {
         const users =

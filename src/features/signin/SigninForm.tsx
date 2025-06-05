@@ -34,7 +34,7 @@ const SigninForm = () => {
           autoClose: 2000, // Auto-close after 2 seconds
         });
         // Redirect to dashboard or any other page
-        router.push('/dashboard');
+        router.push('/admin');
       } else {
         toast.error('Failed! check your credentials', {
           position: 'bottom-right',

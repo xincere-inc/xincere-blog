@@ -1,4 +1,5 @@
 import {
+  AppstoreAddOutlined,
   DashboardOutlined,
   SettingOutlined,
   UserOutlined,
@@ -28,6 +29,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       key: '/users',
       icon: <UserOutlined />,
       label: <Link href="/admin/users">Users</Link>,
+    },
+    {
+      key: '/categories',
+      icon: <AppstoreAddOutlined />,
+      label: <Link href="/admin/categories">Categories</Link>,
     },
     {
       key: '/articles',
