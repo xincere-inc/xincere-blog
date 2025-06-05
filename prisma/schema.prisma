@@ -17,9 +17,8 @@ datasource db {
 }
 
 generator erd {
-  provider         = "prisma-erd-generator"
-  output           = "./erd.svg"
-  puppeteerConfig  = "./puppeteerConfig.json"
+  provider = "prisma-erd-generator"
+  output   = "./erd.svg"
 }
 
 //
