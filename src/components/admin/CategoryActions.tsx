@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import { Category } from './CategoryTable';
 
 interface CategoryActionsProps {
@@ -17,9 +17,17 @@ export function CategoryActions({
       <Button type="primary" onClick={() => onEdit(record)}>
         Edit
       </Button>
-      <Button type="primary" danger onClick={() => onDelete(record)}>
-        Delete
-      </Button>
+      <Popconfirm
+        title="Are you sure to delete this category?"
+        onConfirm={() => onDelete(record)}
+        placement="bottomLeft"
+        okText="Yes"
+        cancelText="No"
+      >
+        <Button type="primary" danger>
+          Delete
+        </Button>
+      </Popconfirm>
     </div>
   );
 }
