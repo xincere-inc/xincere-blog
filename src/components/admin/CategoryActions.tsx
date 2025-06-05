@@ -17,17 +17,20 @@ export function CategoryActions({
       <Button type="primary" onClick={() => onEdit(record)}>
         Edit
       </Button>
-      <Popconfirm
-        title="Are you sure to delete this category?"
-        onConfirm={() => onDelete(record)}
-        placement="bottomLeft"
-        okText="Yes"
-        cancelText="No"
-      >
-        <Button type="primary" danger>
-          Delete
-        </Button>
-      </Popconfirm>
+
+      {!record.deletedAt && (
+        <Popconfirm
+          title="Are you sure to delete this category?"
+          onConfirm={() => onDelete(record)}
+          placement="bottomLeft"
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button type="primary" danger>
+            Delete
+          </Button>
+        </Popconfirm>
+      )}
     </div>
   );
 }
