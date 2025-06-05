@@ -1,6 +1,6 @@
 import {
-  AdminGetCategories200Response,
-  AdminGetCategoriesRequest,
+  AdminGetTags200Response,
+  AdminGetTags200ResponsePagination,
   InternalServerError,
   UnAuthorizedError,
   ValidationError,
@@ -15,7 +15,7 @@ export async function POST(
   req: Request
 ): Promise<
   NextResponse<
-    | AdminGetCategories200Response
+    | AdminGetTags200Response
     | ValidationError
     | InternalServerError
     | UnAuthorizedError
@@ -25,28 +25,23 @@ export async function POST(
     const adminAuthError = await authorizeAdmin();
     if (adminAuthError) return adminAuthError;
 
-    const body: AdminGetCategoriesRequest = await req.json();
-
+    const body: AdminGetTags200ResponsePagination = await req.json();
     const parsedBody = await paginationWithSearchSchema.parseAsync(body);
 
     const { page, limit, search } = parsedBody;
 
     let whereCondition: any = {
-      // deletedAt: null, // Exclude soft-deleted categories
+      // deletedAt: null, // If using soft delete
     };
 
     if (search) {
       whereCondition = {
         ...whereCondition,
-        OR: [
-          { name: { contains: search, mode: 'insensitive' } },
-          { slug: { contains: search, mode: 'insensitive' } },
-          { description: { contains: search, mode: 'insensitive' } },
-        ],
+        OR: [{ name: { contains: search, mode: 'insensitive' } }],
       };
     }
 
-    const categories = await prisma.category.findMany({
+    const tags = await prisma.tag.findMany({
       skip: (page - 1) * limit,
       take: limit,
       where: whereCondition,
@@ -55,20 +50,18 @@ export async function POST(
       },
     });
 
-    const totalCategories = await prisma.category.count({
+    const totalTags = await prisma.tag.count({
       where: whereCondition,
     });
 
-    const totalPages = Math.ceil(totalCategories / limit);
+    const totalPages = Math.ceil(totalTags / limit);
 
-    const formatted = categories.map((category) => ({
-      id: category.id,
-      name: category.name,
-      slug: category.slug,
-      description: category.description ?? '',
-      createdAt: category.createdAt.toISOString(),
-      updatedAt: category.updatedAt.toISOString(),
-      deletedAt: category.deletedAt?.toISOString() ?? null,
+    const formatted = tags.map((tag) => ({
+      id: tag.id,
+      name: tag.name,
+      createdAt: tag.createdAt.toISOString(),
+      updatedAt: tag.updatedAt.toISOString(),
+      deletedAt: tag.deletedAt?.toISOString() ?? null,
     }));
 
     return NextResponse.json(
@@ -78,7 +71,7 @@ export async function POST(
           page,
           limit,
           showPerPage: formatted.length,
-          totalCategories,
+          totalTags,
           totalPages,
         },
       },
@@ -98,11 +91,11 @@ export async function POST(
       );
     }
 
-    console.error('Error during get categories:', error);
+    console.error('Error during get tags:', error);
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: 'Error during get categories',
+        message: 'Error during get tags',
       },
       { status: 500 }
     );

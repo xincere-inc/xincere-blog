@@ -2,6 +2,7 @@ import {
   AppstoreAddOutlined,
   DashboardOutlined,
   SettingOutlined,
+  TagsOutlined,
   UserOutlined,
   ZhihuOutlined,
 } from '@ant-design/icons';
@@ -34,6 +35,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       key: '/categories',
       icon: <AppstoreAddOutlined />,
       label: <Link href="/admin/categories">Categories</Link>,
+    },
+    {
+      key: '/tags',
+      icon: <TagsOutlined />,
+      label: <Link href="/admin/tags">Tags</Link>,
     },
     {
       key: '/articles',
