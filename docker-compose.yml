@@ -35,6 +35,9 @@ services:
       - '3000:3000'
     depends_on:
       - db
+    command: sh -c "npx prisma db push && npm run dev"
+    environment:
+      DATABASE_URL: postgresql://postgres:password@db:5432/xincere_blog
 
 volumes:
   pg_data:
