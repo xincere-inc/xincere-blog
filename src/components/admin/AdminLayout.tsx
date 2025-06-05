@@ -35,7 +35,7 @@ export default function AdminLayout({
 
         {/* Content */}
         <Content style={{ margin: '16px' }}>
-          <div className="p-6 bg-white min-h-[87vh]">{children}</div>
+          <div className="md:p-6 bg-white min-h-[87vh]">{children}</div>
         </Content>
       </Layout>
     </Layout>

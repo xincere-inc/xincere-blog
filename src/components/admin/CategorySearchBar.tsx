@@ -17,20 +17,20 @@ export function CategorySearchBar({
   selectedRowCount,
 }: CategorySearchBarProps) {
   return (
-    <div className="flex justify-between mb-4">
+    <div className="flex justify-between mb-4 flex-col gap-y-2 md:flex-row">
       <Input
         placeholder="Search categories"
         value={searchText}
         onChange={onSearchChange}
-        style={{ width: 300 }}
+        style={{ minWidth: 150, maxWidth: 290, height: 32 }}
         prefix={<SearchOutlined />}
       />
-      <div>
+      <div className="flex mb-4 gap-y-2 md:flex-row flex-col">
         <Button
           type="primary"
           onClick={onCreateClick}
           icon={<PlusOutlined />}
-          className="mr-2"
+          className="md:mr-2"
         >
           Create Category
         </Button>
