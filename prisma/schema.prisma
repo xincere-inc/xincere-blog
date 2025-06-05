@@ -9,6 +9,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
 datasource db {
@@ -16,10 +17,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
-  output   = "./erd.svg"
-}
+// generator erd {
+//  provider = "prisma-erd-generator"
+//  output   = "./erd.svg"
+// }
 
 //
 // analytics.prisma
