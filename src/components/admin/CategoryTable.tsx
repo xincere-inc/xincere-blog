@@ -207,6 +207,7 @@ export default function CategoryTable() {
         />
       ),
     },
+    { title: 'Id', dataIndex: 'id', key: 'id' },
     { title: 'Name', dataIndex: 'name', key: 'name' },
     { title: 'Slug', dataIndex: 'slug', key: 'slug' },
     { title: 'Description', dataIndex: 'description', key: 'description' },
