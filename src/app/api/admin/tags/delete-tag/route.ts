@@ -42,7 +42,6 @@ export async function DELETE(
       },
     });
 
-    console.log(existingTags);
 
     if (existingTags !== body.ids.length) {
       return NextResponse.json(
