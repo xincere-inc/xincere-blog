@@ -30,12 +30,12 @@ export async function PUT(
       return parsed.errorResponse as NextResponse<ValidationError>;
 
     const category = await prisma.category.findUnique({
-      where: { id: parsed.data.id, deletedAt: null },
+      where: { id: parsed.data.id },
     });
 
     if (!category) {
       return NextResponse.json(
-        { message: 'Category not found' },
+        { error: 'Category not found' },
         { status: 404 }
       );
     }

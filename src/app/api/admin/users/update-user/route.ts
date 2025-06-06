@@ -32,7 +32,7 @@ export async function PUT(
     // Validate input
     const parsed = await updateAdminUserSchema.safeParseAsync(body);
 
-    const { id, email, firstName, lastName, address, role, country } =
+    const { id, email, firstName, lastName, address, gender, role, country } =
       parsed.data as any;
 
     const userExists = await prisma.user.findUnique({ where: { id } });
@@ -65,6 +65,7 @@ export async function PUT(
       email: string;
       firstName: string;
       lastName: string;
+      gender: string;
       country: string;
       address: string;
       role: Role;
@@ -73,13 +74,14 @@ export async function PUT(
     if (email) updatedData.email = email;
     if (firstName) updatedData.firstName = firstName;
     if (lastName) updatedData.lastName = lastName;
+    if (gender) updatedData.gender = gender as string;
     if (country) updatedData.country = country;
     if (address) updatedData.address = address;
     if (role) updatedData.role = role as Role;
 
     const updatedUser = await prisma.user.update({
       where: { id },
-      data: updatedData,
+      data: updatedData as any,
     });
 
     return NextResponse.json(
@@ -90,6 +92,7 @@ export async function PUT(
           email: updatedUser.email,
           firstName: updatedUser.firstName,
           lastName: updatedUser.lastName,
+          gender: updatedUser.gender,
           country: updatedUser.country,
           address: updatedUser.address,
           role: updatedUser.role,

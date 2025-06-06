@@ -285,6 +285,8 @@ paths:
                           type: string
                         lastName:
                           type: string
+                        gender:
+                          type: string
                         country:
                           type: string
                         address:
@@ -371,6 +373,10 @@ paths:
                   type: string
                   description: The last name of the user.
                   example: Doe
+                gender:
+                  type: string
+                  description: The gender of the user.
+                  example: male
                 address:
                   type: string
                   description: The address of the user.
@@ -417,6 +423,9 @@ paths:
                       lastName:
                         type: string
                         example: Doe
+                      gender:
+                        type: string
+                        example: male
                       address:
                         type: string
                         example: 123 Main St, Springfield, IL

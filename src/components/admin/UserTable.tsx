@@ -16,6 +16,7 @@ interface User {
   email?: string;
   firstName?: string;
   lastName?: string;
+  gender?: string;
   country?: string;
   address?: string;
   role?: string;
@@ -59,6 +60,7 @@ export default function UserTable() {
               email: user.email || '',
               firstName: user.firstName || '',
               lastName: user.lastName || '',
+              gander: user.g || '',
               country: user.country || '',
               address: user.address || '',
               role: user.role || '',
@@ -220,6 +222,7 @@ export default function UserTable() {
     },
     { title: 'First Name', dataIndex: 'firstName', key: 'firstName' },
     { title: 'Last Name', dataIndex: 'lastName', key: 'lastName' },
+    { title: 'Gender', dataIndex: 'gender', key: 'gender' },
     { title: 'Email', dataIndex: 'email', key: 'email' },
     { title: 'Country', dataIndex: 'country', key: 'country' },
     { title: 'Address', dataIndex: 'address', key: 'address' },

@@ -1,14 +1,22 @@
 'use client';
-import { Alert, Button, Col, Form, Input, Modal, Row } from 'antd';
+
+import InputField from '@/components/inputs/InputField';
+import { Alert, Button, Col, Modal, Row } from 'antd';
 import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+
+interface CategoryFormValues {
+  name: string;
+  slug: string;
+  description?: string;
+}
 
 interface CategoryCreateModalProps {
   visible: boolean;
   onCancel: () => void;
-  onCreate: (values: any) => void;
+  onCreate: (values: CategoryFormValues) => void;
   loading: boolean;
   serverError: string | null;
-  formRef: React.MutableRefObject<any>;
 }
 
 export function CategoryCreateModal({
@@ -17,21 +25,25 @@ export function CategoryCreateModal({
   onCreate,
   loading,
   serverError,
-  formRef,
 }: CategoryCreateModalProps) {
-  const [form] = Form.useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CategoryFormValues>({
+    mode: 'onChange',
+  });
 
-  // Assign form instance to formRef for external control
-  useEffect(() => {
-    formRef.current = form;
-  }, [form, formRef]);
-
-  // Reset form when modal opens or closes
   useEffect(() => {
     if (visible) {
-      form.resetFields();
+      reset();
     }
-  }, [visible, form]);
+  }, [visible, reset]);
+
+  const onSubmit = (data: CategoryFormValues) => {
+    onCreate(data);
+  };
 
   return (
     <Modal
@@ -39,14 +51,14 @@ export function CategoryCreateModal({
       open={visible}
       onCancel={() => {
         onCancel();
-        form.resetFields();
+        reset();
       }}
       footer={[
         <Button
           key="cancel"
           onClick={() => {
             onCancel();
-            form.resetFields();
+            reset();
           }}
           style={{ marginRight: 8 }}
         >
@@ -56,7 +68,7 @@ export function CategoryCreateModal({
           key="submit"
           type="primary"
           loading={loading}
-          onClick={() => form.submit()}
+          onClick={handleSubmit(onSubmit)}
         >
           Create Category
         </Button>,
@@ -66,68 +78,72 @@ export function CategoryCreateModal({
       width="80vw"
       style={{ maxWidth: '800px', margin: '20px 0' }}
     >
-      <Form form={form} onFinish={onCreate} layout="vertical">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12}>
-            <Form.Item
+            <InputField
+              id="name"
               label="Name"
-              name="name"
-              rules={[
-                { required: true, message: 'Please input the category name!' },
-                { max: 150, message: 'Name must be at most 150 characters' },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+              placeholder="Category Name"
+              register={register('name', {
+                required: 'Category name is required',
+                maxLength: {
+                  value: 150,
+                  message: 'Name must be at most 150 characters',
+                },
+              })}
+              error={errors.name}
+            />
           </Col>
           <Col xs={24} sm={12}>
-            <Form.Item
+            <InputField
+              id="slug"
               label="Slug"
-              name="slug"
-              rules={[
-                { required: true, message: 'Please input the slug!' },
-                { max: 150, message: 'Slug must be at most 150 characters' },
-                {
-                  pattern: /^[a-z0-9-]+$/i,
+              placeholder="Category Slug"
+              register={register('slug', {
+                required: 'Slug is required',
+                maxLength: {
+                  value: 150,
+                  message: 'Slug must be at most 150 characters',
+                },
+                pattern: {
+                  value: /^[a-z0-9-]+$/i,
                   message:
                     'Slug must contain only alphanumeric characters and hyphens',
                 },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+              })}
+              error={errors.slug}
+            />
           </Col>
-        </Row>
-
-        <Row gutter={[16, 16]}>
           <Col xs={24}>
-            <Form.Item
+            <InputField
+              id="description"
               label="Description"
-              name="description"
-              rules={[
-                {
-                  max: 300,
+              inputType="textarea"
+              placeholder="Optional description"
+              register={register('description', {
+                maxLength: {
+                  value: 300,
                   message: 'Description must be at most 300 characters',
                 },
-              ]}
-            >
-              <Input.TextArea rows={4} />
-            </Form.Item>
+              })}
+              error={errors.description}
+            />
           </Col>
         </Row>
 
-        <Row>
-          <Col xs={24}>
-            {serverError && (
+        {serverError && (
+          <Row>
+            <Col xs={24}>
               <Alert
                 message={serverError}
                 type="error"
                 style={{ marginTop: '10px' }}
               />
-            )}
-          </Col>
-        </Row>
-      </Form>
+            </Col>
+          </Row>
+        )}
+      </form>
     </Modal>
   );
 }

@@ -34,8 +34,6 @@ export async function POST(
     // Destructure the validated pagination and search data
     const { page, limit, search } = parsedBody;
 
-    console.log(parsedBody);
-
     // Build the search condition
     let whereCondition: any = {};
 
@@ -46,6 +44,7 @@ export async function POST(
           { email: { contains: search, mode: 'insensitive' } },
           { firstName: { contains: search, mode: 'insensitive' } },
           { lastName: { contains: search, mode: 'insensitive' } },
+          { gender: { contains: search, mode: 'insensitive' } },
           { country: { contains: search, mode: 'insensitive' } },
           { address: { contains: search, mode: 'insensitive' } },
         ],
@@ -68,6 +67,7 @@ export async function POST(
         email: true,
         firstName: true,
         lastName: true,
+        gender: true,
         country: true,
         address: true,
         role: true,
@@ -86,6 +86,7 @@ export async function POST(
       ...user,
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
+      gender: user.gender ?? '',
       country: user.country ?? '',
       address: user.address ?? '',
     }));

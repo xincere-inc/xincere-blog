@@ -1,15 +1,21 @@
 'use client';
-import { Alert, Button, Col, Form, Input, Modal, Row } from 'antd';
+import InputField from '@/components/inputs/InputField';
+import { Button, Col, Modal, Row } from 'antd';
 import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Tag } from './TagTable';
 
 interface TagEditModalProps {
   visible: boolean;
   onCancel: () => void;
-  onEdit: (values: any) => void;
+  onEdit: (values: TagFormValues) => void;
   loading: boolean;
   tag: Tag | null;
   serverError: string | null;
+}
+
+interface TagFormValues {
+  name: string;
 }
 
 export function TagEditModal({
@@ -20,18 +26,28 @@ export function TagEditModal({
   tag,
   serverError,
 }: TagEditModalProps) {
-  const [form] = Form.useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<TagFormValues>({
+    mode: 'onChange',
+  });
 
   useEffect(() => {
     if (tag) {
-      const formValues = {
+      reset({
         name: tag.name || '',
-      };
-      form.setFieldsValue(formValues);
+      });
     } else {
-      form.resetFields();
+      reset();
     }
-  }, [tag, form]);
+  }, [tag, reset]);
+
+  const onSubmit = (data: TagFormValues) => {
+    onEdit(data);
+  };
 
   return (
     <Modal
@@ -39,14 +55,14 @@ export function TagEditModal({
       open={visible}
       onCancel={() => {
         onCancel();
-        form.resetFields();
+        reset();
       }}
       footer={[
         <Button
           key="cancel"
           onClick={() => {
             onCancel();
-            form.resetFields();
+            reset();
           }}
           style={{ marginRight: 8 }}
         >
@@ -56,44 +72,51 @@ export function TagEditModal({
           key="submit"
           type="primary"
           loading={loading}
-          onClick={() => form.submit()}
+          onClick={handleSubmit(onSubmit)}
         >
           Update Tag
         </Button>,
       ]}
       destroyOnHidden
       centered
-      width="80vw" // Responsive width
+      width="80vw"
       style={{ maxWidth: '600px', margin: '20px 0' }}
     >
-      <Form form={form} onFinish={onEdit} layout="vertical">
-        <Row>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Row gutter={[16, 16]}>
           <Col xs={24}>
-            <Form.Item
+            <InputField
+              id="name"
               label="Name"
-              name="name"
-              rules={[
-                { required: true, message: 'Please input the tag name!' },
-                { max: 100, message: 'Name must be at most 100 characters' },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+              placeholder="Tag Name"
+              register={register('name', {
+                required: 'Tag name is required',
+                maxLength: {
+                  value: 100,
+                  message: 'Name must be at most 100 characters',
+                },
+              })}
+              error={errors.name}
+            />
           </Col>
         </Row>
 
-        <Row>
-          <Col xs={24}>
-            {serverError && (
-              <Alert
-                message={serverError}
-                type="error"
-                style={{ marginTop: '10px' }}
-              />
-            )}
-          </Col>
-        </Row>
-      </Form>
+        {serverError && (
+          <Row>
+            <Col xs={24}>
+              <div
+                style={{
+                  color: 'red',
+                  marginTop: '10px',
+                  fontSize: '14px',
+                }}
+              >
+                {serverError}
+              </div>
+            </Col>
+          </Row>
+        )}
+      </form>
     </Modal>
   );
 }

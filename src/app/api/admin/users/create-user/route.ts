@@ -31,8 +31,16 @@ export async function POST(
     const body: AdminCreateUserRequest = await req.json();
     const parsedBody = await adminCreateUserSchema.parseAsync(body);
 
-    const { email, password, firstName, lastName, address, role, country } =
-      parsedBody;
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      address,
+      gender,
+      role,
+      country,
+    } = parsedBody;
 
     const existingUserEmail = await prisma.user.findUnique({
       where: { email },
@@ -53,6 +61,7 @@ export async function POST(
         password: hashedPassword,
         firstName,
         lastName,
+        gender,
         address: address || '',
         country,
         role,

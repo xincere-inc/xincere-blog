@@ -22,13 +22,11 @@ export async function PUT(request: Request) {
 
     // Check if tag exists
     const existingTag = await prisma.tag.findUnique({
-      where: { id, deletedAt: null },
+      where: { id },
     });
+
     if (!existingTag) {
-      return NextResponse.json(
-        { error: 'NotFound', message: 'Tag not found.' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Tag not found' }, { status: 404 });
     }
 
     // Check for name uniqueness if provided

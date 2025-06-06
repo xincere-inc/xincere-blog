@@ -12,6 +12,9 @@ export const adminCreateUserSchema = z.object({
     .string()
     .min(1, 'Last name is required')
     .max(50, 'Last name must be at most 50 characters'),
+  gender: z.enum(['male', 'female', 'other'], {
+    required_error: 'Gender is required',
+  }),
   address: z
     .string()
     .max(50, 'Address must not exceed 50 characters')
@@ -27,7 +30,7 @@ export const adminCreateUserSchema = z.object({
   }),
 });
 
-// Define the zod schema for updating the user by admin
+// Define the Zod schema for updating the user by admin
 export const updateAdminUserSchema = z.object({
   id: z.string().uuid('Invalid user ID format'),
   email: z.string().email('Invalid email format').optional(),
@@ -40,6 +43,11 @@ export const updateAdminUserSchema = z.object({
     .string()
     .min(1, 'Last name is required')
     .max(50, 'Last name must be at most 50 characters')
+    .optional(),
+  gender: z
+    .enum(['male', 'female', 'other'], {
+      required_error: 'Gender is required',
+    })
     .optional(),
   address: z.string().min(1, 'Address is required').optional(),
   country: z

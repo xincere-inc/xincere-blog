@@ -1,6 +1,5 @@
 import { Role } from '@prisma/client';
 import NextAuth from 'next-auth';
-import { signOut } from 'next-auth/react';
 import { NextResponse } from 'next/server';
 import { authOptions } from './lib/auth/authOptions';
 import getSession from './lib/auth/getSession';
@@ -24,11 +23,6 @@ export default auth(async (req) => {
   );
 
   const session = await getSession();
-
-  if (session?.expires && Date.now() > new Date(session.expires).getTime()) {
-    await signOut();
-    return NextResponse.redirect(new URL('/', nextUrl)); // Redirect to /signin after sign-out
-  }
 
   // Allow free access to
   if (isOpenRoutes) {
