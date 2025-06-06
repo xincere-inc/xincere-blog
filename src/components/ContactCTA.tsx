@@ -8,9 +8,11 @@ const ContactCTA = () => {
         システム開発やAI推進についてのご相談はこちらから
       </p>
 
-      <div className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-dark transition-colors duration-300  !rounded-button whitespace-nowrap cursor-pointer h-[50px]">
-        <Link href="/contacts">無料相談を予約する</Link>
-      </div>
+      <Link href="/contacts">
+        <div className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-dark transition-colors duration-300  !rounded-button whitespace-nowrap cursor-pointer h-[50px]">
+          無料相談を予約する
+        </div>
+      </Link>
     </div>
   );
 };
