@@ -1,3 +1,5 @@
+import FontAwesomeConfig from '@/fontAwesome.';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
@@ -24,10 +26,11 @@ export default function RootLayout({
           content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes"
         ></meta>
       </head>
+      <FontAwesomeConfig />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="min-h-screen bg-gray-50">{children}</div>
       </body>
     </html>
   );

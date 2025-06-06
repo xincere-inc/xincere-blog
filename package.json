@@ -38,7 +38,9 @@
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.2",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@prisma/client": "^6.7.0",
     "@types/bcrypt": "^5.0.2",
