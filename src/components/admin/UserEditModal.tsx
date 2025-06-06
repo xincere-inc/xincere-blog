@@ -1,12 +1,12 @@
 'use client';
 import InputField from '@/components/inputs/InputField';
+import '@ant-design/v5-patch-for-react-19';
 import { Alert, Col, Modal, Row } from 'antd';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import Select from 'react-select';
 import countries from 'world-countries';
-
 interface UserEditForm {
   firstName: string;
   lastName: string;

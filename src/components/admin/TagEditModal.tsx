@@ -1,10 +1,10 @@
 'use client';
 import InputField from '@/components/inputs/InputField';
+import '@ant-design/v5-patch-for-react-19';
 import { Button, Col, Modal, Row } from 'antd';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Tag } from './TagTable';
-
 interface TagEditModalProps {
   visible: boolean;
   onCancel: () => void;
