@@ -1,9 +1,10 @@
 'use client';
 import { AdminGetUsers200ResponseDataInner } from '@/api/client';
 import IdoAdminUsers from '@/api/IdoAdminUsers';
+
 import { Table } from 'antd';
 import { useSession } from 'next-auth/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { UserActions } from './UserActions';
 import { UserCreateModal } from './UserCreateModal';
@@ -11,12 +12,11 @@ import { UserEditModal } from './UserEditModal';
 import { UserSearchBar } from './UserSearchBar';
 import { UserSelection } from './UserSelection';
 
-interface User {
+export interface User {
   id?: string;
   email?: string;
   firstName?: string;
   lastName?: string;
-  gender?: string;
   country?: string;
   address?: string;
   role?: string;
@@ -25,7 +25,6 @@ interface User {
 export default function UserTable() {
   const { data: session } = useSession();
   const loggedInUserId = session?.user?.id;
-  const createFormRef = useRef<any>(null);
 
   const [data, setData] = useState<User[]>([]);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -60,7 +59,7 @@ export default function UserTable() {
               email: user.email || '',
               firstName: user.firstName || '',
               lastName: user.lastName || '',
-              gander: user.g || '',
+              gander: user.gender || '',
               country: user.country || '',
               address: user.address || '',
               role: user.role || '',
@@ -115,6 +114,7 @@ export default function UserTable() {
         email: values.email,
         firstName: values.firstName,
         lastName: values.lastName,
+        gender: values.gender,
         address: values.address,
         role: values.role,
         country: values.country,
@@ -128,7 +128,6 @@ export default function UserTable() {
         fetchData(pagination.current, pagination.pageSize, searchText);
         setIsCreateModalVisible(false);
         setServerError(null);
-        createFormRef.current?.resetFields();
       } else {
         toast.error(response.data.message || 'Failed to create user', {
           position: 'bottom-right',
@@ -275,7 +274,6 @@ export default function UserTable() {
         onCreate={createUser}
         loading={loading}
         serverError={serverError}
-        formRef={createFormRef}
       />
 
       <UserEditModal
@@ -283,7 +281,19 @@ export default function UserTable() {
         onCancel={handleCancelEditModal}
         onEdit={updateUser}
         loading={loading}
-        user={currentUser}
+        user={
+          currentUser
+            ? {
+                firstName: currentUser.firstName || '',
+                lastName: currentUser.lastName || '',
+                email: currentUser.email || '',
+                country: currentUser.country || '',
+                address: currentUser.address || '',
+                role: currentUser.role || '',
+                gender: (currentUser as any).gender || '',
+              }
+            : null
+        }
         serverError={serverError}
       />
     </div>

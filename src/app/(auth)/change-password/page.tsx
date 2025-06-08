@@ -39,7 +39,7 @@ const ChangePasswordPage = () => {
         toast.success(res.data.message || 'Password updated.', {
           position: 'bottom-right',
         });
-        router.push('/dashboard');
+        router.refresh();
       } else {
         toast.error(res.data.message || 'Failed to update password.', {
           position: 'bottom-right',

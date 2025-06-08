@@ -3,7 +3,7 @@ import { AdminCreateTag201ResponseTag } from '@/api/client';
 
 import IdoTag from '@/api/IdoTag';
 import { Table } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { TagActions } from './TagActions';
 import { TagCreateModal } from './TagCreateModal';
@@ -20,8 +20,6 @@ export interface Tag {
 }
 
 export default function TagTable() {
-  const createFormRef = useRef<any>(null);
-
   const [data, setData] = useState<Tag[]>([]);
   const [serverError, setServerError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
@@ -109,7 +107,6 @@ export default function TagTable() {
         fetchData(pagination.current, pagination.pageSize, searchText);
         setIsCreateModalVisible(false);
         setServerError(null);
-        createFormRef.current?.resetFields();
       } else {
         toast.error(response.data.message || 'Failed to create tag', {
           position: 'bottom-right',
@@ -252,14 +249,7 @@ export default function TagTable() {
         rowKey="id"
         pagination={pagination}
         loading={loading}
-        onChange={
-          handleTableChange as (
-            pagination: any,
-            filters: any,
-            sorter: any,
-            extra: any
-          ) => void
-        }
+        onChange={handleTableChange}
         scroll={{ x: true }}
         style={{ width: '100%' }}
       />
@@ -273,7 +263,6 @@ export default function TagTable() {
         onCreate={createTag}
         loading={loading}
         serverError={serverError}
-        formRef={createFormRef}
       />
 
       <TagEditModal

@@ -119,7 +119,7 @@ function validationErrorResponse(
 }
 
 function handleUnexpectedError(
-  error: unknown
+  error: any
 ): NextResponse<InternalServerError | ValidationError> {
   if (error instanceof z.ZodError) {
     return validationErrorResponse(error);

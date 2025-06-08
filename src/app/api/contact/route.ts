@@ -66,7 +66,7 @@ export async function POST(
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {

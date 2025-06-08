@@ -29,10 +29,10 @@ export async function POST(
     const data: ForgetPasswordRequest = await req.json();
 
     // Validate the request body using the emailSchema
-    const parsedBody = await emailSchema.safeParseAsync(data);
+    const parsedBody = await emailSchema.parseAsync(data);
 
     // Extract the email from the request data
-    const { email } = data;
+    const { email } = parsedBody;
 
     // If no email is provided, return a 400 error
     if (!email) {
@@ -119,7 +119,7 @@ export async function POST(
       message: 'Password reset email sent successfully',
     };
     return NextResponse.json(successResponse, { status: 200 });
-  } catch (error: unknown) {
+  } catch (error: any) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {

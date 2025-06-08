@@ -157,9 +157,6 @@ paths:
                   type: string
                   format: password
                   example: SecureP@ssw0rd
-                phone:
-                  type: string
-                  example: '1234567890'
                 address:
                   type: string
                   example: 123 Main St
@@ -291,8 +288,6 @@ paths:
                           type: string
                         address:
                           type: string
-                        phone:
-                          type: string
                         role:
                           type: string
                   pagination:
@@ -381,10 +376,6 @@ paths:
                   type: string
                   description: The address of the user.
                   example: 123 Main St, Springfield, IL
-                phone:
-                  type: string
-                  description: The phone number of the user.
-                  example: '+1234567890'
                 role:
                   type: string
                   enum:
@@ -429,9 +420,6 @@ paths:
                       address:
                         type: string
                         example: 123 Main St, Springfield, IL
-                      phone:
-                        type: string
-                        example: '+1234567890'
                       role:
                         type: string
                         enum:

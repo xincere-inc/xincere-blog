@@ -29,11 +29,23 @@ export async function POST(
 
     const { name, slug, description } = validated;
 
-    const duplicate = await prisma.category.findUnique({ where: { slug } });
+    const duplicate = await prisma.category.findFirst({
+      where: {
+        OR: [{ slug }, { name }],
+      },
+    });
 
     if (duplicate) {
       return NextResponse.json(
-        { error: `Category already exists with this slug: ${slug}` },
+        {
+          error: `Category already exists with ${
+            duplicate.slug === slug && duplicate.name === name
+              ? `slug and name`
+              : duplicate.slug === slug
+                ? `slug: ${slug}`
+                : `name: ${name}`
+          }`,
+        },
         { status: 400 }
       );
     }
@@ -67,7 +79,7 @@ export async function POST(
 }
 
 function handlePostError(
-  error: unknown
+  error: any
 ): NextResponse<ValidationError | InternalServerError> {
   if (error instanceof z.ZodError) {
     return NextResponse.json(

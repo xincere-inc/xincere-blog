@@ -3,7 +3,6 @@ import InputField from '@/components/inputs/InputField';
 import '@ant-design/v5-patch-for-react-19';
 import { Alert, Col, Modal, Row } from 'antd';
 import Image from 'next/image';
-import React, { useRef } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import Select from 'react-select';
 import countries from 'world-countries';
@@ -12,7 +11,6 @@ interface UserCreateForm {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string;
   country: string;
   address: string;
   role: string;
@@ -39,7 +37,6 @@ interface UserCreateModalProps {
   onCreate: (values: UserCreateForm) => void;
   loading: boolean;
   serverError?: string | null;
-  formRef?: React.RefObject<any>;
 }
 
 export function UserCreateModal({
@@ -48,7 +45,6 @@ export function UserCreateModal({
   onCreate,
   loading,
   serverError,
-  formRef,
 }: UserCreateModalProps) {
   const {
     register,
@@ -60,14 +56,6 @@ export function UserCreateModal({
   } = useForm<UserCreateForm>({
     mode: 'onChange',
   });
-
-  // Forward ref to parent component
-  const internalFormRef = useRef<any>(null);
-  React.useImperativeHandle(formRef, () => ({
-    resetFields: () => {
-      reset();
-    },
-  }));
 
   const countryOptions: CountryOption[] = countries.map((country) => ({
     value: country.cca2,
@@ -104,7 +92,7 @@ export function UserCreateModal({
       centered
       style={{ margin: '20px 0px' }}
     >
-      <form ref={internalFormRef} onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Row gutter={16}>
           <Col xs={24} sm={12}>
             <div className="mb-4">
@@ -261,11 +249,6 @@ export function UserCreateModal({
                   />
                 )}
               />
-              {errors.phone && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.phone.message}
-                </p>
-              )}
             </div>
           </Col>
           <Col xs={24} sm={12}>

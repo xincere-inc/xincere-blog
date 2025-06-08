@@ -1,13 +1,13 @@
 import {
   AdminCreateTagRequest,
   Created,
+  InternalServerError,
   UnAuthorizedError,
   ValidationError,
 } from '@/api/client';
 import { prisma } from '@/lib/prisma';
 import { authorizeAdmin } from '@/lib/utils/authorize-admin';
 import { createTagSchema } from '@/lib/zod/admin/tag-management/tag';
-import { InternalServerError } from 'api';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -73,7 +73,7 @@ export async function POST(
 }
 
 function handlePostError(
-  error: unknown
+  error: any
 ): NextResponse<ValidationError | InternalServerError> {
   if (error instanceof z.ZodError) {
     return NextResponse.json(

@@ -10,8 +10,7 @@ import { authorizeAdmin } from '@/lib/utils/authorize-admin';
 import { updateAdminUserSchema } from '@/lib/zod/admin/user-management/user';
 import { NextResponse } from 'next/server';
 // Role is an enum in your Prisma schema
-import { Role } from '@prisma/client';
-import { z } from 'zod';
+import { Gender, Role, User } from '@prisma/client';
 
 export async function PUT(
   req: Request
@@ -32,10 +31,25 @@ export async function PUT(
     // Validate input
     const parsed = await updateAdminUserSchema.safeParseAsync(body);
 
-    const { id, email, firstName, lastName, address, gender, role, country } =
-      parsed.data as any;
+    if (!parsed.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation error',
+          errors: parsed.error.errors.map((error) => ({
+            path: error.path[0],
+            message: error.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
 
-    const userExists = await prisma.user.findUnique({ where: { id } });
+    const { id, email, firstName, lastName, address, gender, role, country } =
+      parsed.data as AdminUpdateUserRequest;
+
+    const userExists = await prisma.user.findUnique({
+      where: { id: id },
+    });
 
     if (!userExists) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -74,14 +88,14 @@ export async function PUT(
     if (email) updatedData.email = email;
     if (firstName) updatedData.firstName = firstName;
     if (lastName) updatedData.lastName = lastName;
-    if (gender) updatedData.gender = gender as string;
+    if (gender) updatedData.gender = gender as Gender;
     if (country) updatedData.country = country;
     if (address) updatedData.address = address;
     if (role) updatedData.role = role as Role;
 
     const updatedUser = await prisma.user.update({
       where: { id },
-      data: updatedData as any,
+      data: updatedData as User,
     });
 
     return NextResponse.json(
@@ -100,27 +114,14 @@ export async function PUT(
       },
       { status: 200 }
     );
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Validation error',
-          errors: error.errors.map((error) => ({
-            path: error.path[0],
-            message: error.message,
-          })),
-        },
-        { status: 400 }
-      );
-    } else {
-      console.error('Error during update user:', error);
-      return NextResponse.json(
-        {
-          error: 'Internal server error',
-          message: 'Error during update user',
-        },
-        { status: 500 }
-      );
-    }
+  } catch (error: any) {
+    console.error('Error during update user:', error);
+    return NextResponse.json(
+      {
+        error: 'Internal server error',
+        message: 'Error during update user',
+      },
+      { status: 500 }
+    );
   }
 }

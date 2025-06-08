@@ -7,11 +7,11 @@ import { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import Select from 'react-select';
 import countries from 'world-countries';
+
 interface UserEditForm {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string;
   country: string;
   address: string;
   role: string;
@@ -35,7 +35,7 @@ interface UserEditModalProps {
   onCancel: () => void;
   onEdit: (values: UserEditForm) => void;
   loading: boolean;
-  user: any;
+  user: UserEditForm | null;
   serverError?: string | null;
 }
 
@@ -60,7 +60,6 @@ export function UserEditModal({
       firstName: '',
       lastName: '',
       email: '',
-      phone: '',
       country: '',
       address: '',
       role: '',
@@ -73,7 +72,6 @@ export function UserEditModal({
       setValue('firstName', user.firstName || '');
       setValue('lastName', user.lastName || '');
       setValue('email', user.email || '');
-      setValue('phone', user.phone || '');
       setValue('country', user.country || '');
       setValue('address', user.address || '');
       setValue('role', user.role || '');
@@ -185,22 +183,6 @@ export function UserEditModal({
           </Col>
           <Col xs={24} sm={12}>
             <div className="mb-4">
-              <InputField
-                id="phone"
-                label="Phone"
-                placeholder="Enter phone number"
-                register={register('phone', {
-                  required: 'Phone number is required',
-                })}
-                error={errors.phone}
-              />
-            </div>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col xs={24} sm={12}>
-            <div className="mb-4">
               <label htmlFor="gender" className="block mb-1">
                 Gender
               </label>
@@ -236,6 +218,9 @@ export function UserEditModal({
               )}
             </div>
           </Col>
+        </Row>
+
+        <Row gutter={16}>
           <Col xs={24} sm={12}>
             <div className="mb-4">
               <label htmlFor="country" className="block mb-1">
@@ -285,9 +270,6 @@ export function UserEditModal({
               )}
             </div>
           </Col>
-        </Row>
-
-        <Row gutter={16}>
           <Col xs={24} sm={12}>
             <div className="mb-4">
               <InputField
@@ -299,7 +281,10 @@ export function UserEditModal({
               />
             </div>
           </Col>
-          <Col xs={24} sm={12}>
+        </Row>
+
+        <Row gutter={16}>
+          <Col xs={24}>
             <div className="mb-4">
               <label htmlFor="role" className="block mb-1">
                 Role

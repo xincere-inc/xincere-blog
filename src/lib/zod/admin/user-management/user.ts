@@ -34,27 +34,15 @@ export const adminCreateUserSchema = z.object({
 export const updateAdminUserSchema = z.object({
   id: z.string().uuid('Invalid user ID format'),
   email: z.string().email('Invalid email format').optional(),
-  firstName: z
-    .string()
-    .min(1, 'First name is required')
-    .max(50, 'First name must be at most 50 characters')
-    .optional(),
-  lastName: z
-    .string()
-    .min(1, 'Last name is required')
-    .max(50, 'Last name must be at most 50 characters')
-    .optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
   gender: z
     .enum(['male', 'female', 'other'], {
       required_error: 'Gender is required',
     })
     .optional(),
-  address: z.string().min(1, 'Address is required').optional(),
-  country: z
-    .string()
-    .min(1, 'Country is required')
-    .max(50, 'Country must be at most 50 characters')
-    .optional(),
+  address: z.string().optional(),
+  country: z.string().optional(),
   role: z
     .enum(['user', 'admin'], {
       errorMap: () => ({

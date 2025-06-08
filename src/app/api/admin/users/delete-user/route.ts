@@ -50,36 +50,23 @@ export async function DELETE(
       where: {
         id: {
           in: ids,
+          not: loggedUserId, // Exclude the logged-in user
+        },
+        role: {
+          not: 'admin', // Exclude admins
         },
       },
       select: {
         id: true,
-        role: true,
       },
     });
 
-    // Filter out other admins (excluding self)
-    const filteredIds = usersToDelete
-      .filter(
-        (user) => user.role !== 'admin' || user.id === loggedUserId // Allow self, block other admins
-      )
-      .map((user) => user.id);
-
-    if (filteredIds.length === 0) {
-      return NextResponse.json(
-        {
-          message:
-            'No users were deleted. Admins cannot delete other admin accounts.',
-          count: 0,
-        },
-        { status: 400 }
-      );
-    }
+    const userIdsToDelete = usersToDelete.map((user) => user.id); // Extract IDs
 
     const deleteResult = await prisma.user.deleteMany({
       where: {
         id: {
-          in: filteredIds,
+          in: userIdsToDelete, // Pass extracted IDs here
         },
       },
     });
@@ -91,7 +78,7 @@ export async function DELETE(
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {

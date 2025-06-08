@@ -8,6 +8,7 @@ import {
 import { prisma } from '@/lib/prisma';
 import { authorizeAdmin } from '@/lib/utils/authorize-admin';
 import { paginationWithSearchSchema } from '@/lib/zod/common/common';
+import { Gender, Role } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -35,7 +36,7 @@ export async function POST(
     const { page, limit, search } = parsedBody;
 
     // Build the search condition
-    let whereCondition: any = {};
+    let whereCondition: import('@prisma/client').Prisma.UserWhereInput = {};
 
     // Set up the condition for string fields using contains
     if (search) {
@@ -44,16 +45,21 @@ export async function POST(
           { email: { contains: search, mode: 'insensitive' } },
           { firstName: { contains: search, mode: 'insensitive' } },
           { lastName: { contains: search, mode: 'insensitive' } },
-          { gender: { contains: search, mode: 'insensitive' } },
           { country: { contains: search, mode: 'insensitive' } },
           { address: { contains: search, mode: 'insensitive' } },
         ],
       };
 
+      const normalizedSearch = search.toLowerCase();
+
       // Add condition for enums (e.g., role) using equals
       if (search in ['user', 'admin']) {
         // Assuming your `search` could match enum values (case-sensitive)
-        whereCondition.OR.push({ role: { equals: search } });
+        if (!whereCondition.OR) whereCondition.OR = [];
+        whereCondition.OR.push({ role: { equals: search as Role } });
+        whereCondition.OR.push({
+          gender: { equals: normalizedSearch as Gender },
+        });
       }
     }
 
@@ -104,7 +110,7 @@ export async function POST(
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {

@@ -193,6 +193,7 @@ To access the admin page, follow these steps:
    Navigate to [http://localhost:3000/signin](http://localhost:3000/signin)
 
 2. **Login with admin credentials:**
+
    - Email: `admin@example.com`
    - Password: `admin12345`
 

@@ -1,10 +1,16 @@
-import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import { defineConfig, globalIgnores } from 'eslint/config';
+import { FlatCompat } from '@eslint/eslintrc';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-export default defineConfig([
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+const eslintConfig = [
+  ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
@@ -33,4 +39,6 @@ export default defineConfig([
     'build/**',
     'lib/**',
   ]),
-]);
+];
+
+export default eslintConfig;

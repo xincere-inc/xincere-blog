@@ -44,7 +44,7 @@ export async function GET(
       message: 'Email successfully verified',
     };
     return NextResponse.json(successResponse, { status: 200 });
-  } catch (error: unknown) {
+  } catch (error: any) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {

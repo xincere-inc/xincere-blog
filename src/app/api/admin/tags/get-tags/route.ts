@@ -30,9 +30,7 @@ export async function POST(
 
     const { page, limit, search } = parsedBody;
 
-    let whereCondition: any = {
-      // deletedAt: null, // If using soft delete
-    };
+    let whereCondition = {};
 
     if (search) {
       whereCondition = {
@@ -77,7 +75,7 @@ export async function POST(
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {

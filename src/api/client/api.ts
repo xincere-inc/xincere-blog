@@ -12,32 +12,23 @@
  * Do not edit the class manually.
  */
 
-import type { Configuration } from './configuration';
-import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
+import type { AxiosInstance, AxiosPromise, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
+import type { Configuration } from './configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
+import type { RequestArgs } from './base';
 import {
   DUMMY_BASE_URL,
   assertParamExists,
-  setApiKeyToObject,
-  setBasicAuthToObject,
-  setBearerAuthToObject,
-  setOAuthToObject,
-  setSearchParams,
-  serializeDataIfNeeded,
-  toPathString,
   createRequestFunction,
+  serializeDataIfNeeded,
+  setBearerAuthToObject,
+  setSearchParams,
+  toPathString,
 } from './common';
-import type { RequestArgs } from './base';
 // @ts-ignore
-import {
-  BASE_PATH,
-  COLLECTION_FORMATS,
-  BaseAPI,
-  RequiredError,
-  operationServerMap,
-} from './base';
+import { BASE_PATH, BaseAPI, RequiredError, operationServerMap } from './base';
 
 /**
  *
@@ -282,12 +273,6 @@ export interface AdminCreateUserRequest {
    * @memberof AdminCreateUserRequest
    */
   password: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AdminCreateUserRequest
-   */
-  phone?: string;
   /**
    *
    * @type {string}
@@ -546,12 +531,6 @@ export interface AdminGetUsers200ResponseDataInner {
    * @type {string}
    * @memberof AdminGetUsers200ResponseDataInner
    */
-  phone?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AdminGetUsers200ResponseDataInner
-   */
   role?: string;
 }
 /**
@@ -803,12 +782,6 @@ export interface AdminUpdateUser200ResponseUser {
    * @memberof AdminUpdateUser200ResponseUser
    */
   address?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AdminUpdateUser200ResponseUser
-   */
-  phone?: string;
   /**
    *
    * @type {string}

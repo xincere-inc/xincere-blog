@@ -78,21 +78,24 @@ async function validateRequestBody(
   | { success: false; errorResponse: NextResponse<ValidationError> }
 > {
   const result = await adminUpdateCategorySchema.safeParseAsync(body);
-  if (!result.success) {
-    const errorResponse = NextResponse.json(
-      {
-        error: 'Validation error',
-        errors: result.error.errors.map((e: any) => ({
-          path: e.path.join('.'),
-          message: e.message,
-        })),
-      } as ValidationError,
-      { status: 400 }
-    );
-    return { success: false, errorResponse };
-  }
 
-  return { success: true, data: result.data };
+  if (result.success) {
+    return { success: true, data: result.data };
+  } else {
+    return {
+      success: false,
+      errorResponse: NextResponse.json(
+        {
+          error: 'Validation error',
+          errors: result.error.errors.map((e) => ({
+            path: e.path.join('.'),
+            message: e.message,
+          })),
+        },
+        { status: 400 }
+      ),
+    };
+  }
 }
 
 async function isSlugConflict(id: number, slug?: string) {
@@ -119,7 +122,7 @@ function buildUpdatePayload(data: AdminUpdateCategoryRequest) {
   };
 }
 
-function handleUnexpectedError(error: unknown) {
+function handleUnexpectedError(error: any) {
   if (error instanceof z.ZodError) {
     return NextResponse.json(
       {

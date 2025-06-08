@@ -2,7 +2,7 @@
 import { AdminCreateCategory201ResponseCategory } from '@/api/client';
 import IdoCategory from '@/api/IdoCategory';
 import { Table } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { CategoryActions } from './CategoryActions';
 import { CategoryCreateModal } from './CategoryCreateModal';
@@ -21,8 +21,6 @@ export interface Category {
 }
 
 export default function CategoryTable() {
-  const createFormRef = useRef<any>(null);
-
   const [data, setData] = useState<Category[]>([]);
   const [serverError, setServerError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
@@ -128,7 +126,6 @@ export default function CategoryTable() {
         fetchData(pagination.current, pagination.pageSize, searchText);
         setIsCreateModalVisible(false);
         setServerError(null);
-        createFormRef.current?.resetFields();
       } else {
         toast.error(response.data.message || 'Failed to create category', {
           position: 'bottom-right',
@@ -289,7 +286,6 @@ export default function CategoryTable() {
         onCreate={createCategory}
         loading={loading}
         serverError={serverError}
-        formRef={createFormRef}
       />
 
       <CategoryEditModal
