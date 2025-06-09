@@ -8,7 +8,7 @@ import { Category } from './CategoryTable';
 interface CategoryEditModalProps {
   visible: boolean;
   onCancel: () => void;
-  onEdit: (values: any) => void;
+  onEdit: (values: CategoryFormValues) => void;
   loading: boolean;
   category: Category | null;
   serverError: string | null;
@@ -128,7 +128,12 @@ export function CategoryEditModal({
               label="Description"
               inputType="textarea"
               placeholder="Optional description"
-              register={register('description')}
+              register={register('description', {
+                maxLength: {
+                  value: 300,
+                  message: 'Description must be at most 300 characters',
+                },
+              })}
               error={errors.description}
             />
           </Col>

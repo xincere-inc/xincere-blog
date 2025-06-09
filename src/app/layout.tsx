@@ -1,4 +1,4 @@
-import FontAwesomeConfig from '@/fontAwesome.';
+import FontAwesomeConfig from '@/fontAwesome';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';

@@ -17,6 +17,7 @@ export interface User {
   email?: string;
   firstName?: string;
   lastName?: string;
+  gender?: string;
   country?: string;
   address?: string;
   role?: string;
@@ -59,7 +60,7 @@ export default function UserTable() {
               email: user.email || '',
               firstName: user.firstName || '',
               lastName: user.lastName || '',
-              gander: user.gender || '',
+              gender: user.gender || '',
               country: user.country || '',
               address: user.address || '',
               role: user.role || '',
