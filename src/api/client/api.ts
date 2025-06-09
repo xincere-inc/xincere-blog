@@ -1306,6 +1306,159 @@ export const AdminApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
+    /**
+     * Creates new article
+     * @summary Create new article
+     * @param {AdminCreateArticleRequest} adminCreateArticleRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminCreateArticle: async (
+      adminCreateArticleRequest: AdminCreateArticleRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/admin/articles/create-article`;
+      assertParamExists(
+        'adminCreateArticles',
+        'adminCreateArticleRequest',
+        adminCreateArticleRequest
+      );
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminCreateArticleRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Admin deletes article by ids
+     * @summary Delete article by Ids
+     * @param {AdminDeleteArticlesRequest} adminDeleteArticlesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminDeleteArticles: async (
+      adminDeleteArticlesRequest: AdminDeleteArticlesRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      assertParamExists(
+        'adminDeleteArticles',
+        'adminDeleteArticlesRequest',
+        adminDeleteArticlesRequest
+      );
+      const localVarPath = `/api/admin/article/delete-article`;
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'DELETE',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminDeleteArticlesRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Retrieves article information
+     * @summary retrieves articleinformation
+     * @param {AdminGetArticlesRequest} adminGetArticlesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminGetArticles: async (
+      adminGetArticlesRequest: AdminGetArticlesRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      assertParamExists(
+        'adminGetArticles',
+        'adminGetArticlesRequest',
+        adminGetArticlesRequest
+      );
+      const localVarPath = `/api/admin/articles/get-article`;
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminGetArticlesRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
   };
 };
 
@@ -1443,6 +1596,100 @@ export const AdminApiFp = function (configuration?: Configuration) {
           configuration
         )(axios, localVarOperationServerBasePath || basePath);
     },
+    /**Creates new article
+     * @summary Create new article
+     * @param {AdminCreateArticleRequest} adminCreateArticleRequest
+     * @param {*} [options]
+     * @throws {RequiredError}
+     */
+    async adminCreateArticle(
+      adminCreateArticleRequest: AdminCreateArticleRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Created>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.adminCreateArticle(
+        adminCreateArticleRequest,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminCreateArticle']?.[
+          localVarOperationServerIndex
+        ]?.url;
+
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Admin deletes articles
+     * @summary Delete articles by ids
+     * @param {AdminDeleteArticlesRequest} adminDeleteArticlesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminDeleteArticles(
+      adminDeleteArticlesRequest: AdminDeleteArticlesRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminDeleteArticles(
+          adminDeleteArticlesRequest,
+          options
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminDeleteArticles']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Admin retrieves article information
+     * @summary retrieves article information
+     * @param {AdminGetArticleRequest} adminGetArticleRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminGetArticles(
+      adminGetArticlesRequest: AdminGetArticlesRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminGetArticles200Response>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetArticles(
+        adminGetArticlesRequest,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminGetArticles']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
   };
 };
 
@@ -1515,6 +1762,51 @@ export const AdminApiFactory = function (
     ): AxiosPromise<AdminUpdateUser200Response> {
       return localVarFp
         .adminUpdateUser(adminUpdateUserRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     * Creates a new article
+     * @summary Creates new article
+     * @param {AdminCreateArticleRequest} adminCreateArticleRequest
+     * @param {*} [options]
+     * @throws {RequiredError}
+     */
+    adminCreateArticle(
+      adminCreateArticleRequest: AdminCreateArticleRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<Created> {
+      return localVarFp
+        .adminCreateArticle(adminCreateArticleRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /** 
+     * Admin deletes article
+     * @summary Admin Deletes article
+     * @param {AdminDeleteArticleRequest} adminDeleteArticleRequest
+     * @param {*} [options]
+     * @throws {RequiredError}
+    */
+    adminDeleteArticles(
+      adminDeleteArticlesRequest: AdminDeleteArticlesRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<Success> {
+      return localVarFp
+        .adminDeleteArticles(adminDeleteArticlesRequest, options)
+          .then((request) => request(axios, basePath));
+    },
+    /**
+    * Retrieves article information
+    * @summary Fetch article information
+    * @param {AdminGetArticleRequest} adminGetArticleRequest
+    * @param {*} [options]
+    * @throws {RequiredError}
+    */
+    adminGetArticles(
+      adminGetArticlesRequest: AdminGetArticlesRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminGetArticles200Response> {
+      return localVarFp
+        .adminGetArticles(adminGetArticlesRequest, options)
         .then((request) => request(axios, basePath));
     },
   };
