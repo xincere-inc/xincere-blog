@@ -1,5 +1,6 @@
 'use client';
-import { AdminGetArticles200Response } from "@/api/client";
+import { AdminGetUsers200ResponseDataInner } from '@/api/client';
+import IdoAdminArticles from '@/api/IdoAdminArticles';
 import { Table } from 'antd';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -8,9 +9,13 @@ import { ArticleSearchBar } from './ArticleSearchBar';
 
 export interface Article {
   id?: number;
-  title?: string; //name?
+  author?: string;
+  title?: string;
+  category?: string;
   slug?: string;
-  summary?: string; //description?
+  summary?: string;
+  status?: string;
+  tags?: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -25,10 +30,28 @@ export default function ArticleTable() {
     pageSize: 10,
     total:0
   });
+  const [loading, setLoading] = useState(false)
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  const fetchData = async (page: number, pageSize: number, search: string) => {};
+  const fetchData = async (page: number, pageSize: number, search: string) => {
+    setLoading(true);
+    try {
+      const response = await IdoAdminArticles.adminGetArticles({
+        page,
+        limit: pageSize,
+        search,
+      });
+      console.log('get article:', response);
+    } catch (err: any) {
+      toast.error(err.response?.data.message || 'Something went wrong.', {
+        position: 'bottom-right',
+        autoClose: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const deleteArticle = async (ids: string[]) => {};
 
