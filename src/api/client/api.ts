@@ -135,6 +135,66 @@ export interface AdminGetArticles200Response {
 }
 
 /**
+ * @export
+ * @interface AdminGetArticles200ResponseDataInner
+ */
+export interface AdminGetArticles200ResponseDataInner {
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetArticle200ResponseDataInner
+   */
+  id?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetArticle200ResponseDataInner
+   */
+  title?: string;
+  /**
+   * @type {array<string>}
+   * @memberof AdminGetArticle200ResponseDataInner
+   */
+  author?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  /**
+   * @type {array<string>}
+   * @memberof AdminGetArticle200ResponseDataInner
+   */
+  category: {
+    id: number;
+    name: string;
+  };
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetArticle200ResponseDataInner
+   */
+  slug?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetArticle200ResponseDataInner
+   */
+  summary?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetArticle200ResponseDataInner
+   */
+  status?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminGetArticle200ResponseDataInner
+   */
+  tags?: string;
+}
+
+/**
  *
  * @export
  * @interface AdminCreateUser400Response
