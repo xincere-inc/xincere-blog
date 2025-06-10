@@ -1,8 +1,9 @@
+import { User } from '@/types/admin/user';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Popconfirm, Space } from 'antd';
 
 interface UserActionsProps {
-  record: any;
+  record: User;
   loggedInUserId?: string;
   onEdit: (record: any) => void;
   onDelete: (record: any) => void;

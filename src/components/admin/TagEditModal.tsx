@@ -1,17 +1,20 @@
 'use client';
+import TagApi from '@/api/TagApi';
 import InputField from '@/components/inputs/InputField';
+import { Tag } from '@/types/admin/tag';
 import '@ant-design/v5-patch-for-react-19';
-import { Button, Col, Modal, Row } from 'antd';
-import { useEffect } from 'react';
+import { Alert, Button, Col, Modal, Row } from 'antd';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Tag } from './TagTable';
+import { toast } from 'react-toastify';
+
 interface TagEditModalProps {
   visible: boolean;
   onCancel: () => void;
-  onEdit: (values: TagFormValues) => void;
-  loading: boolean;
+  onSuccess: (page: number, pageSize: number, search: string) => void; // Callback to refresh data
+  pagination: { current: number; pageSize: number };
+  searchText: string;
   tag: Tag | null;
-  serverError: string | null;
 }
 
 interface TagFormValues {
@@ -21,10 +24,10 @@ interface TagFormValues {
 export function TagEditModal({
   visible,
   onCancel,
-  onEdit,
-  loading,
+  onSuccess,
+  pagination,
+  searchText,
   tag,
-  serverError,
 }: TagEditModalProps) {
   const {
     register,
@@ -35,18 +38,51 @@ export function TagEditModal({
     mode: 'onChange',
   });
 
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
   useEffect(() => {
-    if (tag) {
+    if (visible && tag) {
       reset({
         name: tag.name || '',
       });
+      setServerError(null);
     } else {
       reset();
     }
-  }, [tag, reset]);
+  }, [tag, visible, reset]);
+
+  const updateTag = async (values: TagFormValues) => {
+    if (!tag) return;
+    setLoading(true);
+    try {
+      const response = await TagApi.adminUpdateTag({
+        id: tag.id,
+        name: values.name,
+      });
+
+      if (response.status === 200) {
+        toast.success(response.data.message || 'Tag updated successfully', {
+          position: 'bottom-right',
+        });
+        setServerError(null);
+        reset();
+        onCancel(); // Close modal
+        onSuccess(pagination.current, pagination.pageSize, searchText); // Refresh data
+      } else {
+        toast.error(response.data.message || 'Failed to update tag', {
+          position: 'bottom-right',
+        });
+      }
+    } catch (error: any) {
+      setServerError(error?.response?.data?.error || 'Error updating tag');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const onSubmit = (data: TagFormValues) => {
-    onEdit(data);
+    updateTag(data);
   };
 
   return (
@@ -64,7 +100,7 @@ export function TagEditModal({
             onCancel();
             reset();
           }}
-          style={{ marginRight: 8 }}
+          className="mr-2"
         >
           Cancel
         </Button>,
@@ -79,8 +115,7 @@ export function TagEditModal({
       ]}
       destroyOnHidden
       centered
-      width="80vw"
-      style={{ maxWidth: '600px', margin: '20px 0' }}
+      className="w-80vw max-w-600 my-5"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Row gutter={[16, 16]}>
@@ -104,15 +139,7 @@ export function TagEditModal({
         {serverError && (
           <Row>
             <Col xs={24}>
-              <div
-                style={{
-                  color: 'red',
-                  marginTop: '10px',
-                  fontSize: '14px',
-                }}
-              >
-                {serverError}
-              </div>
+              <Alert message={serverError} type="error" className="mt-2.5" />
             </Col>
           </Row>
         )}

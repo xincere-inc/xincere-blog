@@ -1,6 +1,6 @@
 'use client';
 
-import IdoContact from '@/api/IdoContact';
+import ContactApi from '@/api/ContactApi';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
@@ -91,7 +91,7 @@ const App: React.FC = () => {
       setSubmissionError(null);
 
       try {
-        const response = await IdoContact.submitContactForm({
+        const response = await ContactApi.submitContactForm({
           companyName: formData.companyName,
           contactName: formData.contactName,
           email: formData.email,
@@ -579,10 +579,7 @@ const App: React.FC = () => {
                                   <i className="fas fa-times text-xl"></i>
                                 </button>
                               </div>
-                              <div
-                                className="p-6 overflow-y-auto"
-                                style={{ maxHeight: 'calc(80vh - 140px)' }}
-                              >
+                              <div className="p-6 overflow-y-auto max-h-[calc(80vh-140px)]">
                                 <div className="space-y-6">
                                   <section>
                                     <h4 className="text-xl font-bold mb-3">

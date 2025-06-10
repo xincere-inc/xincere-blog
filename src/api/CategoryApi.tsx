@@ -5,7 +5,7 @@ import { Configuration } from '@/api/client/configuration';
 
 const axiosInstance = axios.create();
 
-const IdoTag = AdminApiFactory(
+const CategoryApi = AdminApiFactory(
   {
     basePath: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
   } as Configuration,
@@ -13,4 +13,4 @@ const IdoTag = AdminApiFactory(
   axiosInstance
 );
 
-export default IdoTag;
+export default CategoryApi;

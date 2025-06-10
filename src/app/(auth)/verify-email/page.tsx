@@ -1,6 +1,6 @@
 'use client';
 
-import IdoAuth from '@/api/IdoAuth';
+import AuthApi from '@/api/AuthApi';
 import { AxiosError } from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -28,7 +28,7 @@ export default function VerifyEmailPage() {
       setSuccess(null);
 
       try {
-        const response = await IdoAuth.verifyEmail(token);
+        const response = await AuthApi.verifyEmail(token);
 
         if (response.status === 200) {
           // If email verification is successful

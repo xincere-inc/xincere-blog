@@ -40,6 +40,5 @@ export const adminUpdateCategorySchema = z.object({
   description: z
     .string()
     .max(300, 'Description must be at most 300 characters')
-    .optional()
-    .nullable(),
+    .optional(),
 });

@@ -114,7 +114,7 @@ export function UserEditModal({
       footer={null}
       destroyOnHidden
       centered
-      style={{ margin: '20px 0px' }}
+      className="my-5"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Row gutter={16}>
@@ -334,11 +334,7 @@ export function UserEditModal({
         {serverError && (
           <Row>
             <Col span={24}>
-              <Alert
-                message={serverError}
-                type="error"
-                style={{ marginTop: '10px' }}
-              />
+              <Alert message={serverError} type="error" className="mt-2.5" />
             </Col>
           </Row>
         )}

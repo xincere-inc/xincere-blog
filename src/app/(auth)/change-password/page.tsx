@@ -1,5 +1,5 @@
 'use client';
-import IdoAuth from '@/api/IdoAuth';
+import AuthApi from '@/api/AuthApi';
 import PasswordField from '@/components/inputs/PasswordField';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
@@ -30,7 +30,7 @@ const ChangePasswordPage = () => {
     setLoading(true);
 
     try {
-      const res = await IdoAuth.changePassword({
+      const res = await AuthApi.changePassword({
         oldPassword: data.oldPassword,
         newPassword: data.newPassword,
       });

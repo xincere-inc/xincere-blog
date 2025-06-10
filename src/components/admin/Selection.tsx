@@ -1,14 +1,14 @@
-interface UserSelectionProps {
+interface SelectionProps {
   record: any;
   selectedRowKeys: React.Key[];
   onSelectChange: (record: any) => void;
 }
 
-export function UserSelection({
+export function Selection({
   record,
   selectedRowKeys,
   onSelectChange,
-}: UserSelectionProps) {
+}: SelectionProps) {
   return (
     <input
       type="checkbox"

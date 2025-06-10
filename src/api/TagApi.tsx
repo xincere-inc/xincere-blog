@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-import { AuthApiFactory } from '@/api/client';
+import { AdminApiFactory } from '@/api/client';
 import { Configuration } from '@/api/client/configuration';
 
 const axiosInstance = axios.create();
 
-const IdoAuth = AuthApiFactory(
+const TagApi = AdminApiFactory(
   {
     basePath: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
   } as Configuration,
@@ -13,4 +13,4 @@ const IdoAuth = AuthApiFactory(
   axiosInstance
 );
 
-export default IdoAuth;
+export default TagApi;

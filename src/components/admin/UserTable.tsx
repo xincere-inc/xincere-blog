@@ -1,27 +1,17 @@
 'use client';
+import AdminUsersApi from '@/api/AdminUsersApi';
 import { AdminGetUsers200ResponseDataInner } from '@/api/client';
-import IdoAdminUsers from '@/api/IdoAdminUsers';
-
-import { Table } from 'antd';
+import { User } from '@/types/admin/user';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Table } from 'antd';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { SearchBar } from './SearchBar';
+import { Selection } from './Selection';
 import { UserActions } from './UserActions';
 import { UserCreateModal } from './UserCreateModal';
 import { UserEditModal } from './UserEditModal';
-import { UserSearchBar } from './UserSearchBar';
-import { UserSelection } from './UserSelection';
-
-export interface User {
-  id?: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  gender?: string;
-  country?: string;
-  address?: string;
-  role?: string;
-}
 
 export default function UserTable() {
   const { data: session } = useSession();
@@ -44,7 +34,7 @@ export default function UserTable() {
   const fetchData = async (page: number, pageSize: number, search: string) => {
     setLoading(true);
     try {
-      const response = await IdoAdminUsers.adminGetUsers({
+      const response = await AdminUsersApi.adminGetUsers({
         page,
         limit: pageSize,
         search,
@@ -91,7 +81,7 @@ export default function UserTable() {
     setSelectedRowKeys([]);
 
     try {
-      const response = await IdoAdminUsers.adminDeleteUsers({ ids });
+      const response = await AdminUsersApi.adminDeleteUsers({ ids });
       if (response.status !== 200) {
         toast.error(response?.data?.message || 'Failed to delete users data.', {
           position: 'bottom-right',
@@ -108,44 +98,11 @@ export default function UserTable() {
     }
   };
 
-  const createUser = async (values: any) => {
-    setLoading(true);
-    try {
-      const response = await IdoAdminUsers.adminCreateUser({
-        email: values.email,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        gender: values.gender,
-        address: values.address,
-        role: values.role,
-        country: values.country,
-        password: values.password,
-      });
-
-      if (response.status === 201) {
-        toast.success(response.data.message || 'User created successfully', {
-          position: 'bottom-right',
-        });
-        fetchData(pagination.current, pagination.pageSize, searchText);
-        setIsCreateModalVisible(false);
-        setServerError(null);
-      } else {
-        toast.error(response.data.message || 'Failed to create user', {
-          position: 'bottom-right',
-        });
-      }
-    } catch (error: any) {
-      setServerError(error?.response?.data?.error || 'Error creating user');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const updateUser = async (values: any) => {
     if (currentUser?.id) {
       setLoading(true);
       try {
-        const response = await IdoAdminUsers.adminUpdateUser({
+        const response = await AdminUsersApi.adminUpdateUser({
           id: currentUser.id,
           ...values,
         });
@@ -168,11 +125,6 @@ export default function UserTable() {
     }
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-    setPagination((prev) => ({ ...prev, current: 1 }));
-  };
-
   const handleTableChange = (pagination: any) => {
     setPagination(pagination);
     fetchData(pagination.current, pagination.pageSize, searchText);
@@ -182,6 +134,7 @@ export default function UserTable() {
     setCurrentUser({ ...record });
     setIsEditModalVisible(true);
   };
+
   const handleCancelEditModal = () => {
     setIsEditModalVisible(false);
     setServerError(null);
@@ -190,14 +143,6 @@ export default function UserTable() {
   const handleDelete = (record: User) => {
     if (record.id) {
       deleteUser([record.id]);
-    }
-  };
-
-  const handleBulkDelete = () => {
-    if (selectedRowKeys.length > 0) {
-      deleteUser(selectedRowKeys as string[]);
-    } else {
-      toast.error('No users selected.', { position: 'bottom-right' });
     }
   };
 
@@ -213,7 +158,7 @@ export default function UserTable() {
       title: 'Select',
       key: 'select',
       render: (_: any, record: User) => (
-        <UserSelection
+        <Selection
           record={record}
           selectedRowKeys={selectedRowKeys}
           onSelectChange={handleSelectChange}
@@ -247,13 +192,50 @@ export default function UserTable() {
 
   return (
     <div className="p-4">
-      <UserSearchBar
-        searchText={searchText}
-        onSearchChange={handleSearchChange}
-        onCreateClick={() => setIsCreateModalVisible(true)}
-        onBulkDeleteClick={handleBulkDelete}
-        selectedRowCount={selectedRowKeys.length}
-      />
+      <div className="flex justify-between mb-4 flex-col gap-y-2 md:flex-row">
+        <SearchBar
+          placeholder="Search users"
+          searchText={searchText}
+          onSearchChange={(e) => {
+            setSearchText(e.target.value);
+            setPagination((prev) => ({ ...prev, current: 1 }));
+          }}
+        />
+        <div className="flex mb-4 gap-y-2 md:flex-row flex-col">
+          <Button
+            type="primary"
+            onClick={() => setIsCreateModalVisible(true)}
+            icon={<PlusOutlined />}
+            className="md:mr-2"
+          >
+            Create User
+          </Button>
+          <Popconfirm
+            title="Are you sure to delete the selected users?"
+            onConfirm={() => {
+              if (selectedRowKeys.length > 0) {
+                deleteUser(selectedRowKeys as string[]);
+              } else {
+                toast.error('No users selected.', {
+                  position: 'bottom-right',
+                });
+              }
+            }}
+            placement="bottomLeft"
+            okText="Yes"
+            cancelText="No"
+            disabled={selectedRowKeys.length === 0}
+          >
+            <Button
+              type="primary"
+              danger
+              disabled={selectedRowKeys.length === 0}
+            >
+              Delete Selected
+            </Button>
+          </Popconfirm>
+        </div>
+      </div>
 
       <Table
         columns={columns}
@@ -263,18 +245,15 @@ export default function UserTable() {
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: true }}
-        style={{ width: '100%' }}
+        className="w-full"
       />
 
       <UserCreateModal
         visible={isCreateModalVisible}
-        onCancel={() => {
-          setIsCreateModalVisible(false);
-          setServerError(null);
-        }}
-        onCreate={createUser}
-        loading={loading}
-        serverError={serverError}
+        onCancel={() => setIsCreateModalVisible(false)}
+        onSuccess={fetchData}
+        pagination={pagination}
+        searchText={searchText}
       />
 
       <UserEditModal

@@ -1,12 +1,17 @@
 'use client';
+import AdminUsersApi from '@/api/AdminUsersApi';
+import { AdminCreateUserRequestGenderEnum } from '@/api/client';
 import InputField from '@/components/inputs/InputField';
 import '@ant-design/v5-patch-for-react-19';
 import { Alert, Col, Modal, Row } from 'antd';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import Select from 'react-select';
+import { toast } from 'react-toastify';
 import countries from 'world-countries';
 import PasswordField from '../inputs/PasswordField';
+
 interface UserCreateForm {
   firstName: string;
   lastName: string;
@@ -34,17 +39,17 @@ interface GenderOption {
 interface UserCreateModalProps {
   visible: boolean;
   onCancel: () => void;
-  onCreate: (values: UserCreateForm) => void;
-  loading: boolean;
-  serverError?: string | null;
+  onSuccess: (page: number, pageSize: number, search: string) => void; // Callback to refresh data
+  pagination: { current: number; pageSize: number };
+  searchText: string;
 }
 
 export function UserCreateModal({
   visible,
   onCancel,
-  onCreate,
-  loading,
-  serverError,
+  onSuccess,
+  pagination,
+  searchText,
 }: UserCreateModalProps) {
   const {
     register,
@@ -56,6 +61,16 @@ export function UserCreateModal({
   } = useForm<UserCreateForm>({
     mode: 'onChange',
   });
+
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (visible) {
+      reset();
+      setServerError(null);
+    }
+  }, [visible, reset]);
 
   const countryOptions: CountryOption[] = countries.map((country) => ({
     value: country.cca2,
@@ -75,8 +90,48 @@ export function UserCreateModal({
     { value: 'admin', label: 'Admin' },
   ];
 
+  const createUser = async (values: UserCreateForm) => {
+    setLoading(true);
+    try {
+      const response = await AdminUsersApi.adminCreateUser({
+        email: values.email,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        gender: values.gender as AdminCreateUserRequestGenderEnum,
+        address: values.address,
+        role: values.role,
+        country: values.country,
+        password: values.password,
+      });
+
+      if (response.status === 201) {
+        toast.success(response.data.message || 'User created successfully', {
+          position: 'bottom-right',
+        });
+
+        setServerError(null);
+        reset();
+        onCancel(); // Close modal
+        onSuccess(1, pagination.pageSize, searchText); // Refresh data
+      } else {
+        toast.error(response.data.message || 'Failed to create user', {
+          position: 'bottom-right',
+        });
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.error ||
+        error?.response?.data?.message ||
+        'Error creating user';
+      setServerError(errorMessage);
+      toast.error(errorMessage, { position: 'bottom-right', autoClose: 3000 });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const onSubmit: SubmitHandler<UserCreateForm> = (formData) => {
-    onCreate(formData);
+    createUser(formData);
   };
 
   return (
@@ -90,7 +145,7 @@ export function UserCreateModal({
       footer={null}
       destroyOnHidden
       centered
-      style={{ margin: '20px 0px' }}
+      className="my-5"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Row gutter={16}>
@@ -344,11 +399,7 @@ export function UserCreateModal({
         {serverError && (
           <Row>
             <Col span={24}>
-              <Alert
-                message={serverError}
-                type="error"
-                style={{ marginTop: '10px' }}
-              />
+              <Alert message={serverError} type="error" className="mt-2.5" />
             </Col>
           </Row>
         )}

@@ -1,15 +1,17 @@
 'use client';
+import TagApi from '@/api/TagApi';
 import InputField from '@/components/inputs/InputField';
 import '@ant-design/v5-patch-for-react-19';
-import { Button, Col, Modal, Row } from 'antd';
-import { useEffect } from 'react';
+import { Alert, Button, Col, Modal, Row } from 'antd';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 interface TagCreateModalProps {
   visible: boolean;
   onCancel: () => void;
-  onCreate: (values: TagFormValues) => void;
-  loading: boolean;
-  serverError: string | null;
+  onSuccess: (page: number, pageSize: number, search: string) => void; // Callback to refresh data
+  pagination: { current: number; pageSize: number };
+  searchText: string;
 }
 
 interface TagFormValues {
@@ -19,9 +21,9 @@ interface TagFormValues {
 export function TagCreateModal({
   visible,
   onCancel,
-  onCreate,
-  loading,
-  serverError,
+  onSuccess,
+  pagination,
+  searchText,
 }: TagCreateModalProps) {
   const {
     register,
@@ -32,15 +34,45 @@ export function TagCreateModal({
     mode: 'onChange',
   });
 
-  // Reset form when modal opens or closes
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
   useEffect(() => {
     if (visible) {
       reset();
+      setServerError(null);
     }
   }, [visible, reset]);
 
+  const createTag = async (values: TagFormValues) => {
+    setLoading(true);
+    try {
+      const response = await TagApi.adminCreateTag({
+        name: values.name,
+      });
+
+      if (response.status === 201) {
+        toast.success(response.data.message || 'Tag created successfully', {
+          position: 'bottom-right',
+        });
+        setServerError(null);
+        reset();
+        onCancel(); // Close modal
+        onSuccess(1, pagination.pageSize, searchText); // Refresh data
+      } else {
+        toast.error(response.data.message || 'Failed to create tag', {
+          position: 'bottom-right',
+        });
+      }
+    } catch (error: any) {
+      setServerError(error?.response?.data?.error || 'Error creating tag');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const onSubmit = (data: TagFormValues) => {
-    onCreate(data);
+    createTag(data);
   };
 
   return (
@@ -58,7 +90,7 @@ export function TagCreateModal({
             onCancel();
             reset();
           }}
-          style={{ marginRight: 8 }}
+          className="mr-2"
         >
           Cancel
         </Button>,
@@ -73,8 +105,7 @@ export function TagCreateModal({
       ]}
       destroyOnHidden
       centered
-      width="80vw"
-      style={{ maxWidth: '600px', margin: '20px 0' }}
+      className="w-80vw max-w-600 my-5"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Row gutter={[16, 16]}>
@@ -98,15 +129,7 @@ export function TagCreateModal({
         {serverError && (
           <Row>
             <Col xs={24}>
-              <div
-                style={{
-                  color: 'red',
-                  marginTop: '10px',
-                  fontSize: '14px',
-                }}
-              >
-                {serverError}
-              </div>
+              <Alert message={serverError} type="error" className="mt-2.5" />
             </Col>
           </Row>
         )}

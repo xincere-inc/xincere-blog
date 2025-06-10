@@ -1,17 +1,20 @@
 'use client';
+import CategoryApi from '@/api/CategoryApi';
 import InputField from '@/components/inputs/InputField';
+import { Category } from '@/types/admin/category';
 import '@ant-design/v5-patch-for-react-19';
-import { Button, Col, Modal, Row } from 'antd';
-import { useEffect } from 'react';
+import { Alert, Button, Col, Modal, Row } from 'antd';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Category } from './CategoryTable';
+import { toast } from 'react-toastify';
+
 interface CategoryEditModalProps {
   visible: boolean;
   onCancel: () => void;
-  onEdit: (values: CategoryFormValues) => void;
-  loading: boolean;
+  onSuccess: (page: number, pageSize: number, search: string) => void; // Callback to refresh data
+  pagination: { current: number; pageSize: number };
+  searchText: string;
   category: Category | null;
-  serverError: string | null;
 }
 
 interface CategoryFormValues {
@@ -23,8 +26,9 @@ interface CategoryFormValues {
 export function CategoryEditModal({
   visible,
   onCancel,
-  onEdit,
-  loading,
+  onSuccess,
+  pagination,
+  searchText,
   category,
 }: CategoryEditModalProps) {
   const {
@@ -36,20 +40,58 @@ export function CategoryEditModal({
     mode: 'onChange',
   });
 
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
   useEffect(() => {
-    if (category) {
+    if (visible && category) {
       reset({
         name: category.name || '',
         slug: category.slug || '',
         description: category.description ?? '',
       });
+      setServerError(null);
     } else {
       reset();
     }
-  }, [category, reset]);
+  }, [category, visible, reset]);
+
+  const updateCategory = async (values: CategoryFormValues) => {
+    if (!category) return;
+    setLoading(true);
+    try {
+      const response = await CategoryApi.adminUpdateCategory({
+        id: category.id,
+        name: values.name,
+        slug: values.slug,
+        description: values.description || null,
+      });
+
+      if (response.status === 200) {
+        toast.success(
+          response.data.message || 'Category updated successfully',
+          {
+            position: 'bottom-right',
+          }
+        );
+        setServerError(null);
+        reset();
+        onCancel(); // Close modal
+        onSuccess(pagination.current, pagination.pageSize, searchText); // Refresh data
+      } else {
+        toast.error(response.data.message || 'Failed to update category', {
+          position: 'bottom-right',
+        });
+      }
+    } catch (error: any) {
+      setServerError(error?.response?.data?.error || 'Error updating category');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const onSubmit = (data: CategoryFormValues) => {
-    onEdit(data);
+    updateCategory(data);
   };
 
   return (
@@ -67,7 +109,7 @@ export function CategoryEditModal({
             onCancel();
             reset();
           }}
-          style={{ marginRight: 8 }}
+          className="mr-2"
         >
           Cancel
         </Button>,
@@ -82,8 +124,7 @@ export function CategoryEditModal({
       ]}
       destroyOnHidden
       centered
-      width="80vw"
-      style={{ maxWidth: '800px', margin: '20px 0' }}
+      className="w-80vw max-w-800 my-5"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Row gutter={[16, 16]}>
@@ -138,6 +179,14 @@ export function CategoryEditModal({
             />
           </Col>
         </Row>
+
+        {serverError && (
+          <Row>
+            <Col xs={24}>
+              <Alert message={serverError} type="error" className="mt-2.5" />
+            </Col>
+          </Row>
+        )}
       </form>
     </Modal>
   );

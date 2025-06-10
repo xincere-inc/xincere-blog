@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-import { AdminApiFactory } from '@/api/client';
+import { AuthApiFactory } from '@/api/client';
 import { Configuration } from '@/api/client/configuration';
 
 const axiosInstance = axios.create();
 
-const IdoCategory = AdminApiFactory(
+const AuthApi = AuthApiFactory(
   {
     basePath: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
   } as Configuration,
@@ -13,4 +13,4 @@ const IdoCategory = AdminApiFactory(
   axiosInstance
 );
 
-export default IdoCategory;
+export default AuthApi;

@@ -1,10 +1,12 @@
 'use client';
 
+import CategoryApi from '@/api/CategoryApi';
 import InputField from '@/components/inputs/InputField';
 import '@ant-design/v5-patch-for-react-19';
 import { Alert, Button, Col, Modal, Row } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 interface CategoryFormValues {
   name: string;
@@ -15,17 +17,17 @@ interface CategoryFormValues {
 interface CategoryCreateModalProps {
   visible: boolean;
   onCancel: () => void;
-  onCreate: (values: CategoryFormValues) => void;
-  loading: boolean;
-  serverError: string | null;
+  onSuccess: (page: number, pageSize: number, search: string) => void; // Callback to refresh data
+  pagination: { current: number; pageSize: number };
+  searchText: string;
 }
 
 export function CategoryCreateModal({
   visible,
   onCancel,
-  onCreate,
-  loading,
-  serverError,
+  onSuccess,
+  pagination,
+  searchText,
 }: CategoryCreateModalProps) {
   const {
     register,
@@ -35,15 +37,54 @@ export function CategoryCreateModal({
   } = useForm<CategoryFormValues>({
     mode: 'onChange',
   });
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   useEffect(() => {
     if (visible) {
       reset();
+      setServerError(null);
     }
   }, [visible, reset]);
 
+  const createCategory = async (values: CategoryFormValues) => {
+    setLoading(true);
+    try {
+      const response = await CategoryApi.adminCreateCategory({
+        name: values.name,
+        slug: values.slug,
+        description: values.description || '',
+      });
+      if (response.status === 201) {
+        toast.success(
+          response.data.message || 'Category created successfully',
+          {
+            position: 'bottom-right',
+          }
+        );
+        setServerError(null);
+        reset();
+        onCancel(); // Close modal
+        onSuccess(1, pagination.pageSize, searchText); // Refresh data
+      } else {
+        toast.error(response.data.message || 'Failed to create category', {
+          position: 'bottom-right',
+        });
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.error ||
+        error?.response?.data?.message ||
+        'Error creating category';
+      setServerError(errorMessage);
+      toast.error(errorMessage, { position: 'bottom-right', autoClose: 3000 });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const onSubmit = (data: CategoryFormValues) => {
-    onCreate(data);
+    createCategory(data);
   };
 
   return (
@@ -61,7 +102,7 @@ export function CategoryCreateModal({
             onCancel();
             reset();
           }}
-          style={{ marginRight: 8 }}
+          className="mr-2"
         >
           Cancel
         </Button>,
@@ -76,8 +117,7 @@ export function CategoryCreateModal({
       ]}
       destroyOnHidden
       centered
-      width="80vw"
-      style={{ maxWidth: '800px', margin: '20px 0' }}
+      className="w-80vw max-w-800 my-5"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Row gutter={[16, 16]}>
@@ -136,11 +176,7 @@ export function CategoryCreateModal({
         {serverError && (
           <Row>
             <Col xs={24}>
-              <Alert
-                message={serverError}
-                type="error"
-                style={{ marginTop: '10px' }}
-              />
+              <Alert message={serverError} type="error" className="mt-2.5" />
             </Col>
           </Row>
         )}

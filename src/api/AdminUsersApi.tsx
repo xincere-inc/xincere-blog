@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-import { ContactApiFactory } from '@/api/client';
+import { AdminApiFactory } from '@/api/client';
 import { Configuration } from '@/api/client/configuration';
 
 const axiosInstance = axios.create();
 
-const IdoContact = ContactApiFactory(
+const AdminUsersApi = AdminApiFactory(
   {
     basePath: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
   } as Configuration,
@@ -13,4 +13,4 @@ const IdoContact = ContactApiFactory(
   axiosInstance
 );
 
-export default IdoContact;
+export default AdminUsersApi;

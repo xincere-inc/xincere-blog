@@ -1,24 +1,16 @@
 'use client';
+import CategoryApi from '@/api/CategoryApi';
 import { AdminCreateCategory201ResponseCategory } from '@/api/client';
-import IdoCategory from '@/api/IdoCategory';
-import { Table } from 'antd';
+import { Category } from '@/types/admin/category';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { CategoryActions } from './CategoryActions';
+import { Actions } from './Actions';
 import { CategoryCreateModal } from './CategoryCreateModal';
 import { CategoryEditModal } from './CategoryEditModal';
-import { CategorySearchBar } from './CategorySearchBar';
-import { CategorySelection } from './CategorySelection';
-
-export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  description: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date | null;
-}
+import { SearchBar } from './SearchBar';
+import { Selection } from './Selection';
 
 export default function CategoryTable() {
   const [data, setData] = useState<Category[]>([]);
@@ -38,7 +30,7 @@ export default function CategoryTable() {
   const fetchData = async (page: number, pageSize: number, search: string) => {
     setLoading(true);
     try {
-      const response = await IdoCategory.adminGetCategories({
+      const response = await CategoryApi.adminGetCategories({
         page,
         limit: pageSize,
         search,
@@ -87,7 +79,7 @@ export default function CategoryTable() {
     setSelectedRowKeys([]);
 
     try {
-      const response = await IdoCategory.adminDeleteCategories({ ids });
+      const response = await CategoryApi.adminDeleteCategories({ ids });
       if (response.status !== 200) {
         toast.error(response?.data?.message || 'Failed to delete categories.', {
           position: 'bottom-right',
@@ -104,68 +96,6 @@ export default function CategoryTable() {
           autoClose: 3000,
         }
       );
-    }
-  };
-
-  const createCategory = async (values: any) => {
-    setLoading(true);
-    try {
-      const response = await IdoCategory.adminCreateCategory({
-        name: values.name,
-        slug: values.slug,
-        description: values.description,
-      });
-
-      if (response.status === 201) {
-        toast.success(
-          response.data.message || 'Category created successfully',
-          {
-            position: 'bottom-right',
-          }
-        );
-        fetchData(pagination.current, pagination.pageSize, searchText);
-        setIsCreateModalVisible(false);
-        setServerError(null);
-      } else {
-        toast.error(response.data.message || 'Failed to create category', {
-          position: 'bottom-right',
-        });
-      }
-    } catch (error: any) {
-      setServerError(error?.response?.data?.error || 'Error creating category');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateCategory = async (values: any) => {
-    if (currentCategory?.id) {
-      setLoading(true);
-      try {
-        const response = await IdoCategory.adminUpdateCategory({
-          id: currentCategory.id,
-          ...values,
-        });
-
-        if (response.status === 200) {
-          toast.success('Category updated successfully', {
-            position: 'bottom-right',
-          });
-          setServerError(null);
-          setIsEditModalVisible(false);
-          fetchData(pagination.current, pagination.pageSize, searchText);
-        } else {
-          toast.error('Failed to update category', {
-            position: 'bottom-right',
-          });
-        }
-      } catch (error: any) {
-        setServerError(
-          error?.response?.data?.error || 'Error updating category'
-        );
-      } finally {
-        setLoading(false);
-      }
     }
   };
 
@@ -197,7 +127,7 @@ export default function CategoryTable() {
       title: 'Select',
       key: 'select',
       render: (_: any, record: Category) => (
-        <CategorySelection
+        <Selection
           record={record}
           selectedRowKeys={selectedRowKeys}
           onSelectChange={handleSelectChange}
@@ -232,11 +162,7 @@ export default function CategoryTable() {
       key: 'action',
 
       render: (_: any, record: Category) => (
-        <CategoryActions
-          record={record}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        <Actions record={record} onEdit={handleEdit} onDelete={handleDelete} />
       ),
     },
   ];
@@ -247,24 +173,50 @@ export default function CategoryTable() {
 
   return (
     <div className="p-4">
-      <CategorySearchBar
-        searchText={searchText}
-        onSearchChange={(e) => {
-          setSearchText(e.target.value);
-          setPagination((prev) => ({ ...prev, current: 1 }));
-        }}
-        onCreateClick={() => setIsCreateModalVisible(true)}
-        onBulkDeleteClick={() => {
-          if (selectedRowKeys.length > 0) {
-            deleteCategory(selectedRowKeys as number[]);
-          } else {
-            toast.error('No categories selected.', {
-              position: 'bottom-right',
-            });
-          }
-        }}
-        selectedRowCount={selectedRowKeys.length}
-      />
+      <div className="flex justify-between mb-4 flex-col gap-y-2 md:flex-row">
+        <SearchBar
+          placeholder="Search categories"
+          searchText={searchText}
+          onSearchChange={(e) => {
+            setSearchText(e.target.value);
+            setPagination((prev) => ({ ...prev, current: 1 }));
+          }}
+        />
+        <div className="flex mb-4 gap-y-2 md:flex-row flex-col">
+          <Button
+            type="primary"
+            onClick={() => setIsCreateModalVisible(true)}
+            icon={<PlusOutlined />}
+            className="md:mr-2"
+          >
+            Create Category
+          </Button>
+          <Popconfirm
+            title="Are you sure to delete the selected categories?"
+            onConfirm={() => {
+              if (selectedRowKeys.length > 0) {
+                deleteCategory(selectedRowKeys as number[]);
+              } else {
+                toast.error('No categories selected.', {
+                  position: 'bottom-right',
+                });
+              }
+            }}
+            placement="bottomLeft"
+            okText="Yes"
+            cancelText="No"
+            disabled={selectedRowKeys.length === 0}
+          >
+            <Button
+              type="primary"
+              danger
+              disabled={selectedRowKeys.length === 0}
+            >
+              Delete Selected
+            </Button>
+          </Popconfirm>
+        </div>
+      </div>
 
       <Table
         columns={columns}
@@ -274,30 +226,26 @@ export default function CategoryTable() {
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: true }}
-        style={{ width: '100%' }}
+        className="w-full"
       />
 
       <CategoryCreateModal
         visible={isCreateModalVisible}
-        onCancel={() => {
-          setIsCreateModalVisible(false);
-          setServerError(null);
-        }}
-        onCreate={createCategory}
-        loading={loading}
-        serverError={serverError}
+        onCancel={() => setIsCreateModalVisible(false)}
+        onSuccess={fetchData}
+        pagination={pagination}
+        searchText={searchText}
       />
 
       <CategoryEditModal
         visible={isEditModalVisible}
+        onSuccess={fetchData}
+        pagination={pagination}
+        searchText={searchText}
         onCancel={() => {
           setIsEditModalVisible(false);
-          setServerError(null);
         }}
-        onEdit={updateCategory}
-        loading={loading}
         category={currentCategory}
-        serverError={serverError}
       />
     </div>
   );

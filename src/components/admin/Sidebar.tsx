@@ -58,14 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       trigger={null}
       collapsible
       collapsed={collapsed}
-      style={{
-        height: '100vh', // Make it full height
-        position: 'fixed', // Stick it to the left side
-        left: 0,
-        top: 0,
-        bottom: 0,
-        overflow: 'auto', // Allow scrolling if content overflows
-      }}
+      className="h-screen !fixed left-0 top-0 bottom-0 overflow-auto"
     >
       <div className="logo text-white text-center font-bold p-4">XBlog</div>
       <Menu

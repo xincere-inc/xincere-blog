@@ -1,23 +1,17 @@
 'use client';
 import { AdminCreateTag201ResponseTag } from '@/api/client';
 
-import IdoTag from '@/api/IdoTag';
-import { Table } from 'antd';
+import TagApi from '@/api/TagApi';
+import { Tag } from '@/types/admin/tag';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { TagActions } from './TagActions';
+import { Actions } from './Actions';
+import { SearchBar } from './SearchBar';
+import { Selection } from './Selection';
 import { TagCreateModal } from './TagCreateModal';
 import { TagEditModal } from './TagEditModal';
-import { TagSearchBar } from './TagSearchBar';
-import { TagSelection } from './TagSelection';
-
-export interface Tag {
-  id: number;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date | null;
-}
 
 export default function TagTable() {
   const [data, setData] = useState<Tag[]>([]);
@@ -37,7 +31,7 @@ export default function TagTable() {
   const fetchData = async (page: number, pageSize: number, search: string) => {
     setLoading(true);
     try {
-      const response = await IdoTag.adminGetTags({
+      const response = await TagApi.adminGetTags({
         page,
         limit: pageSize,
         search,
@@ -76,7 +70,7 @@ export default function TagTable() {
     setSelectedRowKeys([]);
 
     try {
-      const response = await IdoTag.adminDeleteTags({ ids });
+      const response = await TagApi.adminDeleteTags({ ids });
       if (response.status !== 200) {
         toast.error(response?.data?.message || 'Failed to delete tag.', {
           position: 'bottom-right',
@@ -90,61 +84,6 @@ export default function TagTable() {
         position: 'bottom-right',
         autoClose: 3000,
       });
-    }
-  };
-
-  const createTag = async (values: any) => {
-    setLoading(true);
-    try {
-      const response = await IdoTag.adminCreateTag({
-        name: values.name,
-      });
-
-      if (response.status === 201) {
-        toast.success(response.data.message || 'Tag created successfully', {
-          position: 'bottom-right',
-        });
-        fetchData(pagination.current, pagination.pageSize, searchText);
-        setIsCreateModalVisible(false);
-        setServerError(null);
-      } else {
-        toast.error(response.data.message || 'Failed to create tag', {
-          position: 'bottom-right',
-        });
-      }
-    } catch (error: any) {
-      setServerError(error?.response?.data?.error || 'Error creating tag');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateTag = async (values: any) => {
-    if (currentTag?.id) {
-      setLoading(true);
-      try {
-        const response = await IdoTag.adminUpdateTag({
-          id: currentTag.id,
-          ...values,
-        });
-
-        if (response.status === 200) {
-          toast.success('Tag updated successfully', {
-            position: 'bottom-right',
-          });
-          setServerError(null);
-          setIsEditModalVisible(false);
-          fetchData(pagination.current, pagination.pageSize, searchText);
-        } else {
-          toast.error('Failed to update tag', {
-            position: 'bottom-right',
-          });
-        }
-      } catch (error: any) {
-        setServerError(error?.response?.data?.error || 'Error updating tag');
-      } finally {
-        setLoading(false);
-      }
     }
   };
 
@@ -176,7 +115,7 @@ export default function TagTable() {
       title: 'Select',
       key: 'select',
       render: (_: any, record: Tag) => (
-        <TagSelection
+        <Selection
           record={record}
           selectedRowKeys={selectedRowKeys}
           onSelectChange={handleSelectChange}
@@ -209,11 +148,7 @@ export default function TagTable() {
       key: 'action',
 
       render: (_: any, record: Tag) => (
-        <TagActions
-          record={record}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        <Actions record={record} onEdit={handleEdit} onDelete={handleDelete} />
       ),
     },
   ];
@@ -224,24 +159,50 @@ export default function TagTable() {
 
   return (
     <div className="p-4">
-      <TagSearchBar
-        searchText={searchText}
-        onSearchChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setSearchText(e.target.value);
-          setPagination((prev) => ({ ...prev, current: 1 }));
-        }}
-        onCreateClick={() => setIsCreateModalVisible(true)}
-        onBulkDeleteClick={() => {
-          if (selectedRowKeys.length > 0) {
-            deleteTag(selectedRowKeys as number[]);
-          } else {
-            toast.error('No tag selected.', {
-              position: 'bottom-right',
-            });
-          }
-        }}
-        selectedRowCount={selectedRowKeys.length}
-      />
+      <div className="flex justify-between mb-4 flex-col gap-y-2 md:flex-row">
+        <SearchBar
+          placeholder="Search tags"
+          searchText={searchText}
+          onSearchChange={(e) => {
+            setSearchText(e.target.value);
+            setPagination((prev) => ({ ...prev, current: 1 }));
+          }}
+        />
+        <div className="flex mb-4 gap-y-2 md:flex-row flex-col">
+          <Button
+            type="primary"
+            onClick={() => setIsCreateModalVisible(true)}
+            icon={<PlusOutlined />}
+            className="md:mr-2"
+          >
+            Create User
+          </Button>
+          <Popconfirm
+            title="Are you sure to delete the selected tags?"
+            onConfirm={() => {
+              if (selectedRowKeys.length > 0) {
+                deleteTag(selectedRowKeys as number[]);
+              } else {
+                toast.error('No tags selected.', {
+                  position: 'bottom-right',
+                });
+              }
+            }}
+            placement="bottomLeft"
+            okText="Yes"
+            cancelText="No"
+            disabled={selectedRowKeys.length === 0}
+          >
+            <Button
+              type="primary"
+              danger
+              disabled={selectedRowKeys.length === 0}
+            >
+              Delete Selected
+            </Button>
+          </Popconfirm>
+        </div>
+      </div>
 
       <Table<Tag>
         columns={columns}
@@ -251,30 +212,26 @@ export default function TagTable() {
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: true }}
-        style={{ width: '100%' }}
+        className="w-full"
       />
 
       <TagCreateModal
         visible={isCreateModalVisible}
-        onCancel={() => {
-          setIsCreateModalVisible(false);
-          setServerError(null);
-        }}
-        onCreate={createTag}
-        loading={loading}
-        serverError={serverError}
+        onCancel={() => setIsCreateModalVisible(false)}
+        onSuccess={fetchData}
+        pagination={pagination}
+        searchText={searchText}
       />
 
       <TagEditModal
+        onSuccess={fetchData}
+        pagination={pagination}
+        searchText={searchText}
         visible={isEditModalVisible}
         onCancel={() => {
           setIsEditModalVisible(false);
-          setServerError(null);
         }}
-        onEdit={updateTag}
-        loading={loading}
         tag={currentTag}
-        serverError={serverError}
       />
     </div>
   );
