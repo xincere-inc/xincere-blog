@@ -2,11 +2,12 @@
 import { AdminGetArticles200ResponseDataInner } from '@/api/client';
 import ApiAdminArticles from '@/api/ApiAdminArticles';
 import { Table } from 'antd';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { ArticleSearchBar } from './ArticleSearchBar';
 import { ArticleSelection } from './ArticleSelection';
 import { ArticleActions } from './ArticleActions';
+import { ArticleCreateModal } from './ArticleCreateModal';
 
 
 export interface Article {
@@ -25,15 +26,17 @@ export interface Article {
 
 export default function ArticleTable() {
   const [searchText, setSearchText] = useState('');
-  const [data, setData] = useState<User[]>([]);
+  const [data, setData] = useState<Article[]>([]);
   const [serverError, setServerError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
     total:0
   });
+  const createFormRef = useRef<any>(null);
   const [loading, setLoading] = useState(false)
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [article, setArticle] = useState<Article | null>(null);
 
@@ -79,11 +82,89 @@ export default function ArticleTable() {
     }
   };
 
-  const deleteArticle = async (ids: string[]) => {};
+  const deleteArticle = async (ids: string[]) => {
+    setSelectedRowKeys([]);
+    try {
+      const response = await ApiAdminArticles.adminDeleteArticles({ids});
+      if (response.status !== 200) {
+        toast.error(response?.data?.message || 'Failed to delete Article data.', {
+          position: 'bottom-right',
+        });
+      } else {
+        fetchData(pagination.current, pagination.pageSize, searchText);
+        toast.success(response?.data?.message, { position: 'bottom-right' });
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Error deleting Article(s).', {
+        position: 'bottom-right',
+        autoClose: 3000,
+      });
+    }
+  };
 
-  const createArticle = async (values: any) => {};
+  const createArticle = async (values: any) => {
+    setLoading(true);
+    try {
+      const response = await ApiAdminArticles.adminCreateArticle({
+        authorId: values.authorId,
+        categoryId: values.categoryId,
+        title: values.title,
+        slug: values.slug,
+        summary: values.summary,
+        content: values.content,
+        markdownContent: values.markdownContent,
+        thumbnailUrl: values.thumbnailUrl,
+        status: values.status,
+        tags: values.tags
+      });
 
-  const updateArticle = async (values: any) => {};
+      if (response.status === 201) {
+        toast.success(response.data.message || 'Article created successfully', {
+          position: 'bottom-right',
+        });
+        fetchData(pagination.current, pagination.pageSize, searchText);
+        setIsCreateModalVisible(false);
+        setServerError(null);
+        createFormRef.current?.resetFields();
+      } else {
+        toast.error(response.data.message || 'Failed to create article', {
+          position: 'bottom-right',
+        });
+      }
+    } catch (error: any) {
+      setServerError(error?.response?.data?.error || 'Error creating article');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateArticle = async (values: any) => {
+    if (article?.id) {
+      setLoading(true);
+      try {
+        // TODO: update supporting factory
+        const response = await ApiAdminArticles.adminUpdateArticle({
+          id: article.id,
+          ...values,
+        });
+
+        if(response.status === 200) {
+          toast.success('Article updated successfully', {
+            position: 'bottom-right',
+          });
+          setServerError(null);
+          setIsEditModalVisible(false);
+          fetchData(pagination.current, pagination.pageSize, searchText);
+        } else {
+          toast.error('Failed to update article', { position: 'bottom-right' });
+        }
+      } catch (error: any) {
+        setServerError(error?.response?.data?.error || 'Error updating article');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -97,7 +178,12 @@ export default function ArticleTable() {
 
   const handleEdit = (record: Article) => {
     setArticle({ ...record});
-    // setIsEditModalVisible(true);
+    setIsEditModalVisible(true);
+  };
+
+  const handleCancelEditModal = () => {
+    setIsEditModalVisible(false);
+    setServerError(null);
   };
 
   const handleDelete = (record: Article) => {
@@ -165,7 +251,25 @@ export default function ArticleTable() {
         scroll={{ x: true }}
         className="w-full"
       />
-
+      <ArticleCreateModal
+        visible={isCreateModalVisible}
+        onCancel={() => {
+          setIsCreateModalVisible(false);
+          setServerError(null);
+        }}
+        onCreate={createArticle}
+        loading={loading}
+        serverError={serverError}
+        formRef={createFormRef}
+      />
+      <ArticleEditModal
+        visible={isEditModalVisible}
+        onCancel={handleCancelEditModal}
+        onEdit={updateArticle}
+        loading={loading}
+        article={article}
+        serverError={serverError}
+      />
     </div>
   );
 }

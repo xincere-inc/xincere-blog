@@ -79,7 +79,7 @@ export interface AdminUpdateArticleRequest {
  * @interface AdminDeleteArticlesRequest
  */
 export interface AdminDeleteArticlesRequest {
-  ids: number[];
+  ids: string[];
 }
 
 /**
@@ -1519,6 +1519,58 @@ export const AdminApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
+    /**
+     * Update details of an existing article based on the provided article Id.
+     * @summary Update article details
+     * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUpdateArticle: async (
+      adminUpdateArticleRequest: AdminUpdateArticleRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      assertParamExists(
+        'adminUpdateArticle',
+        'adminUpdateArticleRequest',
+        adminUpdateArticleRequest
+      );
+      const localVarPath = `/api/admin/articles/update-article`;
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'PUT',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminUpdateArticleRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
   };
 };
 
@@ -1867,6 +1919,21 @@ export const AdminApiFactory = function (
     ): AxiosPromise<AdminGetArticles200Response> {
       return localVarFp
         .adminGetArticles(adminGetArticlesRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     * Update details of an existing article based on the provided article ID.
+     * @summary Update article details
+     * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUpdateArticle(
+      adminUpdateArticleRequest: AdminUpdateArticleRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminUpdateArticle200Response> {
+      return localVarFp
+        .adminUpdateArticle(adminUpdateArticleRequest, options)
         .then((request) => request(axios, basePath));
     },
   };
