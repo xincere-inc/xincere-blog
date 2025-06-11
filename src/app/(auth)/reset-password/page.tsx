@@ -1,6 +1,6 @@
 'use client';
 
-import IdoAuth from '@/api/IdoAuth';
+import ApiAuth from '@/api/ApiAuth';
 import { AxiosError } from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
@@ -55,7 +55,7 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const response = await IdoAuth.resetPassword({
+      const response = await ApiAuth.resetPassword({
         newPassword: data.password,
         token: token,
       });
