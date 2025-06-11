@@ -260,7 +260,7 @@ export default function UserTable() {
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: true }}
-        style={{ width: '100%' }}
+        className="w-full"
       />
 
       <UserCreateModal

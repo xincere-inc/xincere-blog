@@ -41,23 +41,14 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggleSidebar }) => {
   };
 
   return (
-    <Header
-      className="overflow-scroll"
-      style={{
-        background: '#fff',
-        padding: '0 16px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}
-    >
+    <Header className="overflow-scroll !bg-white px-4 flex items-center justify-between">
       {/* Left Side: Toggle & Title */}
       <div className="flex items-center">
         <Button
           type="text"
           icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           onClick={toggleSidebar}
-          style={{ fontSize: '18px', marginRight: '16px' }}
+          className="text-lg mr-4"
         />
       </div>
 
@@ -78,7 +69,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggleSidebar }) => {
         <Select
           value={language}
           onChange={handleLanguageChange}
-          style={{ width: 80 }}
+          className="w-20"
           options={[
             { value: 'en', label: 'EN' },
             { value: 'zh', label: '中文' },
@@ -91,7 +82,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggleSidebar }) => {
           <Avatar
             size="large"
             icon={<UserOutlined />}
-            style={{ cursor: 'pointer' }}
+            className="cursor-pointer"
           />
         </Dropdown>
       </Space>
