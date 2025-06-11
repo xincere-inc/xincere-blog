@@ -468,6 +468,107 @@ paths:
                   message:
                     type: string
                     example: Error during registration
+  /api/admin/categories/create-category:
+    post:
+      summary: Create a new category
+      description: Creates a new category with a unique name and slug.
+      operationId: adminCreateCategory
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - slug
+              properties:
+                name:
+                  type: string
+                  description: The name of the category.
+                  example: Technology
+                slug:
+                  type: string
+                  description: The unique slug for the category.
+                  example: technology
+                description:
+                  type: string
+                  description: The description of the category (optional).
+                  example: Articles related to technology and innovation.
+                  nullable: true
+      responses:
+        '201':
+          description: Category created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Created
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The unique identifier for the category.
+                        example: 1
+                      name:
+                        type: string
+                        description: The name of the category.
+                        example: Technology
+                      slug:
+                        type: string
+                        description: The unique slug for the category.
+                        example: technology
+                      description:
+                        type: string
+                        description: The description of the category (optional).
+                        example: Articles related to technology and innovation.
+                        nullable: true
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was created.
+                        example: 2025-06-05T07:55:00Z
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was last updated.
+                        example: 2025-06-05T07:55:00Z
+                      deletedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was deleted (optional).
+                        example: null
+                        nullable: true
+        '400':
+          description: Validation errors or category already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Category already exists with this slug: technology'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/admin/categories/get-category:
     post:
       summary: Fetch categories with pagination and search
