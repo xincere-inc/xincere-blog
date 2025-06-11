@@ -1,6 +1,6 @@
 'use client';
 
-import IdoAuth from '@/api/IdoAuth';
+import ApiAuth from '@/api/ApiAuth';
 import { emailSchema } from '@/lib/zod/auth/auth';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
 
     // Call the API to send a password reset email
     try {
-      const response = await IdoAuth.forgetPassword({
+      const response = await ApiAuth.forgetPassword({
         email: parsedBody.data.email,
       });
 

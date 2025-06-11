@@ -1,6 +1,6 @@
 'use client';
 import { RegisterRequest } from '@/api/client';
-import IdoAuth from '@/api/IdoAuth';
+import ApiAuth from '@/api/ApiAuth';
 import InputField from '@/components/inputs/InputField';
 import PasswordField from '@/components/inputs/PasswordField';
 import Image from 'next/image';
@@ -58,7 +58,7 @@ const RegisterForm = () => {
     try {
       setLoading(true);
       // Call your API to register the user here
-      const response = await IdoAuth.register({
+      const response = await ApiAuth.register({
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
