@@ -782,6 +782,62 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
+  /api/admin/categories/delete-category:
+    delete:
+      summary: Delete categories by IDs
+      description: Deletes categories by their IDs (soft delete, sets deletedAt).
+      operationId: adminDeleteCategories
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ids
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                  example:
+                    - 1
+                    - 2
+      responses:
+        '200':
+          description: Categories deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '404':
+          description: Some categories not found with the provided IDs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/change-password:
     post:
       summary: Change user password
