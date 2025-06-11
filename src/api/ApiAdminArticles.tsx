@@ -4,7 +4,7 @@ import { Configuration } from '@/api/client/configuration';
 
 const axiosInstance = axios.create();
 
-const IdoAdminArticles = AdminApiFactory(
+const ApiAdminArticles = AdminApiFactory(
   {
     basePath: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
   } as Configuration,
@@ -12,4 +12,4 @@ const IdoAdminArticles = AdminApiFactory(
   axiosInstance
 );
 
-export default IdoAdminArticles;
+export default ApiAdminArticles;

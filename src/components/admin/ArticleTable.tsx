@@ -1,6 +1,6 @@
 'use client';
 import { AdminGetArticles200ResponseDataInner } from '@/api/client';
-import IdoAdminArticles from '@/api/IdoAdminArticles';
+import ApiAdminArticles from '@/api/ApiAdminArticles';
 import { Table } from 'antd';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -40,7 +40,7 @@ export default function ArticleTable() {
   const fetchData = async (page: number, pageSize: number, search: string) => {
     setLoading(true);
     try {
-      const response = await IdoAdminArticles.adminGetArticles({
+      const response = await ApiAdminArticles.adminGetArticles({
         page,
         limit: pageSize,
         search,
