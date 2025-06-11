@@ -163,7 +163,7 @@ export default function ArticleTable() {
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: true }}
-        style={{ width: '100%' }}
+        className="w-full"
       />
 
     </div>
