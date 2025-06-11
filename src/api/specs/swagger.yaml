@@ -468,6 +468,113 @@ paths:
                   message:
                     type: string
                     example: Error during registration
+  /api/admin/categories/get-category:
+    post:
+      summary: Fetch categories with pagination and search
+      description: Retrieves categories from the database with pagination and optional search.
+      operationId: adminGetCategories
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  example: 1
+                limit:
+                  type: integer
+                  example: 10
+                search:
+                  type: string
+                  example: tech
+      responses:
+        '200':
+          description: Successfully retrieved categories with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for the category.
+                          example: 1
+                        name:
+                          type: string
+                          description: The name of the category.
+                          example: Technology
+                        slug:
+                          type: string
+                          description: The unique slug for the category.
+                          example: technology
+                        description:
+                          type: string
+                          description: The description of the category (optional).
+                          example: Articles related to technology and innovation.
+                          nullable: true
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was created.
+                          example: 2025-06-05T07:55:00Z
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was last updated.
+                          example: 2025-06-05T07:55:00Z
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was deleted (optional).
+                          example: null
+                          nullable: true
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 10
+                      showPerPage:
+                        type: integer
+                        example: 10
+                      totalCategories:
+                        type: integer
+                        example: 50
+                      totalPages:
+                        type: integer
+                        example: 5
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/change-password:
     post:
       summary: Change user password
