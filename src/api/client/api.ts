@@ -1605,6 +1605,46 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * Deletes tags by their IDs (soft delete, sets deletedAt).
+         * @summary Delete tags by IDs
+         * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteTags: async (adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminDeleteCategoriesRequest' is not null or undefined
+            assertParamExists('adminDeleteTags', 'adminDeleteCategoriesRequest', adminDeleteCategoriesRequest)
+            const localVarPath = `/api/admin/tags/delete-tag`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminDeleteCategoriesRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Admin can delete user accounts including their own, but not other admins.
          * @summary Delete users by IDs
          * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest 
@@ -1948,6 +1988,19 @@ export const AdminApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * Deletes tags by their IDs (soft delete, sets deletedAt).
+         * @summary Delete tags by IDs
+         * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDeleteTags(adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDeleteTags(adminDeleteCategoriesRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminDeleteTags']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Admin can delete user accounts including their own, but not other admins.
          * @summary Delete users by IDs
          * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest 
@@ -2091,6 +2144,16 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.adminDeleteCategories(adminDeleteCategoriesRequest, options).then((request) => request(axios, basePath));
         },
         /**
+         * Deletes tags by their IDs (soft delete, sets deletedAt).
+         * @summary Delete tags by IDs
+         * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteTags(adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.adminDeleteTags(adminDeleteCategoriesRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Admin can delete user accounts including their own, but not other admins.
          * @summary Delete users by IDs
          * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest 
@@ -2218,6 +2281,18 @@ export class AdminApi extends BaseAPI {
      */
     public adminDeleteCategories(adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest, options?: RawAxiosRequestConfig) {
         return AdminApiFp(this.configuration).adminDeleteCategories(adminDeleteCategoriesRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Deletes tags by their IDs (soft delete, sets deletedAt).
+     * @summary Delete tags by IDs
+     * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public adminDeleteTags(adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).adminDeleteTags(adminDeleteCategoriesRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
