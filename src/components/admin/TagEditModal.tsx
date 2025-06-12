@@ -1,7 +1,7 @@
 'use client';
 import TagApi from '@/api/TagApi';
 import InputField from '@/components/inputs/InputField';
-import { Tag } from '@/types/admin/tag';
+import { Tag } from '@/types/admin/tag/tag';
 import '@ant-design/v5-patch-for-react-19';
 import { Alert, Button, Col, Modal, Row } from 'antd';
 import { useEffect, useState } from 'react';
