@@ -174,7 +174,7 @@ export default function TagsPage() {
             icon={<PlusOutlined />}
             className="md:mr-2"
           >
-            Create User
+            Create Tag
           </Button>
           <Popconfirm
             title="Are you sure to delete the selected tags?"
