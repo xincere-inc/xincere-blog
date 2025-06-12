@@ -1019,6 +1019,94 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
+  /api/admin/tags/update-tag:
+    put:
+      summary: Update tag details
+      description: Updates details of an existing tag based on the provided tag ID.
+      operationId: adminUpdateTag
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                  description: The ID of the tag to update.
+                  example: 1
+                name:
+                  type: string
+                  description: The name of the tag.
+                  example: Tech
+      responses:
+        '200':
+          description: Tag updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Tag updated successfully
+                  tag:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The unique identifier for the tag.
+                        example: 1
+                      name:
+                        type: string
+                        description: The name of the tag.
+                        example: Tech
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the tag was created.
+                        example: 2025-06-05T07:55:00Z
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the tag was last updated.
+                        example: 2025-06-05T07:55:00Z
+                      deletedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the tag was deleted (optional).
+                        example: null
+                        nullable: true
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '404':
+          description: Tag not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/change-password:
     post:
       summary: Change user password
