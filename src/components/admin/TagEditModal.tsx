@@ -11,8 +11,8 @@ import { toast } from 'react-toastify';
 interface TagEditModalProps {
   visible: boolean;
   onCancel: () => void;
-  onSuccess: (page: number, pageSize: number, search: string) => void; // Callback to refresh data
-  pagination: { current: number; pageSize: number };
+  onSuccess: (page: number, limit: number, search: string) => void; // Callback to refresh data
+  pagination: { current: number; limit: number };
   searchText: string;
   tag: Tag | null;
 }
@@ -68,7 +68,7 @@ export function TagEditModal({
         setServerError(null);
         reset();
         onCancel(); // Close modal
-        onSuccess(pagination.current, pagination.pageSize, searchText); // Refresh data
+        onSuccess(pagination.current, pagination.limit, searchText); // Refresh data
       } else {
         toast.error(response.data.message || 'Failed to update tag', {
           position: 'bottom-right',

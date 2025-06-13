@@ -9,8 +9,8 @@ import { toast } from 'react-toastify';
 interface TagCreateModalProps {
   visible: boolean;
   onCancel: () => void;
-  onSuccess: (page: number, pageSize: number, search: string) => void; // Callback to refresh data
-  pagination: { current: number; pageSize: number };
+  onSuccess: (page: number, limit: number, search: string) => void; // Callback to refresh data
+  pagination: { current: number; limit: number };
   searchText: string;
 }
 
@@ -58,7 +58,7 @@ export function TagCreateModal({
         setServerError(null);
         reset();
         onCancel(); // Close modal
-        onSuccess(1, pagination.pageSize, searchText); // Refresh data
+        onSuccess(1, pagination.limit, searchText); // Refresh data
       } else {
         toast.error(response.data.message || 'Failed to create tag', {
           position: 'bottom-right',

@@ -17,7 +17,7 @@ export default function TagsPage() {
   const [data, setData] = useState<Tag[]>([]);
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 10,
+    limit: 10,
     total: 0,
   });
   const [loading, setLoading] = useState(false);
@@ -27,14 +27,10 @@ export default function TagsPage() {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [currentTag, setCurrentTag] = useState<Tag | null>(null);
 
-  const fetchData = async (page: number, pageSize: number, search: string) => {
+  const fetchData = async (page: number, limit: number, search: string) => {
     setLoading(true);
     try {
-      const response = await TagApi.adminGetTags({
-        page,
-        limit: pageSize,
-        search,
-      });
+      const response = await TagApi.adminGetTags(page, limit, search);
 
       if (response.status === 200) {
         const tag =
@@ -75,7 +71,7 @@ export default function TagsPage() {
           position: 'bottom-right',
         });
       } else {
-        fetchData(pagination.current, pagination.pageSize, searchText);
+        fetchData(pagination.current, pagination.limit, searchText);
         toast.success(response?.data?.message, { position: 'bottom-right' });
       }
     } catch (err: any) {
@@ -88,7 +84,7 @@ export default function TagsPage() {
 
   const handleTableChange = (pagination: any) => {
     setPagination(pagination);
-    fetchData(pagination.current, pagination.pageSize, searchText);
+    fetchData(pagination.current, pagination.limit, searchText);
   };
 
   const handleEdit = (record: Tag) => {
@@ -153,8 +149,8 @@ export default function TagsPage() {
   ];
 
   useEffect(() => {
-    fetchData(pagination.current, pagination.pageSize, searchText);
-  }, [pagination.current, pagination.pageSize, searchText]);
+    fetchData(pagination.current, pagination.limit, searchText);
+  }, [pagination.current, pagination.limit, searchText]);
 
   return (
     <div className="p-4">
