@@ -17,7 +17,7 @@ export default function CategoriesPage() {
   const [data, setData] = useState<Category[]>([]);
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 10,
+    limit: 10,
     total: 0,
   });
   const [loading, setLoading] = useState(false);
@@ -27,14 +27,14 @@ export default function CategoriesPage() {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
 
-  const fetchData = async (page: number, pageSize: number, search: string) => {
+  const fetchData = async (page: number, limit: number, search: string) => {
     setLoading(true);
     try {
-      const response = await CategoryApi.adminGetCategories({
+      const response = await CategoryApi.adminGetCategories(
         page,
-        limit: pageSize,
-        search,
-      });
+        limit,
+        search
+      );
 
       if (response.status === 200) {
         const categories =
@@ -85,7 +85,7 @@ export default function CategoriesPage() {
           position: 'bottom-right',
         });
       } else {
-        fetchData(pagination.current, pagination.pageSize, searchText);
+        fetchData(pagination.current, pagination.limit, searchText);
         toast.success(response?.data?.message, { position: 'bottom-right' });
       }
     } catch (err: any) {
@@ -101,7 +101,7 @@ export default function CategoriesPage() {
 
   const handleTableChange = (pagination: any) => {
     setPagination(pagination);
-    fetchData(pagination.current, pagination.pageSize, searchText);
+    fetchData(pagination.current, pagination.limit, searchText);
   };
 
   const handleEdit = (record: Category) => {
@@ -168,8 +168,8 @@ export default function CategoriesPage() {
   ];
 
   useEffect(() => {
-    fetchData(pagination.current, pagination.pageSize, searchText);
-  }, [pagination.current, pagination.pageSize, searchText]);
+    fetchData(pagination.current, pagination.limit, searchText);
+  }, [pagination.current, pagination.limit, searchText]);
 
   return (
     <div className="p-4">

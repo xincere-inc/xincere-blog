@@ -11,8 +11,8 @@ import { toast } from 'react-toastify';
 interface CategoryEditModalProps {
   visible: boolean;
   onCancel: () => void;
-  onSuccess: (page: number, pageSize: number, search: string) => void; // Callback to refresh data
-  pagination: { current: number; pageSize: number };
+  onSuccess: (page: number, limit: number, search: string) => void; // Callback to refresh data
+  pagination: { current: number; limit: number };
   searchText: string;
   category: Category | null;
 }
@@ -77,7 +77,7 @@ export function CategoryEditModal({
         setServerError(null);
         reset();
         onCancel(); // Close modal
-        onSuccess(pagination.current, pagination.pageSize, searchText); // Refresh data
+        onSuccess(pagination.current, pagination.limit, searchText); // Refresh data
       } else {
         toast.error(response.data.message || 'Failed to update category', {
           position: 'bottom-right',
