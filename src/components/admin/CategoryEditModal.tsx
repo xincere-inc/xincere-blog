@@ -1,5 +1,5 @@
 'use client';
-import CategoryApi from '@/api/CategoryApi';
+import ApiCategory from '@/api/ApiCategory';
 import InputField from '@/components/inputs/InputField';
 import { Category } from '@/types/admin/category/category';
 import '@ant-design/v5-patch-for-react-19';
@@ -60,7 +60,7 @@ export function CategoryEditModal({
     if (!category) return;
     setLoading(true);
     try {
-      const response = await CategoryApi.adminUpdateCategory({
+      const response = await ApiCategory.adminUpdateCategory({
         id: category.id,
         name: values.name,
         slug: values.slug,

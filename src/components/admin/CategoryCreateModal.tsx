@@ -1,6 +1,6 @@
 'use client';
 
-import CategoryApi from '@/api/CategoryApi';
+import ApiCategory from '@/api/ApiCategory';
 import InputField from '@/components/inputs/InputField';
 import '@ant-design/v5-patch-for-react-19';
 import { Alert, Button, Col, Modal, Row } from 'antd';
@@ -50,7 +50,7 @@ export function CategoryCreateModal({
   const createCategory = async (values: CategoryFormValues) => {
     setLoading(true);
     try {
-      const response = await CategoryApi.adminCreateCategory({
+      const response = await ApiCategory.adminCreateCategory({
         name: values.name,
         slug: values.slug,
         description: values.description || '',

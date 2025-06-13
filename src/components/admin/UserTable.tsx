@@ -1,6 +1,6 @@
 'use client';
+import ApiAdminUsers from '@/api/ApiAdminUsers';
 import { AdminGetUsers200ResponseDataInner } from '@/api/client';
-import IdoAdminUsers from '@/api/IdoAdminUsers';
 import { Table } from 'antd';
 import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
@@ -43,7 +43,7 @@ export default function UserTable() {
   const fetchData = async (page: number, pageSize: number, search: string) => {
     setLoading(true);
     try {
-      const response = await IdoAdminUsers.adminGetUsers({
+      const response = await ApiAdminUsers.adminGetUsers({
         page,
         limit: pageSize,
         search,
@@ -89,7 +89,7 @@ export default function UserTable() {
     setSelectedRowKeys([]);
 
     try {
-      const response = await IdoAdminUsers.adminDeleteUsers({ ids });
+      const response = await ApiAdminUsers.adminDeleteUsers({ ids });
       if (response.status !== 200) {
         toast.error(response?.data?.message || 'Failed to delete users data.', {
           position: 'bottom-right',
@@ -109,7 +109,7 @@ export default function UserTable() {
   const createUser = async (values: any) => {
     setLoading(true);
     try {
-      const response = await IdoAdminUsers.adminCreateUser({
+      const response = await ApiAdminUsers.adminCreateUser({
         email: values.email,
         firstName: values.firstName,
         lastName: values.lastName,
@@ -143,7 +143,7 @@ export default function UserTable() {
     if (currentUser?.id) {
       setLoading(true);
       try {
-        const response = await IdoAdminUsers.adminUpdateUser({
+        const response = await ApiAdminUsers.adminUpdateUser({
           id: currentUser.id,
           ...values,
         });

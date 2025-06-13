@@ -1,5 +1,5 @@
 'use client';
-import TagApi from '@/api/TagApi';
+import ApiTag from '@/api/ApiTag';
 import InputField from '@/components/inputs/InputField';
 import '@ant-design/v5-patch-for-react-19';
 import { Alert, Button, Col, Modal, Row } from 'antd';
@@ -47,7 +47,7 @@ export function TagCreateModal({
   const createTag = async (values: TagFormValues) => {
     setLoading(true);
     try {
-      const response = await TagApi.adminCreateTag({
+      const response = await ApiTag.adminCreateTag({
         name: values.name,
       });
 
