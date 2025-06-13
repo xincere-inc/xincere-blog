@@ -677,6 +677,112 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
+  /api/admin/categories/update-category:
+    put:
+      summary: Update category details
+      description: Updates details of an existing category based on the provided category ID.
+      operationId: adminUpdateCategory
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                  description: The ID of the category to update.
+                  example: 1
+                name:
+                  type: string
+                  description: The name of the category.
+                  example: Technology
+                slug:
+                  type: string
+                  description: The unique slug for the category.
+                  example: technology
+                description:
+                  type: string
+                  description: The description of the category (optional).
+                  example: Articles related to technology and innovation.
+                  nullable: true
+      responses:
+        '200':
+          description: Category updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Category updated successfully
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The unique identifier for the category.
+                        example: 1
+                      name:
+                        type: string
+                        description: The name of the category.
+                        example: Technology
+                      slug:
+                        type: string
+                        description: The unique slug for the category.
+                        example: technology
+                      description:
+                        type: string
+                        description: The description of the category (optional).
+                        example: Articles related to technology and innovation.
+                        nullable: true
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was created.
+                        example: 2025-06-05T07:55:00Z
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was last updated.
+                        example: 2025-06-05T07:55:00Z
+                      deletedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was deleted (optional).
+                        example: null
+                        nullable: true
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '404':
+          description: Category not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/change-password:
     post:
       summary: Change user password
