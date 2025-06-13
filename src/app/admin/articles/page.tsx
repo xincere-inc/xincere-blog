@@ -2,7 +2,7 @@
 import { AdminGetArticles200ResponseDataInner } from "@/api/client";
 import ApiAdminArticles from "@/api/ApiAdminArticles";
 import { Table } from "antd";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 import { ArticleSearchBar } from "@/components/admin/ArticleSearchBar";
 import { ArticleSelection } from "@/components/admin/ArticleSelection";
@@ -39,6 +39,8 @@ export default function ArticleTable() {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [article, setArticle] = useState<Article | null>(null);
+  const [authors, setAuthors] = useState<{ id: string; name: string }[]>([]);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
 
   const fetchData = async (page: number, pageSize: number, search: string) => {
     setLoading(true);
@@ -232,6 +234,56 @@ export default function ArticleTable() {
     }
   };
 
+  const fetchAuthors = async () => {
+    try {
+      // TODO update based on actual API
+      // const response = await ApiAdminArticles.adminGetAuthors(); 
+      const response = {
+        status: 200,
+        data: {
+          data: [
+            { id: '1', name: 'John Doe' },
+            { id: '2', name: 'Jane Smith' },
+            { id: '3', name: 'Alice Johnson' },
+          ],
+        },
+      };
+      if (response.status === 200) {
+        setAuthors(response.data.data); // assumes the data is an array of { id, name }
+      }
+    } catch (error) {
+      console.error('Failed to fetch authors', error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      // TODO update based on actual API
+      // const response = await ApiAdminArticles.adminGetCategories(); 
+      const response = {
+        status: 200,
+        data: {
+          data: [
+            { id: 1, name: 'Tech' },
+            { id: 2, name: 'Lifestyle' },
+            { id: 3, name: 'Education' },
+          ],
+        },
+      };
+
+      if (response.status === 200) {
+        setCategories(response.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch categories", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAuthors();
+    fetchCategories();
+  }, []);
+
   return (
     <div className="p-4">
       <ArticleSearchBar
@@ -261,6 +313,8 @@ export default function ArticleTable() {
         loading={loading}
         serverError={serverError}
         formRef={createFormRef}
+        authors={authors}
+        categories={categories}
       />
       <ArticleEditModal
         visible={isEditModalVisible}
