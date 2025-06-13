@@ -439,31 +439,6 @@ export interface AdminGetTags200ResponsePagination {
 /**
  * 
  * @export
- * @interface AdminGetTagsRequest
- */
-export interface AdminGetTagsRequest {
-    /**
-     * 
-     * @type {number}
-     * @memberof AdminGetTagsRequest
-     */
-    'page'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof AdminGetTagsRequest
-     */
-    'limit'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof AdminGetTagsRequest
-     */
-    'search'?: string;
-}
-/**
- * 
- * @export
  * @interface AdminGetUsers200Response
  */
 export interface AdminGetUsers200Response {
@@ -1571,15 +1546,19 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Retrieves tags from the database with pagination and optional search.
+         * Retrieves tags from the database with pagination and optional search using query parameters.
          * @summary Fetch tags with pagination and search
-         * @param {AdminGetTagsRequest} adminGetTagsRequest 
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of tags to return per page.
+         * @param {string} [search] Optional search term to filter tags by name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminGetTags: async (adminGetTagsRequest: AdminGetTagsRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'adminGetTagsRequest' is not null or undefined
-            assertParamExists('adminGetTags', 'adminGetTagsRequest', adminGetTagsRequest)
+        adminGetTags: async (page: number, limit: number, search?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('adminGetTags', 'page', page)
+            // verify required parameter 'limit' is not null or undefined
+            assertParamExists('adminGetTags', 'limit', limit)
             const localVarPath = `/api/admin/tags/get-tags`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1588,7 +1567,7 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -1596,14 +1575,23 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
+            }
+
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(adminGetTagsRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1800,14 +1788,16 @@ export const AdminApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Retrieves tags from the database with pagination and optional search.
+         * Retrieves tags from the database with pagination and optional search using query parameters.
          * @summary Fetch tags with pagination and search
-         * @param {AdminGetTagsRequest} adminGetTagsRequest 
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of tags to return per page.
+         * @param {string} [search] Optional search term to filter tags by name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async adminGetTags(adminGetTagsRequest: AdminGetTagsRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminGetTags200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetTags(adminGetTagsRequest, options);
+        async adminGetTags(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminGetTags200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetTags(page, limit, search, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.adminGetTags']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1914,14 +1904,16 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.adminGetCategories(page, limit, search, options).then((request) => request(axios, basePath));
         },
         /**
-         * Retrieves tags from the database with pagination and optional search.
+         * Retrieves tags from the database with pagination and optional search using query parameters.
          * @summary Fetch tags with pagination and search
-         * @param {AdminGetTagsRequest} adminGetTagsRequest 
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of tags to return per page.
+         * @param {string} [search] Optional search term to filter tags by name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminGetTags(adminGetTagsRequest: AdminGetTagsRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminGetTags200Response> {
-            return localVarFp.adminGetTags(adminGetTagsRequest, options).then((request) => request(axios, basePath));
+        adminGetTags(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig): AxiosPromise<AdminGetTags200Response> {
+            return localVarFp.adminGetTags(page, limit, search, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieves users from the database with pagination and optional search.
@@ -2026,15 +2018,17 @@ export class AdminApi extends BaseAPI {
     }
 
     /**
-     * Retrieves tags from the database with pagination and optional search.
+     * Retrieves tags from the database with pagination and optional search using query parameters.
      * @summary Fetch tags with pagination and search
-     * @param {AdminGetTagsRequest} adminGetTagsRequest 
+     * @param {number} page The page number for pagination.
+     * @param {number} limit The number of tags to return per page.
+     * @param {string} [search] Optional search term to filter tags by name.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public adminGetTags(adminGetTagsRequest: AdminGetTagsRequest, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).adminGetTags(adminGetTagsRequest, options).then((request) => request(this.axios, this.basePath));
+    public adminGetTags(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).adminGetTags(page, limit, search, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -1,6 +1,5 @@
 import {
   AdminGetTags200Response,
-  AdminGetTags200ResponsePagination,
   InternalServerError,
   UnAuthorizedError,
   ValidationError,
@@ -11,7 +10,7 @@ import { paginationWithSearchSchema } from '@/lib/zod/common/common';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-export async function POST(
+export async function GET(
   req: Request
 ): Promise<
   NextResponse<
@@ -25,7 +24,13 @@ export async function POST(
     const adminAuthError = await authorizeAdmin();
     if (adminAuthError) return adminAuthError;
 
-    const body: AdminGetTags200ResponsePagination = await req.json();
+    const { searchParams } = new URL(req.url);
+    const body = {
+      page: parseInt(searchParams.get('page') || '1'),
+      limit: parseInt(searchParams.get('limit') || '10'),
+      search: searchParams.get('search') || undefined,
+    };
+
     const parsedBody = await paginationWithSearchSchema.parseAsync(body);
 
     const { page, limit, search } = parsedBody;
