@@ -101,24 +101,12 @@ async function validateRequestBody(
 async function isSlugConflict(id: number, slug?: string) {
   if (!slug) return false;
 
-<<<<<<< HEAD
   const existing = await prisma.category.findUnique({
     where: { slug },
     select: { id: true },
   });
 
   return existing && existing.id !== id;
-=======
-  const existing = await prisma.category.findFirst({
-    where: {
-      slug,
-      NOT: { id },
-      deletedAt: null,
-    },
-  });
-
-  return !!existing;
->>>>>>> 09db355 (feat: api function added to update an existing category)
 }
 
 function buildUpdatePayload(data: AdminUpdateCategoryRequest) {
