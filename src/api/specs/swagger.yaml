@@ -469,30 +469,38 @@ paths:
                     type: string
                     example: Error during registration
   /api/admin/categories/get-category:
-    post:
+    get:
       summary: Fetch categories with pagination and search
-      description: Retrieves categories from the database with pagination and optional search.
+      description: Retrieves categories from the database with pagination and optional search using query parameters.
       operationId: adminGetCategories
       tags:
         - Admin
       security:
         - jwt: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                page:
-                  type: integer
-                  example: 1
-                limit:
-                  type: integer
-                  example: 10
-                search:
-                  type: string
-                  example: tech
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 1
+            default: 1
+          description: The page number for pagination.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 10
+            default: 10
+          description: The number of categories to return per page.
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+            example: tech
+          description: Optional search term to filter categories by name or description.
       responses:
         '200':
           description: Successfully retrieved categories with pagination

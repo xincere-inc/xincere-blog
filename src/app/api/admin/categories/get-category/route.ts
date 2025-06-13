@@ -11,7 +11,7 @@ import { paginationWithSearchSchema } from '@/lib/zod/common/common';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-export async function POST(
+export async function GET(
   req: Request
 ): Promise<
   NextResponse<
@@ -25,7 +25,12 @@ export async function POST(
     const adminAuthError = await authorizeAdmin();
     if (adminAuthError) return adminAuthError;
 
-    const body: AdminGetCategoriesRequest = await req.json();
+    const { searchParams } = new URL(req.url);
+    const body: AdminGetCategoriesRequest = {
+      page: parseInt(searchParams.get('page') || '1'),
+      limit: parseInt(searchParams.get('limit') || '10'),
+      search: searchParams.get('search') || undefined,
+    };
 
     const parsedBody = await paginationWithSearchSchema.parseAsync(body);
 
