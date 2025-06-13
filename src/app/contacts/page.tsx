@@ -1,6 +1,6 @@
 'use client';
 
-import IdoContact from '@/api/IdoContact';
+import ApiContact from '@/api/ApiContact';
 import React, { useState } from 'react';
 const App: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -88,7 +88,7 @@ const App: React.FC = () => {
       setSubmissionError(null);
 
       try {
-        const response = await IdoContact.submitContactForm({
+        const response = await ApiContact.submitContactForm({
           companyName: formData.companyName,
           contactName: formData.contactName,
           email: formData.email,
