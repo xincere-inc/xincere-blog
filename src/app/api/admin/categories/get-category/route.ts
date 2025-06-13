@@ -1,6 +1,6 @@
 import {
   AdminGetCategories200Response,
-  AdminGetCategoriesRequest,
+  AdminGetCategories200ResponseDataInner,
   InternalServerError,
   UnAuthorizedError,
   ValidationError,
@@ -26,7 +26,7 @@ export async function GET(
     if (adminAuthError) return adminAuthError;
 
     const { searchParams } = new URL(req.url);
-    const body: AdminGetCategoriesRequest = {
+    const body = {
       page: parseInt(searchParams.get('page') || '1'),
       limit: parseInt(searchParams.get('limit') || '10'),
       search: searchParams.get('search') || undefined,
@@ -63,15 +63,17 @@ export async function GET(
 
     const totalPages = Math.ceil(totalCategories / limit);
 
-    const formatted = categories.map((category) => ({
-      id: category.id,
-      name: category.name,
-      slug: category.slug,
-      description: category.description ?? '',
-      createdAt: category.createdAt.toISOString(),
-      updatedAt: category.updatedAt.toISOString(),
-      deletedAt: category.deletedAt?.toISOString() ?? null,
-    }));
+    const formatted = categories.map(
+      (category: AdminGetCategories200ResponseDataInner) => ({
+        id: category.id,
+        name: category.name,
+        slug: category.slug,
+        description: category.description ?? '',
+        createdAt: category?.createdAt,
+        updatedAt: category?.updatedAt,
+        deletedAt: category?.deletedAt,
+      })
+    );
 
     return NextResponse.json(
       {
