@@ -56,28 +56,20 @@ export async function DELETE(
       where: {
         id: { in: body.ids },
         deletedAt: null,
+        articles: { some: { deletedAt: null } },
       },
-      include: {
-        articles: {
-          where: {
-            deletedAt: null, // Only count non-deleted articles
-          },
-          select: {
-            id: true,
-          },
-        },
-      },
+      select: { name: true },
     });
 
     const categoriesWithNonEmptyArticles = categoriesWithArticles.filter(
-      (category) => category.articles.length > 0
+      (category: any) => category.articles.length > 0
     );
 
     if (categoriesWithNonEmptyArticles.length > 0) {
       return NextResponse.json(
         {
           message: `Cannot delete categories with associated articles: ${categoriesWithNonEmptyArticles
-            .map((c) => c.name)
+            .map((c: any) => c.name)
             .join(', ')}.`,
         },
         { status: 400 }
