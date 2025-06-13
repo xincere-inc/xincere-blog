@@ -61,14 +61,10 @@ export async function DELETE(
       select: { name: true },
     });
 
-    const categoriesWithNonEmptyArticles = categoriesWithArticles.filter(
-      (category: any) => category.articles.length > 0
-    );
-
-    if (categoriesWithNonEmptyArticles.length > 0) {
+    if (categoriesWithArticles.length > 0) {
       return NextResponse.json(
         {
-          message: `Cannot delete categories with associated articles: ${categoriesWithNonEmptyArticles
+          message: `Cannot delete categories with associated articles: ${categoriesWithArticles
             .map((c: any) => c.name)
             .join(', ')}.`,
         },
