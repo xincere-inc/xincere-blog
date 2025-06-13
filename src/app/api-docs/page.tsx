@@ -7,10 +7,6 @@
 
 // export default ApiDocsPage;
 
-
 export default function ApiDocsPage() {
-  return (
-    <div>ApiDocsPage</div>
-  )
+  return <div>ApiDocsPage</div>;
 }
-
