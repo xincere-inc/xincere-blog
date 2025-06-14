@@ -29,7 +29,7 @@ export async function POST(
 
     const { name, slug, description } = validated;
 
-    const duplicate = await prisma.category.findFirst({
+    const duplicate = await prisma.category.findUnique({
       where: {
         slug,
       },
