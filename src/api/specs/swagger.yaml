@@ -468,6 +468,114 @@ paths:
                   message:
                     type: string
                     example: Error during registration
+  /api/admin/categories/get-category:
+    get:
+      summary: Fetch categories with pagination and search
+      description: Retrieves categories from the database with pagination and optional search using query parameters.
+      operationId: adminGetCategories
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+            default: 1
+          description: The page number for pagination.
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 10
+            default: 10
+          description: The number of categories to return per page.
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+            example: tech
+          description: Optional search term to filter categories by name or description.
+      responses:
+        '200':
+          description: Successfully retrieved categories with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for the category.
+                        name:
+                          type: string
+                          description: The name of the category.
+                        slug:
+                          type: string
+                          description: The unique slug for the category.
+                        description:
+                          type: string
+                          description: The description of the category (optional).
+                          nullable: true
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was created.
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was last updated.
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was deleted (optional).
+                          nullable: true
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 10
+                      showPerPage:
+                        type: integer
+                        example: 10
+                      totalCategories:
+                        type: integer
+                        example: 50
+                      totalPages:
+                        type: integer
+                        example: 5
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/change-password:
     post:
       summary: Change user password

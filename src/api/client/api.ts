@@ -40,101 +40,6 @@ import {
 } from './base';
 
 /**
- * @export
- * @interface AdminCreateArticleRequest
- */
-export interface AdminCreateArticleRequest {
-  title: string;
-  slug: string;
-  summary: string;
-  content: string;
-  markdownContent: string;
-  thumbnailUrl?: string;
-  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
-  authorId: string;
-  categoryId: number;
-  tags?: string[];
-}
-
-/**
- * @export
- * @interface AdminUpdateArticleRequest
- */
-export interface AdminUpdateArticleRequest {
-  id: number;
-  title?: string;
-  slug?: string;
-  summary?: string;
-  content?: string;
-  markdownContent?: string;
-  thumbnailUrl?: string;
-  status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
-  authorId?: string;
-  categoryId?: number;
-  tags?: string[];
-}
-
-/**
- * @export
- * @interface AdminDeleteArticlesRequest
- */
-export interface AdminDeleteArticlesRequest {
-  ids: number[];
-}
-
-/**
- *
- * @export
- * @interface AdminGetArticlesRequest
- */
-export interface AdminGetArticlesRequest {
-  page: number;
-  limit: number;
-  search?: string;
-}
-
-/**
- *
- * @export
- * @interface AdminArticlePreview
- */
-export interface AdminArticlePreview {
-  id: number;
-  title: string;
-  slug: string;
-  summary: string;
-  thumbnailUrl?: string;
-  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
-  createdAt: string;
-  updatedAt: string;
-  author: {
-    id: string;
-    name: string;
-    email: string;
-  };
-  category: {
-    id: number;
-    name: string;
-  };
-}
-
-/**
- *
- * @export
- * @interface AdminGetArticles200Response
- */
-export interface AdminGetArticles200Response {
-  data: AdminArticlePreview[];
-  pagination: {
-    page: number;
-    limit: number;
-    showPerPage: number;
-    totalArticles: number;
-    totalPages: number;
-  };
-}
-
-/**
  *
  * @export
  * @interface AdminCreateUser400Response
@@ -230,6 +135,111 @@ export interface AdminDeleteUsersRequest {
    * @memberof AdminDeleteUsersRequest
    */
   ids: Array<string>;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetCategories200Response
+ */
+export interface AdminGetCategories200Response {
+  /**
+   *
+   * @type {Array<AdminGetCategories200ResponseDataInner>}
+   * @memberof AdminGetCategories200Response
+   */
+  data?: Array<AdminGetCategories200ResponseDataInner>;
+  /**
+   *
+   * @type {AdminGetCategories200ResponsePagination}
+   * @memberof AdminGetCategories200Response
+   */
+  pagination?: AdminGetCategories200ResponsePagination;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetCategories200ResponseDataInner
+ */
+export interface AdminGetCategories200ResponseDataInner {
+  /**
+   * The unique identifier for the category.
+   * @type {number}
+   * @memberof AdminGetCategories200ResponseDataInner
+   */
+  id?: number;
+  /**
+   * The name of the category.
+   * @type {string}
+   * @memberof AdminGetCategories200ResponseDataInner
+   */
+  name?: string;
+  /**
+   * The unique slug for the category.
+   * @type {string}
+   * @memberof AdminGetCategories200ResponseDataInner
+   */
+  slug?: string;
+  /**
+   * The description of the category (optional).
+   * @type {string}
+   * @memberof AdminGetCategories200ResponseDataInner
+   */
+  description?: string | null;
+  /**
+   * The date and time when the category was created.
+   * @type {string}
+   * @memberof AdminGetCategories200ResponseDataInner
+   */
+  createdAt?: string;
+  /**
+   * The date and time when the category was last updated.
+   * @type {string}
+   * @memberof AdminGetCategories200ResponseDataInner
+   */
+  updatedAt?: string;
+  /**
+   * The date and time when the category was deleted (optional).
+   * @type {string}
+   * @memberof AdminGetCategories200ResponseDataInner
+   */
+  deletedAt?: string | null;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetCategories200ResponsePagination
+ */
+export interface AdminGetCategories200ResponsePagination {
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetCategories200ResponsePagination
+   */
+  page?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetCategories200ResponsePagination
+   */
+  limit?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetCategories200ResponsePagination
+   */
+  showPerPage?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetCategories200ResponsePagination
+   */
+  totalCategories?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetCategories200ResponsePagination
+   */
+  totalPages?: number;
 }
 /**
  *
@@ -1199,6 +1209,71 @@ export const AdminApiAxiosParamCreator = function (
       };
     },
     /**
+     * Retrieves categories from the database with pagination and optional search using query parameters.
+     * @summary Fetch categories with pagination and search
+     * @param {number} page The page number for pagination.
+     * @param {number} limit The number of categories to return per page.
+     * @param {string} [search] Optional search term to filter categories by name or description.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminGetCategories: async (
+      page: number,
+      limit: number,
+      search?: string,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'page' is not null or undefined
+      assertParamExists('adminGetCategories', 'page', page);
+      // verify required parameter 'limit' is not null or undefined
+      assertParamExists('adminGetCategories', 'limit', limit);
+      const localVarPath = `/api/admin/categories/get-category`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      if (page !== undefined) {
+        localVarQueryParameter['page'] = page;
+      }
+
+      if (limit !== undefined) {
+        localVarQueryParameter['limit'] = limit;
+      }
+
+      if (search !== undefined) {
+        localVarQueryParameter['search'] = search;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
      * Retrieves users from the database with pagination and optional search.
      * @summary Fetch users with pagination and search
      * @param {AdminGetUsersRequest} adminGetUsersRequest
@@ -1378,6 +1453,46 @@ export const AdminApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
+     * Retrieves categories from the database with pagination and optional search using query parameters.
+     * @summary Fetch categories with pagination and search
+     * @param {number} page The page number for pagination.
+     * @param {number} limit The number of categories to return per page.
+     * @param {string} [search] Optional search term to filter categories by name or description.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminGetCategories(
+      page: number,
+      limit: number,
+      search?: string,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminGetCategories200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminGetCategories(
+          page,
+          limit,
+          search,
+          options
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminGetCategories']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
      * Retrieves users from the database with pagination and optional search.
      * @summary Fetch users with pagination and search
      * @param {AdminGetUsersRequest} adminGetUsersRequest
@@ -1488,6 +1603,25 @@ export const AdminApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     * Retrieves categories from the database with pagination and optional search using query parameters.
+     * @summary Fetch categories with pagination and search
+     * @param {number} page The page number for pagination.
+     * @param {number} limit The number of categories to return per page.
+     * @param {string} [search] Optional search term to filter categories by name or description.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminGetCategories(
+      page: number,
+      limit: number,
+      search?: string,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminGetCategories200Response> {
+      return localVarFp
+        .adminGetCategories(page, limit, search, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * Retrieves users from the database with pagination and optional search.
      * @summary Fetch users with pagination and search
      * @param {AdminGetUsersRequest} adminGetUsersRequest
@@ -1558,6 +1692,27 @@ export class AdminApi extends BaseAPI {
   ) {
     return AdminApiFp(this.configuration)
       .adminDeleteUsers(adminDeleteUsersRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Retrieves categories from the database with pagination and optional search using query parameters.
+   * @summary Fetch categories with pagination and search
+   * @param {number} page The page number for pagination.
+   * @param {number} limit The number of categories to return per page.
+   * @param {string} [search] Optional search term to filter categories by name or description.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminGetCategories(
+    page: number,
+    limit: number,
+    search?: string,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminGetCategories(page, limit, search, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
