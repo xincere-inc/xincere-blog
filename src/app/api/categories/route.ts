@@ -44,7 +44,6 @@ export async function GET(
 
     return NextResponse.json(
       {
-        message: 'Successfully retrieved categories',
         categories: formatted,
       },
       { status: 200 }
