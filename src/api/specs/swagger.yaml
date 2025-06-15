@@ -1280,3 +1280,81 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
+  /api/categories:
+    get:
+      summary: Fetch categories with pagination
+      description: Retrieves categories from the database with pagination using skip and take query parameters.
+      operationId: getCategories
+      tags:
+        - Categories
+      parameters:
+        - name: skip
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 0
+            default: 0
+          description: The number of categories to skip for pagination.
+        - name: take
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 5
+            default: 5
+          description: The number of categories to return per request.
+      responses:
+        '200':
+          description: Successfully retrieved categories with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successfully retrieved categories
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for the category.
+                        name:
+                          type: string
+                          description: The name of the category.
+                        slug:
+                          type: string
+                          description: The unique slug for the category.
+                        description:
+                          type: string
+                          nullable: true
+                          description: The description of the category (optional).
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was created.
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was last updated.
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          nullable: true
+                          description: The date and time when the category was deleted (optional).
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'

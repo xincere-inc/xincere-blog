@@ -964,6 +964,25 @@ export interface ForgetPasswordRequest {
 /**
  * 
  * @export
+ * @interface GetCategories200Response
+ */
+export interface GetCategories200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof GetCategories200Response
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<AdminGetCategories200ResponseDataInner>}
+     * @memberof GetCategories200Response
+     */
+    'categories'?: Array<AdminGetCategories200ResponseDataInner>;
+}
+/**
+ * 
+ * @export
  * @interface InternalServerError
  */
 export interface InternalServerError {
@@ -2344,6 +2363,127 @@ export class AuthApi extends BaseAPI {
      */
     public verifyEmail(token: string, options?: RawAxiosRequestConfig) {
         return AuthApiFp(this.configuration).verifyEmail(token, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * CategoriesApi - axios parameter creator
+ * @export
+ */
+export const CategoriesApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Retrieves categories from the database with pagination using skip and take query parameters.
+         * @summary Fetch categories with pagination
+         * @param {number} skip The number of categories to skip for pagination.
+         * @param {number} take The number of categories to return per request.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCategories: async (skip: number, take: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'skip' is not null or undefined
+            assertParamExists('getCategories', 'skip', skip)
+            // verify required parameter 'take' is not null or undefined
+            assertParamExists('getCategories', 'take', take)
+            const localVarPath = `/api/categories`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (skip !== undefined) {
+                localVarQueryParameter['skip'] = skip;
+            }
+
+            if (take !== undefined) {
+                localVarQueryParameter['take'] = take;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * CategoriesApi - functional programming interface
+ * @export
+ */
+export const CategoriesApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = CategoriesApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Retrieves categories from the database with pagination using skip and take query parameters.
+         * @summary Fetch categories with pagination
+         * @param {number} skip The number of categories to skip for pagination.
+         * @param {number} take The number of categories to return per request.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCategories(skip: number, take: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetCategories200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCategories(skip, take, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CategoriesApi.getCategories']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * CategoriesApi - factory interface
+ * @export
+ */
+export const CategoriesApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = CategoriesApiFp(configuration)
+    return {
+        /**
+         * Retrieves categories from the database with pagination using skip and take query parameters.
+         * @summary Fetch categories with pagination
+         * @param {number} skip The number of categories to skip for pagination.
+         * @param {number} take The number of categories to return per request.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCategories(skip: number, take: number, options?: RawAxiosRequestConfig): AxiosPromise<GetCategories200Response> {
+            return localVarFp.getCategories(skip, take, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * CategoriesApi - object-oriented interface
+ * @export
+ * @class CategoriesApi
+ * @extends {BaseAPI}
+ */
+export class CategoriesApi extends BaseAPI {
+    /**
+     * Retrieves categories from the database with pagination using skip and take query parameters.
+     * @summary Fetch categories with pagination
+     * @param {number} skip The number of categories to skip for pagination.
+     * @param {number} take The number of categories to return per request.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CategoriesApi
+     */
+    public getCategories(skip: number, take: number, options?: RawAxiosRequestConfig) {
+        return CategoriesApiFp(this.configuration).getCategories(skip, take, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -1,8 +1,8 @@
 'use client';
 
+import type { Category } from '@prisma/client';
 import React, { useState } from 'react';
 import ContactCTA from './ContactCTA';
-import type { Category } from '@prisma/client';
 
 interface Article {
   id: number;
