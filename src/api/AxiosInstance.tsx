@@ -1,18 +1,8 @@
-import axios from 'axios';
-import { cookies } from 'next/headers';
 import { Configuration } from '@/api/client/configuration';
+import axios from 'axios';
 
 export const axiosInstance = axios.create({
   withCredentials: true,
-});
-
-axiosInstance.interceptors.request.use(async (config) => {
-  const jwt = (await cookies()).get('jwt');
-  if (jwt) {
-    config.headers.Authorization = `Bearer ${jwt.value}`;
-  }
-
-  return config;
 });
 
 // 共通のAPI Factory引数
