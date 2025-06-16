@@ -29,13 +29,34 @@ const HomePage = async () => {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     }),
-    await prisma.category.findMany({
-      include: {
+    prisma.category.findMany({
+      where: {
+        articles: {
+          some: {
+            status: ArticleStatus.PUBLISHED,
+            deletedAt: null,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
         _count: {
           select: {
             articles: {
-              where: { status: ArticleStatus.PUBLISHED, deletedAt: null },
+              where: {
+                status: ArticleStatus.PUBLISHED,
+                deletedAt: null,
+              },
             },
           },
         },

@@ -22,12 +22,12 @@ export async function seedArticles() {
   const sampleThumbnailUrl =
     'https://readdy.ai/api/search-image?query=SEO%20analytics%20dashboard%20on%20computer%20screen%20in%20modern%20office%20setting%2C%20professional%20environment&width=200&height=300&seq=12&orientation=portrait';
 
-  const generateArticles = (count: number) =>
-    Array.from({ length: count }).map(() => {
+  const articles = categories.flatMap((category) => {
+    return Array.from({ length: 10 }).map(() => {
       const content = faker.lorem.paragraphs(5, '\n\n');
       return {
         authorId: author.id,
-        categoryId: faker.helpers.arrayElement(categories).id,
+        categoryId: category.id,
         title: sampleTitle,
         slug: faker.helpers.slugify(
           `${faker.lorem.words(3)}-${faker.string.uuid()}`
@@ -41,13 +41,14 @@ export async function seedArticles() {
         updatedAt: new Date(),
       };
     });
-
-  const articles = [...generateArticles(10), ...generateArticles(10)];
+  });
 
   const result = await prisma.article.createMany({
     data: articles,
     skipDuplicates: true,
   });
 
-  console.log(`✅ Seeded ${result.count} articles successfully.`);
+  console.log(
+    `✅ Seeded ${result.count} articles across ${categories.length} categories.`
+  );
 }
