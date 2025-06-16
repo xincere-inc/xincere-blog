@@ -1,4 +1,4 @@
-import {Alert, Button, Col, Form, FormInstance, Input, Modal, Row, Select } from 'antd';
+import {Alert, Button, Col, Form, FormInstance, Input, Modal, Row, Select, Radio } from 'antd';
 import { useImperativeHandle } from 'react';
 
 interface ArticleCreateModalProps {
@@ -54,11 +54,7 @@ export function ArticleCreateModal({
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item
-              label="Author"
-              name="authorId"
-              rules={[{ required: true, message: 'Please select an author!' }]}
-            >
+            <Form.Item label="Author" name="authorId" rules={[{ required: true }]}>
               <Select placeholder="Select an author">
                 {authors.map((author) => (
                   <Select.Option key={author.id} value={author.id}>
@@ -69,13 +65,9 @@ export function ArticleCreateModal({
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              label="Category"
-              name="categoryId"
-              rules={[{ required: true, message: 'Please select a category!' }]}
-            >
+            <Form.Item label="Category" name="categoryId" rules={[{ required: true }]}>
               <Select placeholder="Select a category">
-                {(categories || []).map((category) => (
+                {categories.map((category) => (
                   <Select.Option key={category.id} value={category.id}>
                     {category.name}
                   </Select.Option>
@@ -89,28 +81,28 @@ export function ArticleCreateModal({
           <Input.TextArea />
         </Form.Item>
 
-        <Form.Item label="Content" name="content" rules={[{ required: true }]}>
+        <Form.Item
+          label="Markdown Content"
+          name="markdownContent"
+          rules={[{ required: true }]}
+        >
           <Input.TextArea rows={4} />
         </Form.Item>
 
-        <Form.Item label="Markdown Content" name="markdownContent" rules={[{ required: true }]}>
-          <Input.TextArea rows={4} />
-        </Form.Item>
-
-        <Form.Item label="Thumbnail URL" name="thumbnailUrl">
-          <Input />
+        <Form.Item label="Thumbnail Image" name="thumbnailUrl">
+          <Input type="url" placeholder="https://example.com/image.png" />
         </Form.Item>
 
         <Form.Item label="Status" name="status" rules={[{ required: true }]}>
-          <Select>
-            <Select.Option value="DRAFT">Draft</Select.Option>
-            <Select.Option value="PUBLISHED">Published</Select.Option>
-            <Select.Option value="ARCHIVED">Archived</Select.Option>
-          </Select>
+          <Radio.Group>
+            <Radio value="DRAFT">Draft</Radio>
+            <Radio value="PUBLISHED">Published</Radio>
+          </Radio.Group>
         </Form.Item>
 
-        <Form.Item label="Tags (comma-separated)" name="tags">
-          <Input />
+        <Form.Item label="Tags" name="tags">
+          <Select mode="tags" style={{ width: '100%' }} placeholder="Enter tags">
+          </Select>
         </Form.Item>
 
         <Button type="primary" htmlType="submit" loading={loading}>

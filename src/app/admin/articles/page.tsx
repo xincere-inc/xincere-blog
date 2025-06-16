@@ -9,6 +9,7 @@ import { ArticleSelection } from "@/components/admin/ArticleSelection";
 import { ArticleActions } from "@/components/admin/ArticleActions";
 import { ArticleCreateModal } from "@/components/admin/ArticleCreateModal";
 import { ArticleEditModal } from "@/components/admin/ArticleEditModal";
+import { marked } from 'marked';
 
 export interface Article {
   id?: number;
@@ -17,6 +18,7 @@ export interface Article {
   category?: string;
   slug?: string;
   summary?: string;
+  content?: string;
   status?: string;
   tags?: string;
   createdAt?: string;
@@ -107,17 +109,18 @@ export default function ArticleTable() {
   const createArticle = async (values: any) => {
     setLoading(true);
     try {
+      const htmlContent: string = await marked(values.markdownContent || '');
       const response = await ApiAdminArticles.adminCreateArticle({
         authorId: values.authorId,
         categoryId: values.categoryId,
         title: values.title,
         slug: values.slug,
         summary: values.summary,
-        content: values.content,
+        content: htmlContent,
         markdownContent: values.markdownContent,
         thumbnailUrl: values.thumbnailUrl,
         status: values.status,
-        tags: values.tags
+        tags: values.tags,
       });
 
       if (response.status === 201) {
@@ -134,6 +137,7 @@ export default function ArticleTable() {
         });
       }
     } catch (error: any) {
+       console.error("Create Article Error:", error);
       setServerError(error?.response?.data?.error || 'Error creating article');
     } finally {
       setLoading(false);
