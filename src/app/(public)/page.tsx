@@ -19,17 +19,17 @@ const HomePage = async () => {
       },
     }),
     await prisma.category.findMany({
-  		 take: 6, // Load first 6 categories initially
-  		 skip: 0,
-  		 where: {
-    		 articles: {
-      		 some: {
-       		  status: ArticleStatus.PUBLISHED,
-       		  deletedAt: null,
-      		 },
-    		 },
-  		 },
-		 }),
+      take: 6, // Load first 6 categories initially
+      skip: 0,
+      where: {
+        articles: {
+          some: {
+            status: ArticleStatus.PUBLISHED,
+            deletedAt: null,
+          },
+        },
+      },
+    }),
     await prisma.category.findMany({
       include: {
         _count: {

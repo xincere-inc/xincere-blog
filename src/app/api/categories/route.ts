@@ -23,22 +23,22 @@ export async function GET(
 
     const { skip, take } = parsed;
 
-		 const categories = await prisma.category.findMany({
-  skip,
-  take,
-  where: {
-    deletedAt: null,
-    articles: {
-      some: {
-        status: 'PUBLISHED',
+    const categories = await prisma.category.findMany({
+      skip,
+      take,
+      where: {
         deletedAt: null,
+        articles: {
+          some: {
+            status: 'PUBLISHED',
+            deletedAt: null,
+          },
+        },
       },
-    },
-  },
-  orderBy: {
-    createdAt: 'desc',
-  },
-});
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
 
     const formatted = categories.map((category) => ({
       id: category?.id,
