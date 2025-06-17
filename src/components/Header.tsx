@@ -29,7 +29,7 @@ const Header = () => {
               href="#"
               className="text-sm sm:text-md text-gray-800 hover:text-primary transition-colors duration-300"
             >
-              無料相談
+              開発サービス
             </Link>
             <Link
               href="#"
@@ -41,13 +41,13 @@ const Header = () => {
               href="#"
               className="text-sm sm:text-md text-gray-800 hover:text-primary transition-colors duration-300"
             >
-              無料スクック
+              技術スタック
             </Link>
             <Link
               href="/contacts"
               className="text-sm sm:text-md bg-primary text-white p-2 sm:p-4 rounded-md hover:bg-primary-dark transition-colors duration-300 flex items-center !rounded-button whitespace-nowrap cursor-pointer"
             >
-              お問い合わせ
+              無料相談
             </Link>
           </nav>
           <button
@@ -124,7 +124,7 @@ const Header = () => {
             className="text-md text-gray-800 hover:text-primary transition-colors duration-300"
             onClick={toggleMenu}
           >
-            無料相談
+            開発サービス
           </Link>
           <Link
             href="#"
@@ -138,14 +138,14 @@ const Header = () => {
             className="text-md text-gray-800 hover:text-primary transition-colors duration-300"
             onClick={toggleMenu}
           >
-            無料スクック
+            技術スタック
           </Link>
           <Link
             href="/contacts"
             className="text-md bg-primary text-white p-3 rounded-md hover:bg-primary-dark transition-colors duration-300 text-center"
             onClick={toggleMenu}
           >
-            お問い合わせ
+            無料相談
           </Link>
         </div>
       </div>
