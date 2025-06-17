@@ -1,51 +1,53 @@
 'use client';
 
+import ApiArticle from '@/api/ApiArticle';
 import ApiCategory from '@/api/ApiCategory';
-import type { Article, Category } from '@prisma/client';
+import { ApiArticle as ApiArticleType } from '@/types/article';
+import { ArticleStatus, Category } from '@prisma/client';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import ArticleIndexCard from './ArticleIndexCard';
 
 interface ArticleGridProps {
-  articles: (Article & { category: Category })[];
+  articles: ApiArticleType[];
   initialCategories: Category[];
 }
 
 const ArticleGrid: React.FC<ArticleGridProps> = ({
-  articles,
+  articles: initialArticles,
   initialCategories,
 }) => {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [activeTab, setActiveTab] = useState<string>('all');
+  const [articles, setArticles] = useState<ApiArticleType[] | []>(
+    initialArticles || []
+  );
   const [loading, setLoading] = useState(false);
-  const [skip, setSkip] = useState(initialCategories.length);
-  const [hasMore, setHasMore] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalArticles, setTotalArticles] = useState(0);
   const [showLeftScroll, setShowLeftScroll] = useState(false);
   const [showRightScroll, setShowRightScroll] = useState(true);
 
   const tabContainerRef = useRef<HTMLDivElement>(null);
+  const itemsPerPage = 9;
 
   const tabs = ['all', ...categories.map((cat) => cat.name)];
-
-  const filteredArticles =
-    activeTab === 'all'
-      ? articles
-      : articles.filter((article) => article.category.name === activeTab);
+  const totalPages = Math.ceil(totalArticles / itemsPerPage);
 
   const loadMoreCategories = useCallback(async () => {
-    if (loading || !hasMore) return;
+    if (loading) return;
     setLoading(true);
     try {
       const {
-        data: { categories },
+        data: { categories: newCategories },
         status,
-      } = await ApiCategory.getCategories(skip, 5);
+      } = await ApiCategory.getCategories(categories.length, 5);
 
       if (status === 200) {
-        if (!categories || categories.length === 0) {
-          setHasMore(false);
+        if (!newCategories || newCategories.length === 0) {
+          setShowRightScroll(false);
         } else {
-          const categoryData = categories.map((cat) => ({
+          const categoryData = newCategories.map((cat) => ({
             id: cat.id!,
             name: cat.name ?? '',
             slug: cat.slug ?? '',
@@ -56,7 +58,6 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
           }));
 
           setCategories((prev) => [...prev, ...categoryData]);
-          setSkip((prevSkip) => prevSkip + categories.length);
         }
       } else {
         toast.error('Failed to get categories data.', {
@@ -68,14 +69,77 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [skip, loading, hasMore]);
+  }, [loading, categories.length]);
+
+  const loadArticles = useCallback(async (category: string, page: number) => {
+    setLoading(true);
+    try {
+      const skip = (page - 1) * itemsPerPage;
+
+      const {
+        data: { articles: newArticles, total },
+        status,
+      } = await ApiArticle.getArticles(skip, itemsPerPage, category);
+
+      if (status === 200) {
+        const mappedArticles: ApiArticleType[] =
+          newArticles?.map((article) => ({
+            id: article.id ?? 0,
+            title: article.title ?? '',
+            slug: article.slug ?? '',
+            summary: article.summary ?? '',
+            thumbnailUrl: article.thumbnailUrl ?? null,
+            status: article.status as ArticleStatus,
+            author: {
+              id: article.author?.id ?? '',
+              name: article.author?.name ?? '',
+            },
+            category: {
+              id: article.category?.id ?? 0,
+              name: article.category?.name ?? '',
+              slug: article.category?.slug ?? '',
+            },
+            createdAt: article.createdAt
+              ? new Date(article.createdAt)
+              : new Date(),
+            updatedAt: article.updatedAt
+              ? new Date(article.updatedAt)
+              : new Date(),
+            deletedAt: article.deletedAt ? new Date(article.deletedAt) : null,
+          })) ?? [];
+        setArticles(mappedArticles || []);
+        setTotalArticles(total ?? 0);
+      } else {
+        toast.error('Failed to load articles.', {
+          position: 'bottom-right',
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load articles', error);
+      toast.error('An error occurred while fetching articles.', {
+        position: 'bottom-right',
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setCurrentPage(1);
+    loadArticles(tab, 1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    loadArticles(activeTab, page);
+  };
 
   const scrollTabs = async (direction: 'left' | 'right') => {
     const container = tabContainerRef.current;
     if (!container) return;
 
     const scrollAmount = direction === 'left' ? -150 : 150;
-
     container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
 
     const nearingRightEdge =
@@ -85,8 +149,6 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
 
     if (nearingRightEdge) {
       await loadMoreCategories();
-
-      // Scroll again after loading new categories to reveal new tabs
       setTimeout(() => {
         container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         updateScrollButtonsVisibility();
@@ -104,7 +166,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
     const maxScrollLeft = container.scrollWidth - container.clientWidth;
 
     setShowLeftScroll(scrollLeft > 10);
-    setShowRightScroll(hasMore || scrollLeft < maxScrollLeft - 10);
+    setShowRightScroll(scrollLeft < maxScrollLeft - 10);
   };
 
   useEffect(() => {
@@ -117,7 +179,86 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
     return () => {
       container.removeEventListener('scroll', updateScrollButtonsVisibility);
     };
-  }, [hasMore]);
+  }, []);
+
+  useEffect(() => {
+    loadArticles('all', 1);
+  }, []);
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    if (startPage > 1) {
+      pages.push(
+        <button
+          key={1}
+          onClick={() => handlePageChange(1)}
+          className={`px-4 py-2 mx-1 rounded-md ${
+            currentPage === 1
+              ? 'bg-primary text-white'
+              : 'bg-gray-200 text-gray-700'
+          }`}
+        >
+          1
+        </button>
+      );
+      if (startPage > 2) {
+        pages.push(
+          <span key="start-ellipsis" className="px-2">
+            ...
+          </span>
+        );
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={`px-4 py-2 mx-1 rounded-md ${
+            currentPage === i
+              ? 'bg-primary text-white'
+              : 'bg-gray-200 text-gray-700'
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        pages.push(
+          <span key="end-ellipsis" className="px-2">
+            ...
+          </span>
+        );
+      }
+      pages.push(
+        <button
+          key={totalPages}
+          onClick={() => handlePageChange(totalPages)}
+          className={`px-4 py-2 mx-1 rounded-md ${
+            currentPage === totalPages
+              ? 'bg-primary text-white'
+              : 'bg-gray-200 text-gray-700'
+          }`}
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    return pages;
+  };
 
   return (
     <>
@@ -134,7 +275,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
               width="12"
               height="12"
               viewBox="0 0 24 24"
-              stroke="#ffffff"
+              stroke="#fff"
               strokeWidth="2"
               fill="none"
             >
@@ -150,7 +291,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
           {tabs.map((tab, index) => (
             <button
               key={`${tab}-${index}`}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className={`px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-t-md transition-colors duration-300 whitespace-nowrap
                 ${
                   activeTab === tab
@@ -174,7 +315,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
               width="12"
               height="12"
               viewBox="0 0 24 24"
-              stroke="#ffffff"
+              stroke="#fff"
               strokeWidth="2"
               fill="none"
             >
@@ -185,10 +326,30 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {filteredArticles.map((article) => (
+        {articles.map((article) => (
           <ArticleIndexCard key={article.id} article={article} />
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-8 flex justify-center items-center space-x-2">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1 || loading}
+            className="px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
+          >
+            Previous
+          </button>
+          {renderPageNumbers()}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages || loading}
+            className="px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </>
   );
 };

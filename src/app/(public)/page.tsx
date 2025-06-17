@@ -9,17 +9,27 @@ import { popularArticles } from 'src/data/articleData';
 
 const HomePage = async () => {
   const [articles, tabCategories, categories] = await Promise.all([
-     prisma.article.findMany({
+    prisma.article.findMany({
+      take: 9,
+      skip: 0,
       where: {
         status: ArticleStatus.PUBLISHED,
         deletedAt: null,
       },
       include: {
-        category: true,
+        category: {
+          select: { id: true, name: true, slug: true },
+        },
+        author: {
+          select: { id: true, name: true },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     }),
     prisma.category.findMany({
-      take: 6, // Load first 6 categories initially
+      take: 6,
       skip: 0,
       where: {
         articles: {

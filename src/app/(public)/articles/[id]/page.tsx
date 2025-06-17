@@ -1,9 +1,9 @@
+import ArticleCard from '@/components/ArticleCard'; // ArticleCardをインポート
+import AuthorHeader from '@/components/AuthorHeader';
 import Breadcrumb from '@/components/Breadcrumb';
 import ContactCTA from '@/components/ContactCTA'; // ContactCTAをインポート
-import ArticleCard from '@/components/ArticleCard'; // ArticleCardをインポート
-import Image from 'next/image';
 import articleCardData from '@/data/articleCardData'; // articleCardDataをインポート
-import AuthorHeader from '@/components/AuthorHeader';
+import Image from 'next/image';
 import Link from 'next/link';
 
 const ArticleDetailPage = () => {

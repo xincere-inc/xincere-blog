@@ -1358,3 +1358,136 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
+  /api/articles:
+    get:
+      summary: Fetch articles with pagination
+      description: Retrieves articles from the database with pagination using skip and take query parameters, optionally filtered by category.
+      operationId: getArticles
+      tags:
+        - Articles
+      parameters:
+        - name: skip
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 0
+            default: 0
+          description: The number of articles to skip for pagination.
+        - name: take
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 9
+            default: 9
+          description: The number of articles to return per request.
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 'Technology'
+          description: The name of the category to filter articles by (optional).
+      responses:
+        '200':
+          description: Successfully retrieved articles with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successfully retrieved articles
+                  total:
+                    type: integer
+                    example: 25
+                    description: The total number of articles matching the query.
+                  articles:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for the article.
+                          example: 1
+                        title:
+                          type: string
+                          description: The title of the article.
+                          example: 'Introduction to Machine Learning'
+                        slug:
+                          type: string
+                          description: The unique slug for the article.
+                          example: 'introduction-to-machine-learning'
+                        summary:
+                          type: string
+                          description: A brief summary of the article.
+                          example: 'This article explores the basics of machine learning concepts.'
+                        thumbnailUrl:
+                          type: string
+                          nullable: true
+                          description: The URL of the article's thumbnail image (optional).
+                          example: 'https://example.com/thumbnail.jpg'
+                        status:
+                          type: string
+                          enum: [DRAFT, PUBLISHED, ARCHIVED]
+                          description: The publication status of the article.
+                          example: 'PUBLISHED'
+                        author:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: The unique identifier for the author.
+                              example: 'auth_123'
+                            name:
+                              type: string
+                              description: The name of the author (optional, assuming Author model has a name field).
+                              example: 'John Doe'
+                          description: The author of the article.
+                        category:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: The unique identifier for the category.
+                              example: 1
+                            name:
+                              type: string
+                              description: The name of the category.
+                              example: 'Technology'
+                            slug:
+                              type: string
+                              description: The unique slug for the category.
+                              example: 'technology'
+                          description: The category of the article.
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the article was created.
+                          example: '2025-06-17T08:30:00Z'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the article was last updated.
+                          example: '2025-06-17T08:30:00Z'
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          nullable: true
+                          description: The date and time when the article was deleted (optional).
+                          example: null
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
