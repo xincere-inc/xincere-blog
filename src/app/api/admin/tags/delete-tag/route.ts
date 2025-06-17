@@ -52,32 +52,27 @@ export async function DELETE(
     }
 
     // Check if any of the tag have associated articles
-    const tagWithArticles = await prisma.tag.findMany({
+    const tagsWithArticles = await prisma.tag.findMany({
       where: {
         id: { in: body.ids },
         deletedAt: null,
-      },
-      include: {
         articles: {
-          select: {
+          some: {
             article: {
-              select: {
-                id: true,
-              },
+              deletedAt: null,
             },
           },
         },
       },
+      select: {
+        name: true,
+      },
     });
 
-    const tagWithNonEmptyArticles = tagWithArticles.filter(
-      (tag) => tag.articles.length > 0
-    );
-
-    if (tagWithNonEmptyArticles.length > 0) {
+    if (tagsWithArticles.length > 0) {
       return NextResponse.json(
         {
-          message: `Cannot delete tag with associated articles: ${tagWithNonEmptyArticles
+          message: `Cannot delete tag with associated articles: ${tagsWithArticles
             .map((c) => c.name)
             .join(', ')}.`,
         },
