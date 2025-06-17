@@ -309,7 +309,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
             onClick={() => scrollTabs('right')}
             disabled={loading}
             aria-label="Load more categories"
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-green-800 rounded-full hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-green-800 rounded-full hover:bg-primary"
           >
             <svg
               width="12"
