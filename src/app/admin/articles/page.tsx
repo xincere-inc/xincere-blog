@@ -19,6 +19,7 @@ export interface Article {
   slug?: string;
   summary?: string;
   content?: string;
+  thumbnailUrl: any;
   status?: string;
   tags?: string;
   createdAt?: string;
