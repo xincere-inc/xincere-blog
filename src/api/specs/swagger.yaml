@@ -839,6 +839,112 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
+  /api/admin/tags/get-tags:
+    get:
+      summary: Fetch tags with pagination and search
+      description: Retrieves tags from the database with pagination and optional search using query parameters.
+      operationId: adminGetTags
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+            default: 1
+          description: The page number for pagination.
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 10
+            default: 10
+          description: The number of tags to return per page.
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+            example: tech
+          description: Optional search term to filter tags by name.
+      responses:
+        '200':
+          description: Successfully retrieved tags with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for the tag.
+                          example: 1
+                        name:
+                          type: string
+                          description: The name of the tag.
+                          example: Tech
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the tag was created.
+                          example: 2025-06-05T07:55:00Z
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the tag was last updated.
+                          example: 2025-06-05T07:55:00Z
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the tag was deleted (optional).
+                          example: null
+                          nullable: true
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 10
+                      showPerPage:
+                        type: integer
+                        example: 10
+                      totalTags:
+                        type: integer
+                        example: 50
+                      totalPages:
+                        type: integer
+                        example: 5
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/change-password:
     post:
       summary: Change user password
