@@ -16,4 +16,4 @@ export const ACCESS_ALL = [
   '/forget-password',
   '/reset-password',
 ];
-export const DEFAULT_REDIRECT = '/dashboard';
+export const DEFAULT_REDIRECT = '/admin';

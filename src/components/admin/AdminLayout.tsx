@@ -16,16 +16,17 @@ export default function AdminLayout({
   const [collapsed, setCollapsed] = useState(true);
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout className="min-h-screen">
       {/* Sidebar */}
       <Sidebar collapsed={collapsed} />
 
       {/* Main Layout */}
       <Layout
-        style={{
-          marginLeft: collapsed ? 80 : 200, // Shift content when sidebar expands
-          transition: 'margin-left 0.3s ease-in-out',
-        }}
+        className={
+          collapsed
+            ? 'ml-20 transition-margin duration-300 ease-in-out'
+            : 'ml-200 transition-margin duration-300 ease-in-out'
+        }
       >
         {/* Header */}
         <HeaderBar
@@ -34,8 +35,8 @@ export default function AdminLayout({
         />
 
         {/* Content */}
-        <Content style={{ margin: '16px' }}>
-          <div className="p-6 bg-white min-h-[87vh]">{children}</div>
+        <Content className="m-4">
+          <div className="p-6 bg-white min-h-87vh">{children}</div>
         </Content>
       </Layout>
     </Layout>

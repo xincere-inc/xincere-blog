@@ -38,9 +38,9 @@ export function UserEditModal({
         form.resetFields();
       }}
       footer={null}
-      destroyOnClose
+      destroyOnHidden
       centered
-      style={{ margin: '20px 0px' }}
+      className="my-5"
       width={800}
     >
       <Form
@@ -132,13 +132,12 @@ export function UserEditModal({
           </Col>
         </Row>
         <Row>
-          <Col span={12} style={{ display: 'flex', alignItems: 'flex-end' }}>
+          <Col span={12} className="flex items-end">
             <Button
               type="primary"
-              className="form-btn"
+              className="form-btn w-full"
               htmlType="submit"
               loading={loading}
-              style={{ width: '100%' }}
             >
               Update User
             </Button>
@@ -147,11 +146,7 @@ export function UserEditModal({
         <Row>
           <Col span={24}>
             {serverError && (
-              <Alert
-                message={serverError}
-                type="error"
-                style={{ marginTop: '10px' }}
-              />
+              <Alert message={serverError} type="error" className="mt-2.5" />
             )}
           </Col>
         </Row>
