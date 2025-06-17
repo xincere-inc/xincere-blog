@@ -1,0 +1,193 @@
+'use client';
+import CategoryApi from '@/api/CategoryApi';
+import InputField from '@/components/inputs/InputField';
+import { Category } from '@/types/admin/category/category';
+import '@ant-design/v5-patch-for-react-19';
+import { Alert, Button, Col, Modal, Row } from 'antd';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+
+interface CategoryEditModalProps {
+  visible: boolean;
+  onCancel: () => void;
+  onSuccess: (page: number, limit: number, search: string) => void; // Callback to refresh data
+  pagination: { current: number; limit: number };
+  searchText: string;
+  category: Category | null;
+}
+
+interface CategoryFormValues {
+  name: string;
+  slug: string;
+  description?: string;
+}
+
+export function CategoryEditModal({
+  visible,
+  onCancel,
+  onSuccess,
+  pagination,
+  searchText,
+  category,
+}: CategoryEditModalProps) {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CategoryFormValues>({
+    mode: 'onChange',
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (visible && category) {
+      reset({
+        name: category.name || '',
+        slug: category.slug || '',
+        description: category.description ?? '',
+      });
+      setServerError(null);
+    } else {
+      reset();
+    }
+  }, [category, visible, reset]);
+
+  const updateCategory = async (values: CategoryFormValues) => {
+    if (!category) return;
+    setLoading(true);
+    try {
+      const response = await CategoryApi.adminUpdateCategory({
+        id: category.id,
+        name: values.name,
+        slug: values.slug,
+        description: values.description || null,
+      });
+
+      if (response.status === 200) {
+        toast.success(
+          response.data.message || 'Category updated successfully',
+          {
+            position: 'bottom-right',
+          }
+        );
+        setServerError(null);
+        reset();
+        onCancel(); // Close modal
+        onSuccess(pagination.current, pagination.limit, searchText); // Refresh data
+      } else {
+        toast.error(response.data.message || 'Failed to update category', {
+          position: 'bottom-right',
+        });
+      }
+    } catch (error: any) {
+      setServerError(error?.response?.data?.error || 'Error updating category');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSubmit = (data: CategoryFormValues) => {
+    updateCategory(data);
+  };
+
+  return (
+    <Modal
+      title="Edit Category"
+      open={visible}
+      onCancel={() => {
+        onCancel();
+        reset();
+      }}
+      footer={[
+        <Button
+          key="cancel"
+          onClick={() => {
+            onCancel();
+            reset();
+          }}
+          className="mr-2"
+        >
+          Cancel
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          loading={loading}
+          onClick={handleSubmit(onSubmit)}
+        >
+          Update Category
+        </Button>,
+      ]}
+      destroyOnHidden
+      centered
+      className="w-80vw max-w-800 my-5"
+    >
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12}>
+            <InputField
+              id="name"
+              label="Name"
+              placeholder="Category Name"
+              register={register('name', {
+                required: 'Category name is required',
+                maxLength: {
+                  value: 150,
+                  message: 'Name must be at most 150 characters',
+                },
+              })}
+              error={errors.name}
+            />
+          </Col>
+          <Col xs={24} sm={12}>
+            <InputField
+              id="slug"
+              label="Slug"
+              placeholder="Category Slug"
+              register={register('slug', {
+                required: 'Slug is required',
+                maxLength: {
+                  value: 150,
+                  message: 'Slug must be at most 150 characters',
+                },
+                pattern: {
+                  value: /^[a-z0-9-]+$/i,
+                  message:
+                    'Slug must contain only alphanumeric characters and hyphens',
+                },
+              })}
+              error={errors.slug}
+            />
+          </Col>
+          <Col xs={24}>
+            <InputField
+              id="description"
+              label="Description"
+              inputType="textarea"
+              placeholder="Optional description"
+              register={register('description', {
+                maxLength: {
+                  value: 300,
+                  message: 'Description must be at most 300 characters',
+                },
+              })}
+              error={errors.description}
+            />
+          </Col>
+        </Row>
+
+        {serverError && (
+          <Row>
+            <Col xs={24}>
+              <Alert message={serverError} type="error" className="mt-2.5" />
+            </Col>
+          </Row>
+        )}
+      </form>
+    </Modal>
+  );
+}
