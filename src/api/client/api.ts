@@ -132,6 +132,88 @@ export interface AdminCreateCategoryRequest {
 /**
  * 
  * @export
+ * @interface AdminCreateTag201Response
+ */
+export interface AdminCreateTag201Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateTag201Response
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {AdminCreateTag201ResponseTag}
+     * @memberof AdminCreateTag201Response
+     */
+    'tag'?: AdminCreateTag201ResponseTag;
+}
+/**
+ * 
+ * @export
+ * @interface AdminCreateTag201ResponseTag
+ */
+export interface AdminCreateTag201ResponseTag {
+    /**
+     * The unique identifier for the tag.
+     * @type {number}
+     * @memberof AdminCreateTag201ResponseTag
+     */
+    'id'?: number;
+    /**
+     * The name of the tag.
+     * @type {string}
+     * @memberof AdminCreateTag201ResponseTag
+     */
+    'name'?: string;
+    /**
+     * The date and time when the tag was created.
+     * @type {string}
+     * @memberof AdminCreateTag201ResponseTag
+     */
+    'createdAt'?: string;
+    /**
+     * The date and time when the tag was last updated.
+     * @type {string}
+     * @memberof AdminCreateTag201ResponseTag
+     */
+    'updatedAt'?: string;
+    /**
+     * The date and time when the tag was deleted (optional).
+     * @type {string}
+     * @memberof AdminCreateTag201ResponseTag
+     */
+    'deletedAt'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface AdminCreateTag400Response
+ */
+export interface AdminCreateTag400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateTag400Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminCreateTagRequest
+ */
+export interface AdminCreateTagRequest {
+    /**
+     * The unique name of the tag.
+     * @type {string}
+     * @memberof AdminCreateTagRequest
+     */
+    'name': string;
+}
+/**
+ * 
+ * @export
  * @interface AdminCreateUser400Response
  */
 export interface AdminCreateUser400Response {
@@ -351,53 +433,16 @@ export interface AdminGetCategories200ResponsePagination {
 export interface AdminGetTags200Response {
     /**
      * 
-     * @type {Array<AdminGetTags200ResponseDataInner>}
+     * @type {Array<AdminCreateTag201ResponseTag>}
      * @memberof AdminGetTags200Response
      */
-    'data'?: Array<AdminGetTags200ResponseDataInner>;
+    'data'?: Array<AdminCreateTag201ResponseTag>;
     /**
      * 
      * @type {AdminGetTags200ResponsePagination}
      * @memberof AdminGetTags200Response
      */
     'pagination'?: AdminGetTags200ResponsePagination;
-}
-/**
- * 
- * @export
- * @interface AdminGetTags200ResponseDataInner
- */
-export interface AdminGetTags200ResponseDataInner {
-    /**
-     * The unique identifier for the tag.
-     * @type {number}
-     * @memberof AdminGetTags200ResponseDataInner
-     */
-    'id'?: number;
-    /**
-     * The name of the tag.
-     * @type {string}
-     * @memberof AdminGetTags200ResponseDataInner
-     */
-    'name'?: string;
-    /**
-     * The date and time when the tag was created.
-     * @type {string}
-     * @memberof AdminGetTags200ResponseDataInner
-     */
-    'createdAt'?: string;
-    /**
-     * The date and time when the tag was last updated.
-     * @type {string}
-     * @memberof AdminGetTags200ResponseDataInner
-     */
-    'updatedAt'?: string;
-    /**
-     * The date and time when the tag was deleted (optional).
-     * @type {string}
-     * @memberof AdminGetTags200ResponseDataInner
-     */
-    'deletedAt'?: string | null;
 }
 /**
  * 
@@ -1381,6 +1426,46 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * Creates a new tag with a unique name.
+         * @summary Create a new tag
+         * @param {AdminCreateTagRequest} adminCreateTagRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminCreateTag: async (adminCreateTagRequest: AdminCreateTagRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminCreateTagRequest' is not null or undefined
+            assertParamExists('adminCreateTag', 'adminCreateTagRequest', adminCreateTagRequest)
+            const localVarPath = `/api/admin/tags/create-tag`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminCreateTagRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
          * @summary Register a new user
          * @param {AdminCreateUserRequest} adminCreateUserRequest 
@@ -1734,6 +1819,19 @@ export const AdminApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * Creates a new tag with a unique name.
+         * @summary Create a new tag
+         * @param {AdminCreateTagRequest} adminCreateTagRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminCreateTag(adminCreateTagRequest: AdminCreateTagRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminCreateTag201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCreateTag(adminCreateTagRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminCreateTag']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
          * @summary Register a new user
          * @param {AdminCreateUserRequest} adminCreateUserRequest 
@@ -1862,6 +1960,16 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.adminCreateCategory(adminCreateCategoryRequest, options).then((request) => request(axios, basePath));
         },
         /**
+         * Creates a new tag with a unique name.
+         * @summary Create a new tag
+         * @param {AdminCreateTagRequest} adminCreateTagRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminCreateTag(adminCreateTagRequest: AdminCreateTagRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminCreateTag201Response> {
+            return localVarFp.adminCreateTag(adminCreateTagRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
          * @summary Register a new user
          * @param {AdminCreateUserRequest} adminCreateUserRequest 
@@ -1965,6 +2073,18 @@ export class AdminApi extends BaseAPI {
      */
     public adminCreateCategory(adminCreateCategoryRequest: AdminCreateCategoryRequest, options?: RawAxiosRequestConfig) {
         return AdminApiFp(this.configuration).adminCreateCategory(adminCreateCategoryRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Creates a new tag with a unique name.
+     * @summary Create a new tag
+     * @param {AdminCreateTagRequest} adminCreateTagRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public adminCreateTag(adminCreateTagRequest: AdminCreateTagRequest, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).adminCreateTag(adminCreateTagRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
