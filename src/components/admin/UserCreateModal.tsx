@@ -41,9 +41,9 @@ export function UserCreateModal({
         form.resetFields();
       }}
       footer={null}
-      destroyOnClose
+      destroyOnHidden
       centered
-      style={{ margin: '20px 0px' }}
+      className="my-5"
     >
       <Form form={form} onFinish={onCreate} layout="vertical">
         <Row gutter={16}>
