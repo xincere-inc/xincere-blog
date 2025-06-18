@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { ArticleStatus, PrismaClient } from '@prisma/client';
+import { readFileSync } from 'fs';
 
 const prisma = new PrismaClient();
 
@@ -22,9 +23,18 @@ export async function seedArticles() {
   const sampleThumbnailUrl =
     'https://readdy.ai/api/search-image?query=SEO%20analytics%20dashboard%20on%20computer%20screen%20in%20modern%20office%20setting%2C%20professional%20environment&width=200&height=300&seq=12&orientation=portrait';
 
+  const htmlContent = readFileSync(
+    new URL('./content.html', import.meta.url),
+    'utf-8'
+  );
+
+  const markdownContent = readFileSync(
+    new URL('./content.md', import.meta.url),
+    'utf-8'
+  );
+
   const articles = categories.flatMap((category) => {
     return Array.from({ length: 10 }).map(() => {
-      const content = faker.lorem.paragraphs(5, '\n\n');
       return {
         authorId: author.id,
         categoryId: category.id,
@@ -33,8 +43,8 @@ export async function seedArticles() {
           `${faker.lorem.words(3)}-${faker.string.uuid()}`
         ),
         summary: sampleSummary,
-        content,
-        markdownContent: `## ${sampleTitle}\n\n${content}`,
+        content: htmlContent,
+        markdownContent,
         thumbnailUrl: sampleThumbnailUrl,
         status: faker.helpers.arrayElement(Object.values(ArticleStatus)),
         createdAt: new Date(),
