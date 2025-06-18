@@ -2053,7 +2053,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
-  /api/admin/comments/delete:
     delete:
       summary: Delete comments by IDs
       description: Allows administrators to soft-delete comments by setting deletedAt. Requires admin authentication.

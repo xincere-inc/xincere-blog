@@ -1,28 +1,33 @@
 'use client';
 
 import ApiCommentArticle from '@/api/ApiCommentArticle';
+import ArticleCommentList, {
+  ArticleCommentListRef,
+} from '@/components/ArticleCommentList';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-// Define custom user type for NextAuth session
 interface LoggedInUserInfo {
   firstName?: string | null;
   lastName?: string | null;
   email?: string | null;
 }
-
 interface CustomSession {
   user?: LoggedInUserInfo;
 }
 
 export default function ArticleComments() {
-  const params = useParams<{ id: string }>();
-
+  const params = useParams();
+  const rawArticleId = params?.id;
+  const articleId = Array.isArray(rawArticleId)
+    ? rawArticleId[0]
+    : rawArticleId;
   const { data: session } = useSession() as { data: CustomSession | null };
 
-  // State for form fields
+  const commentListRef = useRef<ArticleCommentListRef>(null);
+
   const [formData, setFormData] = useState({
     comment: '',
     name: '',
@@ -30,7 +35,8 @@ export default function ArticleComments() {
   });
   const [submitting, setSubmitting] = useState(false);
 
-  // Update name and email when session changes
+  if (!articleId) return null;
+
   useEffect(() => {
     if (session?.user) {
       const fullName =
@@ -45,7 +51,6 @@ export default function ArticleComments() {
     }
   }, [session]);
 
-  // Handle input changes
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -56,13 +61,10 @@ export default function ArticleComments() {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.comment.trim()) {
-      toast.error('コメントを入力してください。', {
-        position: 'bottom-right',
-      });
+      toast.error('コメントを入力してください。', { position: 'bottom-right' });
       return;
     }
     if (!session && (!formData.name.trim() || !formData.email.trim())) {
@@ -75,23 +77,35 @@ export default function ArticleComments() {
     setSubmitting(true);
     try {
       const response = await ApiCommentArticle.postComment({
-        articleId: Number(params.id),
+        articleId: Number(articleId),
         content: formData.comment,
         email: formData.email,
         name: formData.name,
       });
 
-      if (response.status === 201) {
-        // Reset comment field after submission
-        setFormData((prev) => ({
-          ...prev,
-          comment: '',
-        }));
+      if (response.status === 201 && response.data.comment) {
+        const createdComment = {
+          id: response.data.comment.id,
+          articleId: Number(articleId),
+          content: formData.comment,
+          email: formData.email,
+          name: formData.name,
+          status: 'pending',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+          userId: null,
+        };
+
+        commentListRef.current?.addComment(createdComment as any);
+
+        setFormData((prev) => ({ ...prev, comment: '' }));
+
         toast.success(response.data.message || 'Comment posted successfully', {
           position: 'bottom-right',
         });
       } else {
-        toast.error(response.data.message || 'Failed to create tag', {
+        toast.error(response.data.message || 'Failed to create comment', {
           position: 'bottom-right',
         });
       }
@@ -106,10 +120,8 @@ export default function ArticleComments() {
   };
 
   return (
-    /* コメントセクション */
-    <div className="bg-white rounded-lg shadow-sm p-6">
+    <>
       <h3 className="text-xl font-bold mb-4">コメント</h3>
-      {/* コメント投稿フォーム */}
       <form onSubmit={handleSubmit} className="mb-8">
         <div className="mb-4">
           <textarea
@@ -157,38 +169,7 @@ export default function ArticleComments() {
           </button>
         </div>
       </form>
-      {/* 既存コメント */}
-      <div className="space-y-6">
-        <div className="border-b pb-4">
-          <div className="flex justify-between mb-2">
-            <div className="font-bold">佐藤 健太</div>
-            <div className="text-sm text-gray-500">2025-04-08</div>
-          </div>
-          <p className="text-gray-700">
-            とても参考になる記事でした！特に「ペルソナの精緻化」と「内部リンク構造の最適化」は自社のサイトでもすぐに取り入れたいと思います。質問ですが、内部リンク構造を最適化する際に使用しているツールなどはありますか？
-          </p>
-        </div>
-        <div className="border-b pb-4">
-          <div className="flex justify-between mb-2">
-            <div className="font-bold">
-              田島 光太郎 <span className="text-primary text-sm">（著者）</span>
-            </div>
-            <div className="text-sm text-gray-500">2025-04-09</div>
-          </div>
-          <p className="text-gray-700">
-            佐藤様、コメントありがとうございます！内部リンク構造の分析には主にScreamingFrogとAhrefsを使用しています。特にScreamingFrogのビジュアライゼーション機能は、サイト構造の問題点を視覚的に把握するのに役立ちます。また、社内では独自のスプレッドシートでコンテンツインベントリを管理し、リンク機会を定期的に見直しています。
-          </p>
-        </div>
-        <div>
-          <div className="flex justify-between mb-2">
-            <div className="font-bold">鈴木 美咲</div>
-            <div className="text-sm text-gray-500">2025-04-10</div>
-          </div>
-          <p className="text-gray-700">
-            「組織文化としてのSEO意識の浸透」が特に印象に残りました。マーケティング部門だけでなく、全社的な取り組みとしてSEOを位置づけることの重要性を再認識しました。弊社でも部門間の壁を取り払い、情報共有を活性化させたいと思います。素晴らしい記事をありがとうございました！
-          </p>
-        </div>
-      </div>
-    </div>
+      <ArticleCommentList id={articleId} ref={commentListRef} />
+    </>
   );
 }

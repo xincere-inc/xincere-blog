@@ -7,7 +7,11 @@ import ArticleComments from '@/features/article-comments/ArticleComments';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const ArticleDetailPage = () => {
+type ArticleDetailPageProps = {
+  params: Promise<{ id: string }>;
+};
+
+const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
   return (
     <div className="flex flex-col lg:flex-row gap-8 mt-8">
       <div className="w-full lg:w-2/3">
@@ -264,40 +268,6 @@ const ArticleDetailPage = () => {
         {/*          コメントセクション */}
         <div className="bg-white rounded-lg shadow-sm p-6">
           <ArticleComments />
-
-          {/* 既存コメント */}
-          <div className="space-y-6">
-            <div className="border-b pb-4">
-              <div className="flex justify-between mb-2">
-                <div className="font-bold">佐藤 健太</div>
-                <div className="text-sm text-gray-500">2025-04-08</div>
-              </div>
-              <p className="text-gray-700">
-                とても参考になる記事でした！特に「ペルソナの精緻化」と「内部リンク構造の最適化」は自社のサイトでもすぐに取り入れたいと思います。質問ですが、内部リンク構造を最適化する際に使用しているツールなどはありますか？
-              </p>
-            </div>
-            <div className="border-b pb-4">
-              <div className="flex justify-between mb-2">
-                <div className="font-bold">
-                  田島 光太郎{' '}
-                  <span className="text-primary text-sm">（著者）</span>
-                </div>
-                <div className="text-sm text-gray-500">2025-04-09</div>
-              </div>
-              <p className="text-gray-700">
-                佐藤様、コメントありがとうございます！内部リンク構造の分析には主にScreamingFrogとAhrefsを使用しています。特にScreamingFrogのビジュアライゼーション機能は、サイト構造の問題点を視覚的に把握するのに役立ちます。また、社内では独自のスプレッドシートでコンテンツインベントリを管理し、リンク機会を定期的に見直しています。
-              </p>
-            </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <div className="font-bold">鈴木 美咲</div>
-                <div className="text-sm text-gray-500">2025-04-10</div>
-              </div>
-              <p className="text-gray-700">
-                「組織文化としてのSEO意識の浸透」が特に印象に残りました。マーケティング部門だけでなく、全社的な取り組みとしてSEOを位置づけることの重要性を再認識しました。弊社でも部門間の壁を取り払い、情報共有を活性化させたいと思います。素晴らしい記事をありがとうございました！
-              </p>
-            </div>
-          </div>
         </div>
       </div>
       {/* サイドバー */}
