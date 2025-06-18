@@ -1,6 +1,6 @@
-import { AdminApiFactory } from '@/api/client';
+import { CategoriesApiFactory } from '@/api/client';
 import { commonApiFactoryArgs } from './AxiosInstance';
 
-const ApiCategory = AdminApiFactory(...commonApiFactoryArgs);
+const ApiCategory = CategoriesApiFactory(...commonApiFactoryArgs);
 
 export default ApiCategory;

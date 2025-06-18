@@ -1,16 +1,16 @@
 'use client';
 
-import type { Article, Category } from '@prisma/client';
+import { defaultImageUrl } from '@/data/articleData';
+import { ApiArticle } from '@/types/article';
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { defaultImageUrl } from '@/data/articleData';
 import Link from 'next/link';
 
 interface ArticleCardProps {
-  article: Article & { category: Category };
+  article: ApiArticle;
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
+const ArticleIndexCard: React.FC<ArticleCardProps> = ({ article }) => {
   return (
     <Link
       href={`/articles/${article.id}`}
@@ -30,7 +30,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
             {article.category.name}
           </span>
           <span className="text-gray-500 text-xs">
-            {format(new Date(article.createdAt), 'yyyy年MM月dd日', {
+            {format(article.createdAt, 'yyyy年MM月dd日', {
               locale: ja,
             })}
           </span>
@@ -42,4 +42,4 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
   );
 };
 
-export default ArticleCard;
+export default ArticleIndexCard;

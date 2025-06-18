@@ -1,6 +1,6 @@
 'use client';
 
-import ApiCategory from '@/api/ApiCategory';
+import ApiAdminCategory from '@/api/ApiAdminCategory';
 import { AdminCreateCategory201ResponseCategory } from '@/api/client';
 import { Actions } from '@/components/admin/Actions';
 import { CategoryCreateModal } from '@/components/admin/CategoryCreateModal';
@@ -30,7 +30,7 @@ export default function CategoriesPage() {
   const fetchData = async (page: number, limit: number, search: string) => {
     setLoading(true);
     try {
-      const response = await ApiCategory.adminGetCategories(
+      const response = await ApiAdminCategory.adminGetCategories(
         page,
         limit,
         search
@@ -79,7 +79,7 @@ export default function CategoriesPage() {
     setSelectedRowKeys([]);
 
     try {
-      const response = await ApiCategory.adminDeleteCategories({ ids });
+      const response = await ApiAdminCategory.adminDeleteCategories({ ids });
       if (response.status !== 200) {
         toast.error(response?.data?.message || 'Failed to delete categories.', {
           position: 'bottom-right',

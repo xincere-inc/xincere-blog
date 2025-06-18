@@ -1,6 +1,6 @@
 'use client';
 
-import ApiTag from '@/api/ApiTag';
+import ApiAdminTag from '@/api/ApiAdminTag';
 import { AdminCreateTag201ResponseTag } from '@/api/client';
 import { Actions } from '@/components/admin/Actions';
 import { SearchBar } from '@/components/admin/SearchBar';
@@ -30,7 +30,7 @@ export default function TagsPage() {
   const fetchData = async (page: number, limit: number, search: string) => {
     setLoading(true);
     try {
-      const response = await ApiTag.adminGetTags(page, limit, search);
+      const response = await ApiAdminTag.adminGetTags(page, limit, search);
 
       if (response.status === 200) {
         const tag =
@@ -65,7 +65,7 @@ export default function TagsPage() {
     setSelectedRowKeys([]);
 
     try {
-      const response = await ApiTag.adminDeleteTags({ ids });
+      const response = await ApiAdminTag.adminDeleteTags({ ids });
       if (response.status !== 200) {
         toast.error(response?.data?.message || 'Failed to delete tag.', {
           position: 'bottom-right',

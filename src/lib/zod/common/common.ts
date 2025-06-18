@@ -8,6 +8,12 @@ export const validateUUIDSSchema = z.object({
 });
 
 // Zod schema for validation pagination with search
+export const skipPaginationSchema = z.object({
+  skip: z.coerce.number().min(0).default(0),
+  take: z.coerce.number().min(1).max(100).default(5),
+});
+
+// Zod schema for validation pagination with search
 export const paginationWithSearchSchema = z.object({
   page: z
     .number()

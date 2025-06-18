@@ -1,6 +1,6 @@
 'use client';
 
-import ApiCategory from '@/api/ApiCategory';
+import ApiCategory from '@/api/ApiAdminCategory';
 import InputField from '@/components/inputs/InputField';
 import '@ant-design/v5-patch-for-react-19';
 import { Alert, Button, Col, Modal, Row } from 'antd';

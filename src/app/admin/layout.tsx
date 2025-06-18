@@ -27,17 +27,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Providers>
-          <AntdRegistry>
-            <AdminLayout>{children}</AdminLayout>
-          </AntdRegistry>
-        </Providers>
-        <ToastContainer />
-      </body>
-    </html>
+    <Providers>
+      <AntdRegistry>
+        <AdminLayout>{children}</AdminLayout>
+      </AntdRegistry>
+      <ToastContainer />
+    </Providers>
   );
 }
