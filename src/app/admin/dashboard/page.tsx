@@ -7,7 +7,7 @@ export default async function DashboardPage() {
   const user = session?.user;
   return (
     <>
-      <div>Welcome to dashboard - {user?.name} </div>
+      <div>Welcome to dashboard - {user?.firstName} </div>
       <br />
       <Link href="/change-password">Change-password</Link>
       <br />

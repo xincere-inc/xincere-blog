@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { FaFacebook, FaGithub, FaLinkedin } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 
@@ -40,12 +41,12 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  href="/contacts"
                   className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
                 >
                   お問い合わせ
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
