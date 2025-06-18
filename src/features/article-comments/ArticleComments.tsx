@@ -1,6 +1,8 @@
 'use client';
 
+import ApiCommentArticle from '@/api/ApiCommentArticle';
 import { useSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -16,6 +18,8 @@ interface CustomSession {
 }
 
 export default function ArticleComments() {
+  const params = useParams<{ id: string }>();
+
   const { data: session } = useSession() as { data: CustomSession | null };
 
   // State for form fields
@@ -70,16 +74,27 @@ export default function ArticleComments() {
 
     setSubmitting(true);
     try {
-      // TODO: Replace with API call (e.g., ApiArticle.submitComment)
-      console.log('Submitting comment:', formData);
-      toast.success('コメントが投稿されました！', {
-        position: 'bottom-right',
+      const response = await ApiCommentArticle.postComment({
+        articleId: Number(params.id),
+        content: formData.comment,
+        email: formData.email,
+        name: formData.name,
       });
-      // Reset comment field after submission
-      setFormData((prev) => ({
-        ...prev,
-        comment: '',
-      }));
+
+      if (response.status === 201) {
+        // Reset comment field after submission
+        setFormData((prev) => ({
+          ...prev,
+          comment: '',
+        }));
+        toast.success(response.data.message || 'Comment posted successfully', {
+          position: 'bottom-right',
+        });
+      } else {
+        toast.error(response.data.message || 'Failed to create tag', {
+          position: 'bottom-right',
+        });
+      }
     } catch (error) {
       console.error('Error submitting comment:', error);
       toast.error('コメントの投稿に失敗しました。', {
