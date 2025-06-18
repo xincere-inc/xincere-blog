@@ -6,7 +6,6 @@ import articleCardData from '@/data/articleCardData'; // articleCardDataをイ�
 import Image from 'next/image';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 export const dynamic = 'force-static';
