@@ -23,8 +23,8 @@ const ArticleDetailPage = async ({ params }: { params: { id: string } }) => {
   const article = await prisma.article.findUnique({
     where: {
       id: Number(params.id),
-    }
-  })
+    },
+  });
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 mt-8">
