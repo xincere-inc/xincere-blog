@@ -22,7 +22,7 @@ export function UserSearchBar({
         placeholder="Search users"
         value={searchText}
         onChange={onSearchChange}
-        style={{ width: 300 }}
+        className="!w-64"
         prefix={<SearchOutlined />}
       />
       <div>

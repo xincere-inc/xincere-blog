@@ -1,6 +1,8 @@
 import {
+  AppstoreAddOutlined,
   DashboardOutlined,
   SettingOutlined,
+  TagsOutlined,
   UserOutlined,
   ZhihuOutlined,
 } from '@ant-design/icons';
@@ -30,6 +32,16 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       label: <Link href="/admin/users">Users</Link>,
     },
     {
+      key: '/categories',
+      icon: <AppstoreAddOutlined />,
+      label: <Link href="/admin/categories">Categories</Link>,
+    },
+    {
+      key: '/tags',
+      icon: <TagsOutlined />,
+      label: <Link href="/admin/tags">Tags</Link>,
+    },
+    {
       key: '/articles',
       icon: <ZhihuOutlined />,
       label: <Link href="/admin/articles">記事</Link>,
@@ -46,14 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       trigger={null}
       collapsible
       collapsed={collapsed}
-      style={{
-        height: '100vh', // Make it full height
-        position: 'fixed', // Stick it to the left side
-        left: 0,
-        top: 0,
-        bottom: 0,
-        overflow: 'auto', // Allow scrolling if content overflows
-      }}
+      className="h-screen !fixed left-0 top-0 bottom-0 overflow-auto"
     >
       <div className="logo text-white text-center font-bold p-4">XBlog</div>
       <Menu

@@ -1,6 +1,6 @@
 'use client';
-import { AdminGetUsers200ResponseDataInner } from '@/api/client';
 import ApiAdminUsers from '@/api/ApiAdminUsers';
+import { AdminGetUsers200ResponseDataInner } from '@/api/client';
 import { Table } from 'antd';
 import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
@@ -260,7 +260,7 @@ export default function UserTable() {
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: true }}
-        style={{ width: '100%' }}
+        className="w-full"
       />
 
       <UserCreateModal

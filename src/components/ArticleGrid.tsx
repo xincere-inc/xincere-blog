@@ -9,19 +9,13 @@ import { toast } from 'react-toastify';
 import ArticleIndexCard from './ArticleIndexCard';
 
 interface ArticleGridProps {
-  articles: ApiArticleType[];
   initialCategories: Category[];
 }
 
-const ArticleGrid: React.FC<ArticleGridProps> = ({
-  articles: initialArticles,
-  initialCategories,
-}) => {
+const ArticleGrid: React.FC<ArticleGridProps> = ({ initialCategories }) => {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [activeTab, setActiveTab] = useState<string>('all');
-  const [articles, setArticles] = useState<ApiArticleType[] | []>(
-    initialArticles || []
-  );
+  const [articles, setArticles] = useState<ApiArticleType[] | []>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
@@ -304,25 +298,23 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
           ))}
         </div>
 
-        {showRightScroll && (
-          <button
-            onClick={() => scrollTabs('right')}
-            disabled={loading}
-            aria-label="Load more categories"
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-green-800 rounded-full hover:bg-primary"
+        <button
+          onClick={() => scrollTabs('right')}
+          disabled={loading}
+          aria-label="Load more categories"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-green-800 rounded-full hover:bg-primary"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            stroke="#fff"
+            strokeWidth="2"
+            fill="none"
           >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              stroke="#fff"
-              strokeWidth="2"
-              fill="none"
-            >
-              <path d="M9 6l6 6-6 6" />
-            </svg>
-          </button>
-        )}
+            <path d="M9 6l6 6-6 6" />
+          </svg>
+        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
