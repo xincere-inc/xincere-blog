@@ -1,5 +1,5 @@
 'use client';
-import TagApi from '@/api/TagApi';
+import ApiTag from '@/api/ApiTag';
 import InputField from '@/components/inputs/InputField';
 import { Tag } from '@/types/admin/tag/tag';
 import '@ant-design/v5-patch-for-react-19';
@@ -56,7 +56,7 @@ export function TagEditModal({
     if (!tag) return;
     setLoading(true);
     try {
-      const response = await TagApi.adminUpdateTag({
+      const response = await ApiTag.adminUpdateTag({
         id: tag.id,
         name: values.name,
       });

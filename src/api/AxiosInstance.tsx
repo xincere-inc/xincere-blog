@@ -8,7 +8,7 @@ export const axiosInstance = axios.create({
 // 共通のAPI Factory引数
 export const commonApiFactoryArgs = [
   {
-    basePath: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000',
+    basePath: process.env.NEXT_PUBLIC_API_URL ?? 'https://localhost:3000',
   } as Configuration,
   undefined,
   axiosInstance,

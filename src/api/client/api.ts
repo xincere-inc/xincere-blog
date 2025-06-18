@@ -148,6 +148,88 @@ export interface AdminCreateCategoryRequest {
 /**
  *
  * @export
+ * @interface AdminCreateTag201Response
+ */
+export interface AdminCreateTag201Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateTag201Response
+   */
+  message?: string;
+  /**
+   *
+   * @type {AdminCreateTag201ResponseTag}
+   * @memberof AdminCreateTag201Response
+   */
+  tag?: AdminCreateTag201ResponseTag;
+}
+/**
+ *
+ * @export
+ * @interface AdminCreateTag201ResponseTag
+ */
+export interface AdminCreateTag201ResponseTag {
+  /**
+   * The unique identifier for the tag.
+   * @type {number}
+   * @memberof AdminCreateTag201ResponseTag
+   */
+  id?: number;
+  /**
+   * The name of the tag.
+   * @type {string}
+   * @memberof AdminCreateTag201ResponseTag
+   */
+  name?: string;
+  /**
+   * The date and time when the tag was created.
+   * @type {string}
+   * @memberof AdminCreateTag201ResponseTag
+   */
+  createdAt?: string;
+  /**
+   * The date and time when the tag was last updated.
+   * @type {string}
+   * @memberof AdminCreateTag201ResponseTag
+   */
+  updatedAt?: string;
+  /**
+   * The date and time when the tag was deleted (optional).
+   * @type {string}
+   * @memberof AdminCreateTag201ResponseTag
+   */
+  deletedAt?: string | null;
+}
+/**
+ *
+ * @export
+ * @interface AdminCreateTag400Response
+ */
+export interface AdminCreateTag400Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateTag400Response
+   */
+  error?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminCreateTagRequest
+ */
+export interface AdminCreateTagRequest {
+  /**
+   * The unique name of the tag.
+   * @type {string}
+   * @memberof AdminCreateTagRequest
+   */
+  name: string;
+}
+/**
+ *
+ * @export
  * @interface AdminCreateUser400Response
  */
 export interface AdminCreateUser400Response {
@@ -357,6 +439,62 @@ export interface AdminGetCategories200ResponsePagination {
    *
    * @type {number}
    * @memberof AdminGetCategories200ResponsePagination
+   */
+  totalPages?: number;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetTags200Response
+ */
+export interface AdminGetTags200Response {
+  /**
+   *
+   * @type {Array<AdminCreateTag201ResponseTag>}
+   * @memberof AdminGetTags200Response
+   */
+  data?: Array<AdminCreateTag201ResponseTag>;
+  /**
+   *
+   * @type {AdminGetTags200ResponsePagination}
+   * @memberof AdminGetTags200Response
+   */
+  pagination?: AdminGetTags200ResponsePagination;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetTags200ResponsePagination
+ */
+export interface AdminGetTags200ResponsePagination {
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetTags200ResponsePagination
+   */
+  page?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetTags200ResponsePagination
+   */
+  limit?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetTags200ResponsePagination
+   */
+  showPerPage?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetTags200ResponsePagination
+   */
+  totalTags?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetTags200ResponsePagination
    */
   totalPages?: number;
 }
@@ -583,6 +721,44 @@ export interface AdminUpdateCategoryRequest {
    * @memberof AdminUpdateCategoryRequest
    */
   description?: string | null;
+}
+/**
+ *
+ * @export
+ * @interface AdminUpdateTag200Response
+ */
+export interface AdminUpdateTag200Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateTag200Response
+   */
+  message?: string;
+  /**
+   *
+   * @type {AdminCreateTag201ResponseTag}
+   * @memberof AdminUpdateTag200Response
+   */
+  tag?: AdminCreateTag201ResponseTag;
+}
+/**
+ *
+ * @export
+ * @interface AdminUpdateTagRequest
+ */
+export interface AdminUpdateTagRequest {
+  /**
+   * The ID of the tag to update.
+   * @type {number}
+   * @memberof AdminUpdateTagRequest
+   */
+  id: number;
+  /**
+   * The name of the tag.
+   * @type {string}
+   * @memberof AdminUpdateTagRequest
+   */
+  name?: string;
 }
 /**
  *
@@ -1328,6 +1504,64 @@ export const AdminApiAxiosParamCreator = function (
       };
     },
     /**
+     * Creates a new tag with a unique name.
+     * @summary Create a new tag
+     * @param {AdminCreateTagRequest} adminCreateTagRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminCreateTag: async (
+      adminCreateTagRequest: AdminCreateTagRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminCreateTagRequest' is not null or undefined
+      assertParamExists(
+        'adminCreateTag',
+        'adminCreateTagRequest',
+        adminCreateTagRequest
+      );
+      const localVarPath = `/api/admin/tags/create-tag`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminCreateTagRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
      * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
      * @summary Register a new user
      * @param {AdminCreateUserRequest} adminCreateUserRequest
@@ -1399,6 +1633,64 @@ export const AdminApiAxiosParamCreator = function (
         adminDeleteCategoriesRequest
       );
       const localVarPath = `/api/admin/categories/delete-category`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'DELETE',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminDeleteCategoriesRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Deletes tags by their IDs (soft delete, sets deletedAt).
+     * @summary Delete tags by IDs
+     * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminDeleteTags: async (
+      adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminDeleteCategoriesRequest' is not null or undefined
+      assertParamExists(
+        'adminDeleteTags',
+        'adminDeleteCategoriesRequest',
+        adminDeleteCategoriesRequest
+      );
+      const localVarPath = `/api/admin/tags/delete-tag`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -1559,6 +1851,71 @@ export const AdminApiAxiosParamCreator = function (
       };
     },
     /**
+     * Retrieves tags from the database with pagination and optional search using query parameters.
+     * @summary Fetch tags with pagination and search
+     * @param {number} page The page number for pagination.
+     * @param {number} limit The number of tags to return per page.
+     * @param {string} [search] Optional search term to filter tags by name.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminGetTags: async (
+      page: number,
+      limit: number,
+      search?: string,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'page' is not null or undefined
+      assertParamExists('adminGetTags', 'page', page);
+      // verify required parameter 'limit' is not null or undefined
+      assertParamExists('adminGetTags', 'limit', limit);
+      const localVarPath = `/api/admin/tags/get-tags`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      if (page !== undefined) {
+        localVarQueryParameter['page'] = page;
+      }
+
+      if (limit !== undefined) {
+        localVarQueryParameter['limit'] = limit;
+      }
+
+      if (search !== undefined) {
+        localVarQueryParameter['search'] = search;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
      * Retrieves users from the database with pagination and optional search.
      * @summary Fetch users with pagination and search
      * @param {AdminGetUsersRequest} adminGetUsersRequest
@@ -1671,6 +2028,64 @@ export const AdminApiAxiosParamCreator = function (
       };
     },
     /**
+     * Updates details of an existing tag based on the provided tag ID.
+     * @summary Update tag details
+     * @param {AdminUpdateTagRequest} adminUpdateTagRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUpdateTag: async (
+      adminUpdateTagRequest: AdminUpdateTagRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminUpdateTagRequest' is not null or undefined
+      assertParamExists(
+        'adminUpdateTag',
+        'adminUpdateTagRequest',
+        adminUpdateTagRequest
+      );
+      const localVarPath = `/api/admin/tags/update-tag`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'PUT',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminUpdateTagRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
      * Update details of an existing user based on the provided user ID.
      * @summary Update user details
      * @param {AdminUpdateUserRequest} adminUpdateUserRequest
@@ -1769,6 +2184,39 @@ export const AdminApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
+     * Creates a new tag with a unique name.
+     * @summary Create a new tag
+     * @param {AdminCreateTagRequest} adminCreateTagRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminCreateTag(
+      adminCreateTagRequest: AdminCreateTagRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminCreateTag201Response>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.adminCreateTag(
+        adminCreateTagRequest,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminCreateTag']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
      * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
      * @summary Register a new user
      * @param {AdminCreateUserRequest} adminCreateUserRequest
@@ -1819,6 +2267,36 @@ export const AdminApiFp = function (configuration?: Configuration) {
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
         operationServerMap['AdminApi.adminDeleteCategories']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Deletes tags by their IDs (soft delete, sets deletedAt).
+     * @summary Delete tags by IDs
+     * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminDeleteTags(
+      adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.adminDeleteTags(
+        adminDeleteCategoriesRequest,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminDeleteTags']?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -1901,6 +2379,45 @@ export const AdminApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
+     * Retrieves tags from the database with pagination and optional search using query parameters.
+     * @summary Fetch tags with pagination and search
+     * @param {number} page The page number for pagination.
+     * @param {number} limit The number of tags to return per page.
+     * @param {string} [search] Optional search term to filter tags by name.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminGetTags(
+      page: number,
+      limit: number,
+      search?: string,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminGetTags200Response>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetTags(
+        page,
+        limit,
+        search,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminGetTags']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
      * Retrieves users from the database with pagination and optional search.
      * @summary Fetch users with pagination and search
      * @param {AdminGetUsersRequest} adminGetUsersRequest
@@ -1957,6 +2474,39 @@ export const AdminApiFp = function (configuration?: Configuration) {
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
         operationServerMap['AdminApi.adminUpdateCategory']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Updates details of an existing tag based on the provided tag ID.
+     * @summary Update tag details
+     * @param {AdminUpdateTagRequest} adminUpdateTagRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminUpdateTag(
+      adminUpdateTagRequest: AdminUpdateTagRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminUpdateTag200Response>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateTag(
+        adminUpdateTagRequest,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminUpdateTag']?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -2030,6 +2580,21 @@ export const AdminApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     * Creates a new tag with a unique name.
+     * @summary Create a new tag
+     * @param {AdminCreateTagRequest} adminCreateTagRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminCreateTag(
+      adminCreateTagRequest: AdminCreateTagRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminCreateTag201Response> {
+      return localVarFp
+        .adminCreateTag(adminCreateTagRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
      * @summary Register a new user
      * @param {AdminCreateUserRequest} adminCreateUserRequest
@@ -2057,6 +2622,21 @@ export const AdminApiFactory = function (
     ): AxiosPromise<Success> {
       return localVarFp
         .adminDeleteCategories(adminDeleteCategoriesRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     * Deletes tags by their IDs (soft delete, sets deletedAt).
+     * @summary Delete tags by IDs
+     * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminDeleteTags(
+      adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<Success> {
+      return localVarFp
+        .adminDeleteTags(adminDeleteCategoriesRequest, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -2094,6 +2674,25 @@ export const AdminApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     * Retrieves tags from the database with pagination and optional search using query parameters.
+     * @summary Fetch tags with pagination and search
+     * @param {number} page The page number for pagination.
+     * @param {number} limit The number of tags to return per page.
+     * @param {string} [search] Optional search term to filter tags by name.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminGetTags(
+      page: number,
+      limit: number,
+      search?: string,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminGetTags200Response> {
+      return localVarFp
+        .adminGetTags(page, limit, search, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * Retrieves users from the database with pagination and optional search.
      * @summary Fetch users with pagination and search
      * @param {AdminGetUsersRequest} adminGetUsersRequest
@@ -2121,6 +2720,21 @@ export const AdminApiFactory = function (
     ): AxiosPromise<AdminUpdateCategory200Response> {
       return localVarFp
         .adminUpdateCategory(adminUpdateCategoryRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     * Updates details of an existing tag based on the provided tag ID.
+     * @summary Update tag details
+     * @param {AdminUpdateTagRequest} adminUpdateTagRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUpdateTag(
+      adminUpdateTagRequest: AdminUpdateTagRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminUpdateTag200Response> {
+      return localVarFp
+        .adminUpdateTag(adminUpdateTagRequest, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -2166,6 +2780,23 @@ export class AdminApi extends BaseAPI {
   }
 
   /**
+   * Creates a new tag with a unique name.
+   * @summary Create a new tag
+   * @param {AdminCreateTagRequest} adminCreateTagRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminCreateTag(
+    adminCreateTagRequest: AdminCreateTagRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminCreateTag(adminCreateTagRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
    * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
    * @summary Register a new user
    * @param {AdminCreateUserRequest} adminCreateUserRequest
@@ -2196,6 +2827,23 @@ export class AdminApi extends BaseAPI {
   ) {
     return AdminApiFp(this.configuration)
       .adminDeleteCategories(adminDeleteCategoriesRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Deletes tags by their IDs (soft delete, sets deletedAt).
+   * @summary Delete tags by IDs
+   * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminDeleteTags(
+    adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminDeleteTags(adminDeleteCategoriesRequest, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -2238,6 +2886,27 @@ export class AdminApi extends BaseAPI {
   }
 
   /**
+   * Retrieves tags from the database with pagination and optional search using query parameters.
+   * @summary Fetch tags with pagination and search
+   * @param {number} page The page number for pagination.
+   * @param {number} limit The number of tags to return per page.
+   * @param {string} [search] Optional search term to filter tags by name.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminGetTags(
+    page: number,
+    limit: number,
+    search?: string,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminGetTags(page, limit, search, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
    * Retrieves users from the database with pagination and optional search.
    * @summary Fetch users with pagination and search
    * @param {AdminGetUsersRequest} adminGetUsersRequest
@@ -2268,6 +2937,23 @@ export class AdminApi extends BaseAPI {
   ) {
     return AdminApiFp(this.configuration)
       .adminUpdateCategory(adminUpdateCategoryRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Updates details of an existing tag based on the provided tag ID.
+   * @summary Update tag details
+   * @param {AdminUpdateTagRequest} adminUpdateTagRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminUpdateTag(
+    adminUpdateTagRequest: AdminUpdateTagRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminUpdateTag(adminUpdateTagRequest, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
