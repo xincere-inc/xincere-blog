@@ -15,7 +15,7 @@ interface CustomSession {
   user?: LoggedInUserInfo;
 }
 
-export default function ArticleReviewForm() {
+export default function ArticleComments() {
   const { data: session } = useSession() as { data: CustomSession | null };
 
   // State for form fields

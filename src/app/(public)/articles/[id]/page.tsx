@@ -3,7 +3,7 @@ import AuthorHeader from '@/components/AuthorHeader';
 import Breadcrumb from '@/components/Breadcrumb';
 import ContactCTA from '@/components/ContactCTA'; // ContactCTAをインポート
 import articleCardData from '@/data/articleCardData'; // articleCardDataをインポート
-import ArticleReviewForm from '@/features/article-review-form/ArticleReviewForm';
+import ArticleComments from '@/features/article-comments/ArticleComments';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -262,7 +262,7 @@ const ArticleDetailPage = () => {
           </div>
         </div>
 
-        <ArticleReviewForm />
+        <ArticleComments />
       </div>
       {/* サイドバー */}
       <div className="w-full lg:w-1/3">

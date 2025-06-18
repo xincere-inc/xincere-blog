@@ -310,6 +310,19 @@ export interface AdminDeleteCategoriesRequest {
 /**
  * 
  * @export
+ * @interface AdminDeleteCommentsRequest
+ */
+export interface AdminDeleteCommentsRequest {
+    /**
+     * The IDs of the comments to soft-delete.
+     * @type {Array<number>}
+     * @memberof AdminDeleteCommentsRequest
+     */
+    'ids': Array<number>;
+}
+/**
+ * 
+ * @export
  * @interface AdminDeleteUsersRequest
  */
 export interface AdminDeleteUsersRequest {
@@ -1310,6 +1323,98 @@ export interface GetCategories200Response {
 /**
  * 
  * @export
+ * @interface GetComments200Response
+ */
+export interface GetComments200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof GetComments200Response
+     */
+    'message'?: string;
+    /**
+     * The total number of non-deleted comments for the article.
+     * @type {number}
+     * @memberof GetComments200Response
+     */
+    'total'?: number;
+    /**
+     * 
+     * @type {Array<GetComments200ResponseCommentsInner>}
+     * @memberof GetComments200Response
+     */
+    'comments'?: Array<GetComments200ResponseCommentsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface GetComments200ResponseCommentsInner
+ */
+export interface GetComments200ResponseCommentsInner {
+    /**
+     * The unique identifier for the comment.
+     * @type {number}
+     * @memberof GetComments200ResponseCommentsInner
+     */
+    'id'?: number;
+    /**
+     * The ID of the associated article.
+     * @type {number}
+     * @memberof GetComments200ResponseCommentsInner
+     */
+    'articleId'?: number;
+    /**
+     * The ID of the associated user (optional).
+     * @type {string}
+     * @memberof GetComments200ResponseCommentsInner
+     */
+    'userId'?: string | null;
+    /**
+     * The name of the commenter.
+     * @type {string}
+     * @memberof GetComments200ResponseCommentsInner
+     */
+    'name'?: string;
+    /**
+     * The email address of the commenter (not publicly displayed).
+     * @type {string}
+     * @memberof GetComments200ResponseCommentsInner
+     */
+    'email'?: string;
+    /**
+     * The content of the comment.
+     * @type {string}
+     * @memberof GetComments200ResponseCommentsInner
+     */
+    'content'?: string;
+    /**
+     * The status of the comment (e.g., pending, approved).
+     * @type {string}
+     * @memberof GetComments200ResponseCommentsInner
+     */
+    'status'?: string;
+    /**
+     * The date and time when the comment was created.
+     * @type {string}
+     * @memberof GetComments200ResponseCommentsInner
+     */
+    'createdAt'?: string;
+    /**
+     * The date and time when the comment was last updated.
+     * @type {string}
+     * @memberof GetComments200ResponseCommentsInner
+     */
+    'updatedAt'?: string;
+    /**
+     * The date and time when the comment was soft-deleted (optional).
+     * @type {string}
+     * @memberof GetComments200ResponseCommentsInner
+     */
+    'deletedAt'?: string | null;
+}
+/**
+ * 
+ * @export
  * @interface InternalServerError
  */
 export interface InternalServerError {
@@ -1344,6 +1449,56 @@ export interface NotFoundError {
      * @memberof NotFoundError
      */
     'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface PostComment201Response
+ */
+export interface PostComment201Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof PostComment201Response
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {GetComments200ResponseCommentsInner}
+     * @memberof PostComment201Response
+     */
+    'comment'?: GetComments200ResponseCommentsInner;
+}
+/**
+ * 
+ * @export
+ * @interface PostCommentRequest
+ */
+export interface PostCommentRequest {
+    /**
+     * The ID of the article to comment on.
+     * @type {number}
+     * @memberof PostCommentRequest
+     */
+    'articleId': number;
+    /**
+     * The name of the commenter.
+     * @type {string}
+     * @memberof PostCommentRequest
+     */
+    'name': string;
+    /**
+     * The email address of the commenter (not publicly displayed).
+     * @type {string}
+     * @memberof PostCommentRequest
+     */
+    'email': string;
+    /**
+     * The content of the comment.
+     * @type {string}
+     * @memberof PostCommentRequest
+     */
+    'content': string;
 }
 /**
  * 
@@ -3259,6 +3414,287 @@ export class CategoriesApi extends BaseAPI {
      */
     public getCategories(skip: number, take: number, options?: RawAxiosRequestConfig) {
         return CategoriesApiFp(this.configuration).getCategories(skip, take, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * CommentsApi - axios parameter creator
+ * @export
+ */
+export const CommentsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Allows administrators to soft-delete comments by setting deletedAt. Requires admin authentication.
+         * @summary Delete comments by IDs
+         * @param {AdminDeleteCommentsRequest} adminDeleteCommentsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteComments: async (adminDeleteCommentsRequest: AdminDeleteCommentsRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminDeleteCommentsRequest' is not null or undefined
+            assertParamExists('adminDeleteComments', 'adminDeleteCommentsRequest', adminDeleteCommentsRequest)
+            const localVarPath = `/api/admin/comments/delete`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminDeleteCommentsRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retrieves comments for a specific article with pagination (10 comments per page). Excludes comments where deletedAt is not null. Includes all comments regardless of status.
+         * @summary Fetch comments for an article
+         * @param {number} articleId The ID of the article to fetch comments for.
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of comments to return per page (fixed at 10).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getComments: async (articleId: number, page: number, limit: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'articleId' is not null or undefined
+            assertParamExists('getComments', 'articleId', articleId)
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('getComments', 'page', page)
+            // verify required parameter 'limit' is not null or undefined
+            assertParamExists('getComments', 'limit', limit)
+            const localVarPath = `/api/comments`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (articleId !== undefined) {
+                localVarQueryParameter['articleId'] = articleId;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows authenticated or unauthenticated users to post a comment on an article. Requires name, email, and content. Associates the comment with the authenticated user if logged in.
+         * @summary Post a comment on an article
+         * @param {PostCommentRequest} postCommentRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postComment: async (postCommentRequest: PostCommentRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'postCommentRequest' is not null or undefined
+            assertParamExists('postComment', 'postCommentRequest', postCommentRequest)
+            const localVarPath = `/api/comments`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(postCommentRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * CommentsApi - functional programming interface
+ * @export
+ */
+export const CommentsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = CommentsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Allows administrators to soft-delete comments by setting deletedAt. Requires admin authentication.
+         * @summary Delete comments by IDs
+         * @param {AdminDeleteCommentsRequest} adminDeleteCommentsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDeleteComments(adminDeleteCommentsRequest: AdminDeleteCommentsRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDeleteComments(adminDeleteCommentsRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CommentsApi.adminDeleteComments']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Retrieves comments for a specific article with pagination (10 comments per page). Excludes comments where deletedAt is not null. Includes all comments regardless of status.
+         * @summary Fetch comments for an article
+         * @param {number} articleId The ID of the article to fetch comments for.
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of comments to return per page (fixed at 10).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getComments(articleId: number, page: number, limit: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetComments200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getComments(articleId, page, limit, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CommentsApi.getComments']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows authenticated or unauthenticated users to post a comment on an article. Requires name, email, and content. Associates the comment with the authenticated user if logged in.
+         * @summary Post a comment on an article
+         * @param {PostCommentRequest} postCommentRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postComment(postCommentRequest: PostCommentRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostComment201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postComment(postCommentRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CommentsApi.postComment']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * CommentsApi - factory interface
+ * @export
+ */
+export const CommentsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = CommentsApiFp(configuration)
+    return {
+        /**
+         * Allows administrators to soft-delete comments by setting deletedAt. Requires admin authentication.
+         * @summary Delete comments by IDs
+         * @param {AdminDeleteCommentsRequest} adminDeleteCommentsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteComments(adminDeleteCommentsRequest: AdminDeleteCommentsRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.adminDeleteComments(adminDeleteCommentsRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves comments for a specific article with pagination (10 comments per page). Excludes comments where deletedAt is not null. Includes all comments regardless of status.
+         * @summary Fetch comments for an article
+         * @param {number} articleId The ID of the article to fetch comments for.
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of comments to return per page (fixed at 10).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getComments(articleId: number, page: number, limit: number, options?: RawAxiosRequestConfig): AxiosPromise<GetComments200Response> {
+            return localVarFp.getComments(articleId, page, limit, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows authenticated or unauthenticated users to post a comment on an article. Requires name, email, and content. Associates the comment with the authenticated user if logged in.
+         * @summary Post a comment on an article
+         * @param {PostCommentRequest} postCommentRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postComment(postCommentRequest: PostCommentRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostComment201Response> {
+            return localVarFp.postComment(postCommentRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * CommentsApi - object-oriented interface
+ * @export
+ * @class CommentsApi
+ * @extends {BaseAPI}
+ */
+export class CommentsApi extends BaseAPI {
+    /**
+     * Allows administrators to soft-delete comments by setting deletedAt. Requires admin authentication.
+     * @summary Delete comments by IDs
+     * @param {AdminDeleteCommentsRequest} adminDeleteCommentsRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CommentsApi
+     */
+    public adminDeleteComments(adminDeleteCommentsRequest: AdminDeleteCommentsRequest, options?: RawAxiosRequestConfig) {
+        return CommentsApiFp(this.configuration).adminDeleteComments(adminDeleteCommentsRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Retrieves comments for a specific article with pagination (10 comments per page). Excludes comments where deletedAt is not null. Includes all comments regardless of status.
+     * @summary Fetch comments for an article
+     * @param {number} articleId The ID of the article to fetch comments for.
+     * @param {number} page The page number for pagination.
+     * @param {number} limit The number of comments to return per page (fixed at 10).
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CommentsApi
+     */
+    public getComments(articleId: number, page: number, limit: number, options?: RawAxiosRequestConfig) {
+        return CommentsApiFp(this.configuration).getComments(articleId, page, limit, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows authenticated or unauthenticated users to post a comment on an article. Requires name, email, and content. Associates the comment with the authenticated user if logged in.
+     * @summary Post a comment on an article
+     * @param {PostCommentRequest} postCommentRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CommentsApi
+     */
+    public postComment(postCommentRequest: PostCommentRequest, options?: RawAxiosRequestConfig) {
+        return CommentsApiFp(this.configuration).postComment(postCommentRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
