@@ -134,6 +134,21 @@ export interface AdminGetArticles200Response {
   };
 }
 
+export interface AdminUpdateArticle200Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateArticle200Response
+   */
+  message?: string;
+  /**
+   *
+   * @type {AdminUpdateArticle200ResponseArticle}
+   * @memberof AdminUpdateArticle200Response
+   */
+  article?: AdminUpdateArticle200Response;
+}
+
 /**
  * @export
  * @interface AdminGetArticles200ResponseDataInner
@@ -192,6 +207,11 @@ export interface AdminGetArticles200ResponseDataInner {
    * @memberof AdminGetArticle200ResponseDataInner
    */
   tags?: string;
+  /**
+   * @type {string}
+   * @memberof AdminGetArticle200ResponseDataInner
+   */
+  thumbnailUrl?: string;
 }
 
 /**
@@ -1792,6 +1812,39 @@ export const AdminApiFp = function (configuration?: Configuration) {
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
         operationServerMap['AdminApi.adminGetArticles']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Update details of an existing article based on the provided article ID.
+     * @summary Update article details
+     * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest
+     * @param {*} [options]
+     * @throws {RequiredError}
+     */
+    async adminUpdateArticle(
+      adminUpdateArticleRequest: AdminUpdateArticleRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminUpdateArticle200Response>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateArticle(
+        adminUpdateArticleRequest,
+        options
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminUpdateArticle']?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>

@@ -67,7 +67,8 @@ export default function ArticleTable() {
               slug: article.slug || '',
               summary: article.summary || '',
               status: article.status || '',
-              tags: article.tags || ''
+              tags: article.tags || '',
+              thumbnailUrl: article.thumbnailUrl || ''
             })
           ) || [];
 
@@ -327,7 +328,7 @@ export default function ArticleTable() {
         onEdit={updateArticle}
         loading={loading}
         article={article}
-        serverError={serverError}
+        serverError={serverError} authors={[]} categories={[]}
       />
     </div>
   );
