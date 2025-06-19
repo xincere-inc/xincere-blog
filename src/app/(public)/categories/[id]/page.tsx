@@ -2,7 +2,11 @@
 
 import ContactCTA from '@/components/ContactCTA';
 import React, { useState } from 'react';
-import { articles, popularArticles, categories } from '@/data/marketingStrategyData';
+import {
+  articles,
+  popularArticles,
+  categories,
+} from '@/data/marketingStrategyData';
 
 const CategoriesIndex: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,12 +30,12 @@ const CategoriesIndex: React.FC = () => {
   // カテゴリーURLを取得する関数
   const getCategoryUrl = (categoryName: string) => {
     const urlMap: { [key: string]: string } = {
-      'コンテンツ戦略': '/categories/content-strategy',
-      'マーケティング戦略': '/categories/marketing-strategy',
-      'SNSマーケティング': '/categories/sns-marketing',
-      'SEO対策': '/categories/seo',
-      'リードジェネレーション': '/categories/lead-generation',
-      'メール戦略': '/categories/email-strategy',
+      コンテンツ戦略: '/categories/content-strategy',
+      マーケティング戦略: '/categories/marketing-strategy',
+      SNSマーケティング: '/categories/sns-marketing',
+      SEO対策: '/categories/seo',
+      リードジェネレーション: '/categories/lead-generation',
+      メール戦略: '/categories/email-strategy',
     };
     return urlMap[categoryName] || '/categories';
   };

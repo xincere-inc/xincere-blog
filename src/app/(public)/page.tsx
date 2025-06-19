@@ -1,26 +1,55 @@
-import HeroSection from 'src/components/HeroSection';
-import ArticleGrid from 'src/components/ArticleGrid';
-import Sidebar from 'src/components/Sidebar';
-import { popularArticles } from 'src/data/articleData';
 import { prisma } from '@/lib/prisma';
 import { ArticleStatus } from '@prisma/client';
+import ArticleGrid from 'src/components/ArticleGrid';
+import HeroSection from 'src/components/HeroSection';
 import PickUpArticle from 'src/components/PickUpArticle';
+import Sidebar from 'src/components/Sidebar';
 import H2 from 'src/components/organisms/h2';
+import { popularArticles } from 'src/data/articleData';
 
 const HomePage = async () => {
-  const [articles, categories] = await Promise.all([
-    await prisma.article.findMany({
+  const [tabCategories, categories] = await Promise.all([
+    prisma.category.findMany({
+      take: 8,
+      skip: 0,
       where: {
-        status: ArticleStatus.PUBLISHED,
+        articles: {
+          some: {
+            status: ArticleStatus.PUBLISHED,
+            deletedAt: null,
+          },
+        },
       },
-      include: {
-        category: true,
+      orderBy: {
+        createdAt: 'desc',
       },
     }),
-    await prisma.category.findMany({
-      include: {
+    prisma.category.findMany({
+      where: {
+        articles: {
+          some: {
+            status: ArticleStatus.PUBLISHED,
+            deletedAt: null,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
         _count: {
-          select: { articles: { where: { status: ArticleStatus.PUBLISHED } } },
+          select: {
+            articles: {
+              where: {
+                status: ArticleStatus.PUBLISHED,
+                deletedAt: null,
+              },
+            },
+          },
         },
       },
     }),
@@ -54,7 +83,7 @@ const HomePage = async () => {
       <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
         {/* 記事一覧エリア */}
         <div className="w-full lg:w-2/3 xl:w-3/4">
-          <ArticleGrid articles={articles} />
+          <ArticleGrid initialCategories={tabCategories} />
         </div>
 
         {/* サイドバー */}

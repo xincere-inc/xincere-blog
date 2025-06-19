@@ -468,6 +468,709 @@ paths:
                   message:
                     type: string
                     example: Error during registration
+  /api/admin/categories/create-category:
+    post:
+      summary: Create a new category
+      description: Creates a new category with a unique name and slug.
+      operationId: adminCreateCategory
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - slug
+              properties:
+                name:
+                  type: string
+                  description: The name of the category.
+                  example: Technology
+                slug:
+                  type: string
+                  description: The unique slug for the category.
+                  example: technology
+                description:
+                  type: string
+                  description: The description of the category (optional).
+                  example: Articles related to technology and innovation.
+                  nullable: true
+      responses:
+        '201':
+          description: Category created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Created
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The unique identifier for the category.
+                        example: 1
+                      name:
+                        type: string
+                        description: The name of the category.
+                        example: Technology
+                      slug:
+                        type: string
+                        description: The unique slug for the category.
+                        example: technology
+                      description:
+                        type: string
+                        description: The description of the category (optional).
+                        example: Articles related to technology and innovation.
+                        nullable: true
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was created.
+                        example: 2025-06-05T07:55:00Z
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was last updated.
+                        example: 2025-06-05T07:55:00Z
+                      deletedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was deleted (optional).
+                        example: null
+                        nullable: true
+        '400':
+          description: Validation errors or category already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Category already exists with this slug: technology'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/admin/categories/get-category:
+    get:
+      summary: Fetch categories with pagination and search
+      description: Retrieves categories from the database with pagination and optional search using query parameters.
+      operationId: adminGetCategories
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+            default: 1
+          description: The page number for pagination.
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 10
+            default: 10
+          description: The number of categories to return per page.
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+            example: tech
+          description: Optional search term to filter categories by name or description.
+      responses:
+        '200':
+          description: Successfully retrieved categories with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for the category.
+                        name:
+                          type: string
+                          description: The name of the category.
+                        slug:
+                          type: string
+                          description: The unique slug for the category.
+                        description:
+                          type: string
+                          description: The description of the category (optional).
+                          nullable: true
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was created.
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was last updated.
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was deleted (optional).
+                          nullable: true
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 10
+                      showPerPage:
+                        type: integer
+                        example: 10
+                      totalCategories:
+                        type: integer
+                        example: 50
+                      totalPages:
+                        type: integer
+                        example: 5
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/admin/categories/update-category:
+    put:
+      summary: Update category details
+      description: Updates details of an existing category based on the provided category ID.
+      operationId: adminUpdateCategory
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                  description: The ID of the category to update.
+                  example: 1
+                name:
+                  type: string
+                  description: The name of the category.
+                  example: Technology
+                slug:
+                  type: string
+                  description: The unique slug for the category.
+                  example: technology
+                description:
+                  type: string
+                  description: The description of the category (optional).
+                  example: Articles related to technology and innovation.
+                  nullable: true
+      responses:
+        '200':
+          description: Category updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Category updated successfully
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The unique identifier for the category.
+                        example: 1
+                      name:
+                        type: string
+                        description: The name of the category.
+                        example: Technology
+                      slug:
+                        type: string
+                        description: The unique slug for the category.
+                        example: technology
+                      description:
+                        type: string
+                        description: The description of the category (optional).
+                        example: Articles related to technology and innovation.
+                        nullable: true
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was created.
+                        example: 2025-06-05T07:55:00Z
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was last updated.
+                        example: 2025-06-05T07:55:00Z
+                      deletedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the category was deleted (optional).
+                        example: null
+                        nullable: true
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '404':
+          description: Category not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/admin/categories/delete-category:
+    delete:
+      summary: Delete categories by IDs
+      description: Deletes categories by their IDs (soft delete, sets deletedAt).
+      operationId: adminDeleteCategories
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ids
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                  example:
+                    - 1
+                    - 2
+      responses:
+        '200':
+          description: Categories deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '404':
+          description: Some categories not found with the provided IDs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/admin/tags/create-tag:
+    post:
+      summary: Create a new tag
+      description: Creates a new tag with a unique name.
+      operationId: adminCreateTag
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: The unique name of the tag.
+                  example: Tech
+      responses:
+        '201':
+          description: Tag created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Created
+                  tag:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The unique identifier for the tag.
+                        example: 1
+                      name:
+                        type: string
+                        description: The name of the tag.
+                        example: Tech
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the tag was created.
+                        example: 2025-06-05T07:55:00Z
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the tag was last updated.
+                        example: 2025-06-05T07:55:00Z
+                      deletedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the tag was deleted (optional).
+                        example: null
+                        nullable: true
+        '400':
+          description: Validation errors or tag already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Tag already exists with this name: Tech'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/admin/tags/get-tags:
+    get:
+      summary: Fetch tags with pagination and search
+      description: Retrieves tags from the database with pagination and optional search using query parameters.
+      operationId: adminGetTags
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+            default: 1
+          description: The page number for pagination.
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 10
+            default: 10
+          description: The number of tags to return per page.
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+            example: tech
+          description: Optional search term to filter tags by name.
+      responses:
+        '200':
+          description: Successfully retrieved tags with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for the tag.
+                          example: 1
+                        name:
+                          type: string
+                          description: The name of the tag.
+                          example: Tech
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the tag was created.
+                          example: 2025-06-05T07:55:00Z
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the tag was last updated.
+                          example: 2025-06-05T07:55:00Z
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the tag was deleted (optional).
+                          example: null
+                          nullable: true
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 10
+                      showPerPage:
+                        type: integer
+                        example: 10
+                      totalTags:
+                        type: integer
+                        example: 50
+                      totalPages:
+                        type: integer
+                        example: 5
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/admin/tags/update-tag:
+    put:
+      summary: Update tag details
+      description: Updates details of an existing tag based on the provided tag ID.
+      operationId: adminUpdateTag
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                  description: The ID of the tag to update.
+                  example: 1
+                name:
+                  type: string
+                  description: The name of the tag.
+                  example: Tech
+      responses:
+        '200':
+          description: Tag updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Tag updated successfully
+                  tag:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The unique identifier for the tag.
+                        example: 1
+                      name:
+                        type: string
+                        description: The name of the tag.
+                        example: Tech
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the tag was created.
+                        example: 2025-06-05T07:55:00Z
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the tag was last updated.
+                        example: 2025-06-05T07:55:00Z
+                      deletedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the tag was deleted (optional).
+                        example: null
+                        nullable: true
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '404':
+          description: Tag not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/admin/tags/delete-tag:
+    delete:
+      summary: Delete tags by IDs
+      description: Deletes tags by their IDs (soft delete, sets deletedAt).
+      operationId: adminDeleteTags
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ids
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                  example:
+                    - 1
+                    - 2
+      responses:
+        '200':
+          description: Tags deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '404':
+          description: Some tags not found with the provided IDs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/change-password:
     post:
       summary: Change user password
@@ -903,6 +1606,217 @@ paths:
                   error:
                     type: string
                     example: 'User already exists with this email: user@example.com'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/categories:
+    get:
+      summary: Fetch categories with pagination
+      description: Retrieves categories from the database with pagination using skip and take query parameters.
+      operationId: getCategories
+      tags:
+        - Categories
+      parameters:
+        - name: skip
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 0
+            default: 0
+          description: The number of categories to skip for pagination.
+        - name: take
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 5
+            default: 5
+          description: The number of categories to return per request.
+      responses:
+        '200':
+          description: Successfully retrieved categories with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successfully retrieved categories
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for the category.
+                        name:
+                          type: string
+                          description: The name of the category.
+                        slug:
+                          type: string
+                          description: The unique slug for the category.
+                        description:
+                          type: string
+                          nullable: true
+                          description: The description of the category (optional).
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was created.
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the category was last updated.
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          nullable: true
+                          description: The date and time when the category was deleted (optional).
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/articles:
+    get:
+      summary: Fetch articles with pagination
+      description: Retrieves articles from the database with pagination using skip and take query parameters, optionally filtered by category.
+      operationId: getArticles
+      tags:
+        - Articles
+      parameters:
+        - name: skip
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 0
+            default: 0
+          description: The number of articles to skip for pagination.
+        - name: take
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 9
+            default: 9
+          description: The number of articles to return per request.
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 'Technology'
+          description: The name of the category to filter articles by (optional).
+      responses:
+        '200':
+          description: Successfully retrieved articles with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successfully retrieved articles
+                  total:
+                    type: integer
+                    example: 25
+                    description: The total number of articles matching the query.
+                  articles:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for the article.
+                          example: 1
+                        title:
+                          type: string
+                          description: The title of the article.
+                          example: 'Introduction to Machine Learning'
+                        slug:
+                          type: string
+                          description: The unique slug for the article.
+                          example: 'introduction-to-machine-learning'
+                        summary:
+                          type: string
+                          description: A brief summary of the article.
+                          example: 'This article explores the basics of machine learning concepts.'
+                        thumbnailUrl:
+                          type: string
+                          nullable: true
+                          description: The URL of the article's thumbnail image (optional).
+                          example: 'https://example.com/thumbnail.jpg'
+                        status:
+                          type: string
+                          enum: [DRAFT, PUBLISHED, ARCHIVED]
+                          description: The publication status of the article.
+                          example: 'PUBLISHED'
+                        author:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: The unique identifier for the author.
+                              example: 'auth_123'
+                            name:
+                              type: string
+                              description: The name of the author (optional, assuming Author model has a name field).
+                              example: 'John Doe'
+                          description: The author of the article.
+                        category:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: The unique identifier for the category.
+                              example: 1
+                            name:
+                              type: string
+                              description: The name of the category.
+                              example: 'Technology'
+                            slug:
+                              type: string
+                              description: The unique slug for the category.
+                              example: 'technology'
+                          description: The category of the article.
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the article was created.
+                          example: '2025-06-17T08:30:00Z'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the article was last updated.
+                          example: '2025-06-17T08:30:00Z'
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          nullable: true
+                          description: The date and time when the article was deleted (optional).
+                          example: null
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
         '500':
           description: Internal server error
           content:

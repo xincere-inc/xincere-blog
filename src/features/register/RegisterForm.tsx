@@ -1,4 +1,5 @@
 'use client';
+import ApiAuth from '@/api/ApiAuth';
 import { RegisterRequest } from '@/api/client';
 import ApiAuth from '@/api/ApiAuth';
 import InputField from '@/components/inputs/InputField';

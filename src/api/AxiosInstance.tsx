@@ -1,3 +1,4 @@
+import { Configuration } from '@/api/client/configuration';
 import axios from 'axios';
 import { cookies } from 'next/headers';
 import { Configuration } from '@/api/client/configuration';

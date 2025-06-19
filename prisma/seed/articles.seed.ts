@@ -1,5 +1,5 @@
-import { PrismaClient, ArticleStatus } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import { ArticleStatus, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -9,50 +9,46 @@ export async function seedArticles() {
   await prisma.article.deleteMany({});
 
   const author = await prisma.author.findFirst();
+  if (!author) throw new Error('No author found. Please seed authors first.');
 
-  const categories = await prisma.category.findMany({});
+  const categories = await prisma.category.findMany();
+  if (categories.length === 0)
+    throw new Error('No categories found. Please seed categories first.');
 
   const sampleTitle =
     'マイクロサービスアーキテクチャで実現した基幹システムの刷新事例';
   const sampleSummary =
     '従来の一枚岩システムをマイクロサービス化することで、開発効率と運用保守性を大幅に向上させた事例を詳しく解説します。';
   const sampleThumbnailUrl =
-    'https://readdy.ai/api/search-image?query=Software%20development%20team%20working%20on%20microservices%20architecture%20diagram%2C%20modern%20tech%20office%20with%20multiple%20screens%20showing%20system%20design%2C%20professional%20environment%20with%20green%20accents&width=400&height=225&seq=1&orientation=landscape';
+    'https://readdy.ai/api/search-image?query=SEO%20analytics%20dashboard%20on%20computer%20screen%20in%20modern%20office%20setting%2C%20professional%20environment&width=200&height=300&seq=12&orientation=portrait';
 
-  const userArticles = Array.from({ length: 10 }).map(() => {
-    return {
-      authorId: author.id,
-      categoryId: faker.helpers.arrayElement(categories).id,
-      title: sampleTitle,
-      slug: faker.helpers.slugify(faker.lorem.sentence()),
-      summary: sampleSummary,
-      content: faker.lorem.paragraphs(5),
-      thumbnailUrl: sampleThumbnailUrl,
-      status: faker.helpers.arrayElement(Object.values(ArticleStatus)),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+  const articles = categories.flatMap((category) => {
+    return Array.from({ length: 10 }).map(() => {
+      const content = faker.lorem.paragraphs(5, '\n\n');
+      return {
+        authorId: author.id,
+        categoryId: category.id,
+        title: sampleTitle,
+        slug: faker.helpers.slugify(
+          `${faker.lorem.words(3)}-${faker.string.uuid()}`
+        ),
+        summary: sampleSummary,
+        content,
+        markdownContent: `## ${sampleTitle}\n\n${content}`,
+        thumbnailUrl: sampleThumbnailUrl,
+        status: faker.helpers.arrayElement(Object.values(ArticleStatus)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+    });
   });
 
-  const adminArticles = Array.from({ length: 10 }).map(() => {
-    return {
-      authorId: author.id,
-      categoryId: faker.helpers.arrayElement(categories).id,
-      title: sampleTitle,
-      slug: faker.helpers.slugify(faker.lorem.sentence()),
-      summary: sampleSummary,
-      content: faker.lorem.paragraphs(5),
-      thumbnailUrl: sampleThumbnailUrl,
-      status: faker.helpers.arrayElement(Object.values(ArticleStatus)),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-  });
-
-  const articles = [...userArticles, ...adminArticles];
   const result = await prisma.article.createMany({
     data: articles,
+    skipDuplicates: true,
   });
 
-  console.log(`Seeded ${result.count} articles successfully.`);
+  console.log(
+    `✅ Seeded ${result.count} articles across ${categories.length} categories.`
+  );
 }
