@@ -96,8 +96,13 @@ export interface AdminCreateCategory201ResponseCategory {
  * @export
  * @interface AdminCreateCategory400Response
  */
-export interface AdminDeleteArticlesRequest {
-  ids: string[];
+export interface AdminCreateCategory400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminCreateCategory400Response
+     */
+    'error'?: string;
 }
 /**
  * 
@@ -180,87 +185,6 @@ export interface AdminCreateTag201ResponseTag {
      */
     'deletedAt'?: string | null;
 }
-
-export interface AdminUpdateArticle200Response {
-  /**
-   *
-   * @type {string}
-   * @memberof AdminUpdateArticle200Response
-   */
-  message?: string;
-  /**
-   *
-   * @type {AdminUpdateArticle200ResponseArticle}
-   * @memberof AdminUpdateArticle200Response
-   */
-  article?: AdminUpdateArticle200Response;
-}
-
-/**
- * @export
- * @interface AdminGetArticles200ResponseDataInner
- */
-export interface AdminGetArticles200ResponseDataInner {
-  /**
-   *
-   * @type {number}
-   * @memberof AdminGetArticle200ResponseDataInner
-   */
-  id?: number;
-  /**
-   *
-   * @type {string}
-   * @memberof AdminGetArticle200ResponseDataInner
-   */
-  title?: string;
-  /**
-   * @type {array<string>}
-   * @memberof AdminGetArticle200ResponseDataInner
-   */
-  author?: {
-    id: string;
-    name: string;
-    email: string;
-  };
-  /**
-   * @type {array<string>}
-   * @memberof AdminGetArticle200ResponseDataInner
-   */
-  category: {
-    id: number;
-    name: string;
-  };
-  /**
-   *
-   * @type {string}
-   * @memberof AdminGetArticle200ResponseDataInner
-   */
-  slug?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AdminGetArticle200ResponseDataInner
-   */
-  summary?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AdminGetArticle200ResponseDataInner
-   */
-  status?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof AdminGetArticle200ResponseDataInner
-   */
-  tags?: string;
-  /**
-   * @type {string}
-   * @memberof AdminGetArticle200ResponseDataInner
-   */
-  thumbnailUrl?: string;
-}
-
 /**
  * 
  * @export
@@ -1775,615 +1699,695 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * Creates new article
-     * @summary Create new article
-     * @param {AdminCreateArticleRequest} adminCreateArticleRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    adminCreateArticle: async (
-      adminCreateArticleRequest: AdminCreateArticleRequest,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/api/admin/articles/create-article`;
-      assertParamExists(
-        'adminCreateArticles',
-        'adminCreateArticleRequest',
-        adminCreateArticleRequest
-      );
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-      const localVarRequestOptions = {
-        method: 'POST',
-        ...baseOptions,
-        ...options,
-      };
-      localVarHeaderParameter['Content-Type'] = 'application/json';
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        adminCreateArticleRequest,
-        localVarRequestOptions,
-        configuration
-      );
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminCreateUserRequest, localVarRequestOptions, configuration)
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * Admin deletes article by ids
-     * @summary Delete article by Ids
-     * @param {AdminDeleteArticlesRequest} adminDeleteArticlesRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    adminDeleteArticles: async (
-      adminDeleteArticlesRequest: AdminDeleteArticlesRequest,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      assertParamExists(
-        'adminDeleteArticles',
-        'adminDeleteArticlesRequest',
-        adminDeleteArticlesRequest
-      );
-      const localVarPath = `/api/admin/article/delete-article`;
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Deletes categories by their IDs (soft delete, sets deletedAt).
+         * @summary Delete categories by IDs
+         * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteCategories: async (adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminDeleteCategoriesRequest' is not null or undefined
+            assertParamExists('adminDeleteCategories', 'adminDeleteCategoriesRequest', adminDeleteCategoriesRequest)
+            const localVarPath = `/api/admin/categories/delete-category`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      const localVarRequestOptions = {
-        method: 'DELETE',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      localVarHeaderParameter['Content-Type'] = 'application/json';
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        adminDeleteArticlesRequest,
-        localVarRequestOptions,
-        configuration
-      );
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * Retrieves article information
-     * @summary retrieves articleinformation
-     * @param {AdminGetArticlesRequest} adminGetArticlesRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    adminGetArticles: async (
-      adminGetArticlesRequest: AdminGetArticlesRequest,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      assertParamExists(
-        'adminGetArticles',
-        'adminGetArticlesRequest',
-        adminGetArticlesRequest
-      );
-      const localVarPath = `/api/admin/articles/get-article`;
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
-      const localVarRequestOptions = {
-        method: 'POST',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminDeleteCategoriesRequest, localVarRequestOptions, configuration)
 
-      localVarHeaderParameter['Content-Type'] = 'application/json';
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Deletes tags by their IDs (soft delete, sets deletedAt).
+         * @summary Delete tags by IDs
+         * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteTags: async (adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminDeleteCategoriesRequest' is not null or undefined
+            assertParamExists('adminDeleteTags', 'adminDeleteCategoriesRequest', adminDeleteCategoriesRequest)
+            const localVarPath = `/api/admin/tags/delete-tag`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        adminGetArticlesRequest,
-        localVarRequestOptions,
-        configuration
-      );
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * Update details of an existing article based on the provided article Id.
-     * @summary Update article details
-     * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    adminUpdateArticle: async (
-      adminUpdateArticleRequest: AdminUpdateArticleRequest,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      assertParamExists(
-        'adminUpdateArticle',
-        'adminUpdateArticleRequest',
-        adminUpdateArticleRequest
-      );
-      const localVarPath = `/api/admin/articles/update-article`;
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      const localVarRequestOptions = {
-        method: 'PUT',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
 
-      localVarHeaderParameter['Content-Type'] = 'application/json';
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        adminUpdateArticleRequest,
-        localVarRequestOptions,
-        configuration
-      );
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminDeleteCategoriesRequest, localVarRequestOptions, configuration)
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-  };
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Admin can delete user accounts including their own, but not other admins.
+         * @summary Delete users by IDs
+         * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteUsers: async (adminDeleteUsersRequest: AdminDeleteUsersRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminDeleteUsersRequest' is not null or undefined
+            assertParamExists('adminDeleteUsers', 'adminDeleteUsersRequest', adminDeleteUsersRequest)
+            const localVarPath = `/api/admin/users/delete-user`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminDeleteUsersRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retrieves categories from the database with pagination and optional search using query parameters.
+         * @summary Fetch categories with pagination and search
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of categories to return per page.
+         * @param {string} [search] Optional search term to filter categories by name or description.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetCategories: async (page: number, limit: number, search?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('adminGetCategories', 'page', page)
+            // verify required parameter 'limit' is not null or undefined
+            assertParamExists('adminGetCategories', 'limit', limit)
+            const localVarPath = `/api/admin/categories/get-category`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retrieves tags from the database with pagination and optional search using query parameters.
+         * @summary Fetch tags with pagination and search
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of tags to return per page.
+         * @param {string} [search] Optional search term to filter tags by name.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetTags: async (page: number, limit: number, search?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('adminGetTags', 'page', page)
+            // verify required parameter 'limit' is not null or undefined
+            assertParamExists('adminGetTags', 'limit', limit)
+            const localVarPath = `/api/admin/tags/get-tags`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retrieves users from the database with pagination and optional search.
+         * @summary Fetch users with pagination and search
+         * @param {AdminGetUsersRequest} adminGetUsersRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetUsers: async (adminGetUsersRequest: AdminGetUsersRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminGetUsersRequest' is not null or undefined
+            assertParamExists('adminGetUsers', 'adminGetUsersRequest', adminGetUsersRequest)
+            const localVarPath = `/api/admin/users/get-user`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminGetUsersRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Updates details of an existing category based on the provided category ID.
+         * @summary Update category details
+         * @param {AdminUpdateCategoryRequest} adminUpdateCategoryRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminUpdateCategory: async (adminUpdateCategoryRequest: AdminUpdateCategoryRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminUpdateCategoryRequest' is not null or undefined
+            assertParamExists('adminUpdateCategory', 'adminUpdateCategoryRequest', adminUpdateCategoryRequest)
+            const localVarPath = `/api/admin/categories/update-category`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminUpdateCategoryRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Updates details of an existing tag based on the provided tag ID.
+         * @summary Update tag details
+         * @param {AdminUpdateTagRequest} adminUpdateTagRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminUpdateTag: async (adminUpdateTagRequest: AdminUpdateTagRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminUpdateTagRequest' is not null or undefined
+            assertParamExists('adminUpdateTag', 'adminUpdateTagRequest', adminUpdateTagRequest)
+            const localVarPath = `/api/admin/tags/update-tag`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminUpdateTagRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update details of an existing user based on the provided user ID.
+         * @summary Update user details
+         * @param {AdminUpdateUserRequest} adminUpdateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminUpdateUser: async (adminUpdateUserRequest: AdminUpdateUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminUpdateUserRequest' is not null or undefined
+            assertParamExists('adminUpdateUser', 'adminUpdateUserRequest', adminUpdateUserRequest)
+            const localVarPath = `/api/admin/users/update-user`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(adminUpdateUserRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
 };
 
 /**
  * AdminApi - functional programming interface
  * @export
  */
-export const AdminApiFp = function (configuration?: Configuration) {
-  const localVarAxiosParamCreator = AdminApiAxiosParamCreator(configuration);
-  return {
-    /**
-     * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
-     * @summary Register a new user
-     * @param {AdminCreateUserRequest} adminCreateUserRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async adminCreateUser(
-      adminCreateUserRequest: AdminCreateUserRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Created>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.adminCreateUser(
-        adminCreateUserRequest,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AdminApi.adminCreateUser']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Admin can delete user accounts including their own, but not other admins.
-     * @summary Delete users by IDs
-     * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async adminDeleteUsers(
-      adminDeleteUsersRequest: AdminDeleteUsersRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.adminDeleteUsers(
-          adminDeleteUsersRequest,
-          options
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AdminApi.adminDeleteUsers']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Retrieves users from the database with pagination and optional search.
-     * @summary Fetch users with pagination and search
-     * @param {AdminGetUsersRequest} adminGetUsersRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async adminGetUsers(
-      adminGetUsersRequest: AdminGetUsersRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<AdminGetUsers200Response>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetUsers(
-        adminGetUsersRequest,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AdminApi.adminGetUsers']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Update details of an existing user based on the provided user ID.
-     * @summary Update user details
-     * @param {AdminUpdateUserRequest} adminUpdateUserRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async adminUpdateUser(
-      adminUpdateUserRequest: AdminUpdateUserRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<AdminUpdateUser200Response>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateUser(
-        adminUpdateUserRequest,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AdminApi.adminUpdateUser']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**Creates new article
-     * @summary Create new article
-     * @param {AdminCreateArticleRequest} adminCreateArticleRequest
-     * @param {*} [options]
-     * @throws {RequiredError}
-     */
-    async adminCreateArticle(
-      adminCreateArticleRequest: AdminCreateArticleRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Created>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.adminCreateArticle(
-        adminCreateArticleRequest,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AdminApi.adminCreateArticle']?.[
-          localVarOperationServerIndex
-        ]?.url;
-
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Admin deletes articles
-     * @summary Delete articles by ids
-     * @param {AdminDeleteArticlesRequest} adminDeleteArticlesRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async adminDeleteArticles(
-      adminDeleteArticlesRequest: AdminDeleteArticlesRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.adminDeleteArticles(
-          adminDeleteArticlesRequest,
-          options
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AdminApi.adminDeleteArticles']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Admin retrieves article information
-     * @summary retrieves article information
-     * @param {AdminGetArticleRequest} adminGetArticleRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async adminGetArticles(
-      adminGetArticlesRequest: AdminGetArticlesRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<AdminGetArticles200Response>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetArticles(
-        adminGetArticlesRequest,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AdminApi.adminGetArticles']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     * Update details of an existing article based on the provided article ID.
-     * @summary Update article details
-     * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest
-     * @param {*} [options]
-     * @throws {RequiredError}
-     */
-    async adminUpdateArticle(
-      adminUpdateArticleRequest: AdminUpdateArticleRequest,
-      options?: RawAxiosRequestConfig
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<AdminUpdateArticle200Response>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateArticle(
-        adminUpdateArticleRequest,
-        options
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AdminApi.adminUpdateArticle']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-  };
+export const AdminApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AdminApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Creates a new category with a unique name and slug.
+         * @summary Create a new category
+         * @param {AdminCreateCategoryRequest} adminCreateCategoryRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminCreateCategory(adminCreateCategoryRequest: AdminCreateCategoryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminCreateCategory201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCreateCategory(adminCreateCategoryRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminCreateCategory']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Creates a new tag with a unique name.
+         * @summary Create a new tag
+         * @param {AdminCreateTagRequest} adminCreateTagRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminCreateTag(adminCreateTagRequest: AdminCreateTagRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminCreateTag201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCreateTag(adminCreateTagRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminCreateTag']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+         * @summary Register a new user
+         * @param {AdminCreateUserRequest} adminCreateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminCreateUser(adminCreateUserRequest: AdminCreateUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Created>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCreateUser(adminCreateUserRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminCreateUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Deletes categories by their IDs (soft delete, sets deletedAt).
+         * @summary Delete categories by IDs
+         * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDeleteCategories(adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDeleteCategories(adminDeleteCategoriesRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminDeleteCategories']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Deletes tags by their IDs (soft delete, sets deletedAt).
+         * @summary Delete tags by IDs
+         * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDeleteTags(adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDeleteTags(adminDeleteCategoriesRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminDeleteTags']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Admin can delete user accounts including their own, but not other admins.
+         * @summary Delete users by IDs
+         * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDeleteUsers(adminDeleteUsersRequest: AdminDeleteUsersRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDeleteUsers(adminDeleteUsersRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminDeleteUsers']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Retrieves categories from the database with pagination and optional search using query parameters.
+         * @summary Fetch categories with pagination and search
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of categories to return per page.
+         * @param {string} [search] Optional search term to filter categories by name or description.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminGetCategories(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminGetCategories200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetCategories(page, limit, search, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminGetCategories']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Retrieves tags from the database with pagination and optional search using query parameters.
+         * @summary Fetch tags with pagination and search
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of tags to return per page.
+         * @param {string} [search] Optional search term to filter tags by name.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminGetTags(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminGetTags200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetTags(page, limit, search, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminGetTags']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Retrieves users from the database with pagination and optional search.
+         * @summary Fetch users with pagination and search
+         * @param {AdminGetUsersRequest} adminGetUsersRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminGetUsers(adminGetUsersRequest: AdminGetUsersRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminGetUsers200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetUsers(adminGetUsersRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminGetUsers']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Updates details of an existing category based on the provided category ID.
+         * @summary Update category details
+         * @param {AdminUpdateCategoryRequest} adminUpdateCategoryRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminUpdateCategory(adminUpdateCategoryRequest: AdminUpdateCategoryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminUpdateCategory200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateCategory(adminUpdateCategoryRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminUpdateCategory']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Updates details of an existing tag based on the provided tag ID.
+         * @summary Update tag details
+         * @param {AdminUpdateTagRequest} adminUpdateTagRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminUpdateTag(adminUpdateTagRequest: AdminUpdateTagRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminUpdateTag200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateTag(adminUpdateTagRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminUpdateTag']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Update details of an existing user based on the provided user ID.
+         * @summary Update user details
+         * @param {AdminUpdateUserRequest} adminUpdateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminUpdateUser(adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminUpdateUser200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateUser(adminUpdateUserRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminUpdateUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
 };
 
 /**
  * AdminApi - factory interface
  * @export
  */
-export const AdminApiFactory = function (
-  configuration?: Configuration,
-  basePath?: string,
-  axios?: AxiosInstance
-) {
-  const localVarFp = AdminApiFp(configuration);
-  return {
-    /**
-     * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
-     * @summary Register a new user
-     * @param {AdminCreateUserRequest} adminCreateUserRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    adminCreateUser(
-      adminCreateUserRequest: AdminCreateUserRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<Created> {
-      return localVarFp
-        .adminCreateUser(adminCreateUserRequest, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     * Admin can delete user accounts including their own, but not other admins.
-     * @summary Delete users by IDs
-     * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    adminDeleteUsers(
-      adminDeleteUsersRequest: AdminDeleteUsersRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<Success> {
-      return localVarFp
-        .adminDeleteUsers(adminDeleteUsersRequest, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     * Retrieves users from the database with pagination and optional search.
-     * @summary Fetch users with pagination and search
-     * @param {AdminGetUsersRequest} adminGetUsersRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    adminGetUsers(
-      adminGetUsersRequest: AdminGetUsersRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<AdminGetUsers200Response> {
-      return localVarFp
-        .adminGetUsers(adminGetUsersRequest, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     * Update details of an existing user based on the provided user ID.
-     * @summary Update user details
-     * @param {AdminUpdateUserRequest} adminUpdateUserRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    adminUpdateUser(
-      adminUpdateUserRequest: AdminUpdateUserRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<AdminUpdateUser200Response> {
-      return localVarFp
-        .adminUpdateUser(adminUpdateUserRequest, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     * Creates a new article
-     * @summary Creates new article
-     * @param {AdminCreateArticleRequest} adminCreateArticleRequest
-     * @param {*} [options]
-     * @throws {RequiredError}
-     */
-    adminCreateArticle(
-      adminCreateArticleRequest: AdminCreateArticleRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<Created> {
-      return localVarFp
-        .adminCreateArticle(adminCreateArticleRequest, options)
-        .then((request) => request(axios, basePath));
-    },
-    /** 
-     * Admin deletes article
-     * @summary Admin Deletes article
-     * @param {AdminDeleteArticleRequest} adminDeleteArticleRequest
-     * @param {*} [options]
-     * @throws {RequiredError}
-    */
-    adminDeleteArticles(
-      adminDeleteArticlesRequest: AdminDeleteArticlesRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<Success> {
-      return localVarFp
-        .adminDeleteArticles(adminDeleteArticlesRequest, options)
-          .then((request) => request(axios, basePath));
-    },
-    /**
-    * Retrieves article information
-    * @summary Fetch article information
-    * @param {AdminGetArticleRequest} adminGetArticleRequest
-    * @param {*} [options]
-    * @throws {RequiredError}
-    */
-    adminGetArticles(
-      adminGetArticlesRequest: AdminGetArticlesRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<AdminGetArticles200Response> {
-      return localVarFp
-        .adminGetArticles(adminGetArticlesRequest, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     * Update details of an existing article based on the provided article ID.
-     * @summary Update article details
-     * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    adminUpdateArticle(
-      adminUpdateArticleRequest: AdminUpdateArticleRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<AdminUpdateArticle200Response> {
-      return localVarFp
-        .adminUpdateArticle(adminUpdateArticleRequest, options)
-        .then((request) => request(axios, basePath));
-    },
-  };
+export const AdminApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AdminApiFp(configuration)
+    return {
+        /**
+         * Creates a new category with a unique name and slug.
+         * @summary Create a new category
+         * @param {AdminCreateCategoryRequest} adminCreateCategoryRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminCreateCategory(adminCreateCategoryRequest: AdminCreateCategoryRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminCreateCategory201Response> {
+            return localVarFp.adminCreateCategory(adminCreateCategoryRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Creates a new tag with a unique name.
+         * @summary Create a new tag
+         * @param {AdminCreateTagRequest} adminCreateTagRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminCreateTag(adminCreateTagRequest: AdminCreateTagRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminCreateTag201Response> {
+            return localVarFp.adminCreateTag(adminCreateTagRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Creates a new user, hashes their password, generates an email verification token, and sends a verification email.
+         * @summary Register a new user
+         * @param {AdminCreateUserRequest} adminCreateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminCreateUser(adminCreateUserRequest: AdminCreateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<Created> {
+            return localVarFp.adminCreateUser(adminCreateUserRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Deletes categories by their IDs (soft delete, sets deletedAt).
+         * @summary Delete categories by IDs
+         * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteCategories(adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.adminDeleteCategories(adminDeleteCategoriesRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Deletes tags by their IDs (soft delete, sets deletedAt).
+         * @summary Delete tags by IDs
+         * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteTags(adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.adminDeleteTags(adminDeleteCategoriesRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Admin can delete user accounts including their own, but not other admins.
+         * @summary Delete users by IDs
+         * @param {AdminDeleteUsersRequest} adminDeleteUsersRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteUsers(adminDeleteUsersRequest: AdminDeleteUsersRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.adminDeleteUsers(adminDeleteUsersRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves categories from the database with pagination and optional search using query parameters.
+         * @summary Fetch categories with pagination and search
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of categories to return per page.
+         * @param {string} [search] Optional search term to filter categories by name or description.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetCategories(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig): AxiosPromise<AdminGetCategories200Response> {
+            return localVarFp.adminGetCategories(page, limit, search, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves tags from the database with pagination and optional search using query parameters.
+         * @summary Fetch tags with pagination and search
+         * @param {number} page The page number for pagination.
+         * @param {number} limit The number of tags to return per page.
+         * @param {string} [search] Optional search term to filter tags by name.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetTags(page: number, limit: number, search?: string, options?: RawAxiosRequestConfig): AxiosPromise<AdminGetTags200Response> {
+            return localVarFp.adminGetTags(page, limit, search, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves users from the database with pagination and optional search.
+         * @summary Fetch users with pagination and search
+         * @param {AdminGetUsersRequest} adminGetUsersRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetUsers(adminGetUsersRequest: AdminGetUsersRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminGetUsers200Response> {
+            return localVarFp.adminGetUsers(adminGetUsersRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Updates details of an existing category based on the provided category ID.
+         * @summary Update category details
+         * @param {AdminUpdateCategoryRequest} adminUpdateCategoryRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminUpdateCategory(adminUpdateCategoryRequest: AdminUpdateCategoryRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminUpdateCategory200Response> {
+            return localVarFp.adminUpdateCategory(adminUpdateCategoryRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Updates details of an existing tag based on the provided tag ID.
+         * @summary Update tag details
+         * @param {AdminUpdateTagRequest} adminUpdateTagRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminUpdateTag(adminUpdateTagRequest: AdminUpdateTagRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminUpdateTag200Response> {
+            return localVarFp.adminUpdateTag(adminUpdateTagRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Update details of an existing user based on the provided user ID.
+         * @summary Update user details
+         * @param {AdminUpdateUserRequest} adminUpdateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminUpdateUser(adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminUpdateUser200Response> {
+            return localVarFp.adminUpdateUser(adminUpdateUserRequest, options).then((request) => request(axios, basePath));
+        },
+    };
 };
 
 /**
