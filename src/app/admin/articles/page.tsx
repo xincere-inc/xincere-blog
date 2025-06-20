@@ -1,5 +1,5 @@
 'use client'
-import { AdminGetArticles200ResponseDataInner } from "@/api/client";
+import { GetArticles200ResponseArticlesInner } from "@/api/client";
 import ApiAdminArticles from "@/api/ApiAdminArticles";
 import { Table } from "antd";
 import { useState, useRef, useEffect } from "react";
@@ -47,8 +47,9 @@ export default function ArticleTable() {
 
   const fetchData = async (page: number, pageSize: number, search: string) => {
     setLoading(true);
+    console.log('Get Article before fetch');
     try {
-      const response = await ApiAdminArticles.adminGetArticles({
+      const response = await ApiAdminArticles.getArticles({
         page,
         limit: pageSize,
         search,
@@ -58,7 +59,7 @@ export default function ArticleTable() {
       if (response.status === 200) {
         const articles = 
           response.data?.data?.map(
-            (article: AdminGetArticles200ResponseDataInner) => ({
+            (article: GetArticles200ResponseArticlesInner) => ({
               ...article,
               id: article.id || 0,
               author: article.author?.name || '',
@@ -288,7 +289,8 @@ export default function ArticleTable() {
   useEffect(() => {
     fetchAuthors();
     fetchCategories();
-  }, []);
+    fetchData(pagination.current, pagination.pageSize, searchText);
+  }, [pagination.current, pagination.pageSize, searchText]);
 
   return (
     <div className="p-4">
