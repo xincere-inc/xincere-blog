@@ -1823,3 +1823,289 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
+  /api/comments:
+    post:
+      summary: Post a comment on an article
+      description: Allows authenticated or unauthenticated users to post a comment on an article. Requires name, email, and content. Associates the comment with the authenticated user if logged in.
+      operationId: postComment
+      tags:
+        - Comments
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - articleId
+                - name
+                - email
+                - content
+              properties:
+                articleId:
+                  type: integer
+                  description: The ID of the article to comment on.
+                  example: 1
+                name:
+                  type: string
+                  description: The name of the commenter.
+                  example: '佐藤 健太'
+                email:
+                  type: string
+                  format: email
+                  description: The email address of the commenter (not publicly displayed).
+                  example: 'user@example.com'
+                content:
+                  type: string
+                  description: The content of the comment.
+                  example: 'とても参考になる記事でした！'
+      responses:
+        '201':
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Created
+                  comment:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The unique identifier for the comment.
+                        example: 1
+                      articleId:
+                        type: integer
+                        description: The ID of the associated article.
+                        example: 1
+                      userId:
+                        type: string
+                        description: The ID of the associated user (optional).
+                        example: 'auth_123'
+                        nullable: true
+                      name:
+                        type: string
+                        description: The name of the commenter.
+                        example: '佐藤 健太'
+                      email:
+                        type: string
+                        format: email
+                        description: The email address of the commenter (not publicly displayed).
+                        example: 'user@example.com'
+                      content:
+                        type: string
+                        description: The content of the comment.
+                        example: 'とても参考になる記事でした！'
+                      status:
+                        type: string
+                        description: The status of the comment (e.g., pending, approved).
+                        example: 'pending'
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the comment was created.
+                        example: '2025-06-18T05:48:00Z'
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the comment was last updated.
+                        example: '2025-06-18T05:48:00Z'
+                      deletedAt:
+                        type: string
+                        format: date-time
+                        description: The date and time when the comment was soft-deleted (optional).
+                        example: null
+                        nullable: true
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '404':
+          description: Article not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    get:
+      summary: Fetch comments for an article
+      description: Retrieves comments for a specific article with pagination (10 comments per page). Excludes comments where deletedAt is not null. Includes all comments regardless of status.
+      operationId: getComments
+      tags:
+        - Comments
+      parameters:
+        - name: articleId
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: The ID of the article to fetch comments for.
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+            default: 1
+          description: The page number for pagination.
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 10
+            default: 10
+          description: The number of comments to return per page (fixed at 10).
+      responses:
+        '200':
+          description: Successfully retrieved comments with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successfully retrieved comments
+                  total:
+                    type: integer
+                    example: 25
+                    description: The total number of non-deleted comments for the article.
+                  comments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for the comment.
+                          example: 1
+                        articleId:
+                          type: integer
+                          description: The ID of the associated article.
+                          example: 1
+                        userId:
+                          type: string
+                          description: The ID of the associated user (optional).
+                          example: 'auth_123'
+                          nullable: true
+                        name:
+                          type: string
+                          description: The name of the commenter.
+                          example: '佐藤 健太'
+                        email:
+                          type: string
+                          format: email
+                          description: The email address of the commenter (not publicly displayed).
+                          example: 'user@example.com'
+                        content:
+                          type: string
+                          description: The content of the comment.
+                          example: 'とても参考になる記事でした！'
+                        status:
+                          type: string
+                          description: The status of the comment (e.g., pending, approved).
+                          example: 'pending'
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the comment was created.
+                          example: '2025-06-18T05:48:00Z'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the comment was last updated.
+                          example: '2025-06-18T05:48:00Z'
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the comment was soft-deleted (optional).
+                          example: null
+                          nullable: true
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '404':
+          description: Article not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    delete:
+      summary: Delete comments by IDs
+      description: Allows administrators to soft-delete comments by setting deletedAt. Requires admin authentication.
+      operationId: adminDeleteComments
+      tags:
+        - Comments
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ids
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                  example:
+                    - 1
+                    - 2
+                  description: The IDs of the comments to soft-delete.
+      responses:
+        '200':
+          description: Comments deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '404':
+          description: Some comments not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'

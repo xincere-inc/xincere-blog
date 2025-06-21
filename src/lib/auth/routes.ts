@@ -5,6 +5,7 @@ export const PUBLIC_ROUTES = [
   '/verify-email',
   '/forget-password',
   '/reset-password',
+  '/articles',
 ];
 export const ACCESS_ALL = [
   '/privacy',

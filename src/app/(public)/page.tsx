@@ -8,9 +8,28 @@ import H2 from 'src/components/organisms/h2';
 import { popularArticles } from 'src/data/articleData';
 
 const HomePage = async () => {
-  const [tabCategories, categories] = await Promise.all([
+  const [articles, tabCategories, categories] = await Promise.all([
+    prisma.article.findMany({
+      take: 9,
+      skip: 0,
+      where: {
+        status: ArticleStatus.PUBLISHED,
+        deletedAt: null,
+      },
+      include: {
+        category: {
+          select: { id: true, name: true, slug: true },
+        },
+        author: {
+          select: { id: true, name: true },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    }),
     prisma.category.findMany({
-      take: 8,
+      take: 6,
       skip: 0,
       where: {
         articles: {
@@ -83,7 +102,7 @@ const HomePage = async () => {
       <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
         {/* 記事一覧エリア */}
         <div className="w-full lg:w-2/3 xl:w-3/4">
-          <ArticleGrid initialCategories={tabCategories} />
+          <ArticleGrid initialCategories={tabCategories} articles={articles} />
         </div>
 
         {/* サイドバー */}
