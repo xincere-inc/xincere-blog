@@ -26,11 +26,11 @@ type ArticleDetailPageProps = {
 const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
   const { id } = await params;
 
-  const currentArticle = await prisma.article.findUnique({
+  const article = await prisma.article.findUnique({
     where: { id: Number(id) },
   });
 
-  if (!currentArticle) {
+  if (!article) {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center">
         <h1 className="text-3xl font-bold mb-4">Article Not Found</h1>
@@ -49,7 +49,7 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
 
   const relatedArticles = await prisma.article.findMany({
     where: {
-      categoryId: currentArticle.categoryId,
+      categoryId: article.categoryId,
       id: { not: Number(id) },
       deletedAt: null,
     },
