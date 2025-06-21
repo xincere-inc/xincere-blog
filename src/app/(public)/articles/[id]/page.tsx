@@ -2,7 +2,7 @@ import ArticleCard from '@/components/ArticleCard'; // ArticleCardをインポ�
 import AuthorHeader from '@/components/AuthorHeader';
 import Breadcrumb from '@/components/Breadcrumb';
 import ContactCTA from '@/components/ContactCTA'; // ContactCTAをインポート
-import articleCardData from '@/data/articleCardData'; // articleCardDataをインポート
+import { prisma } from '@/lib/prisma';
 import ArticleComments from '@/features/article-comments/ArticleComments';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,6 +12,41 @@ type ArticleDetailPageProps = {
 };
 
 const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
+  const { id } = await params;
+
+  const currentArticle = await prisma.article.findUnique({
+    where: { id: Number(id) },
+  });
+
+  if (!currentArticle) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center">
+        <h1 className="text-3xl font-bold mb-4">Article Not Found</h1>
+        <p className="text-gray-600">
+          The requested article does not exist or has been deleted.
+        </p>
+        <Link
+          href="/"
+          className="mt-6 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+        >
+          Back to Home
+        </Link>
+      </div>
+    );
+  }
+
+  const relatedArticles = await prisma.article.findMany({
+    where: {
+      categoryId: currentArticle.categoryId,
+      id: { not: Number(id) },
+      deletedAt: null,
+    },
+    take: 4,
+    orderBy: {
+      updatedAt: 'desc',
+    },
+  });
+
   return (
     <div className="flex flex-col lg:flex-row gap-8 mt-8">
       <div className="w-full lg:w-2/3">
@@ -255,11 +290,12 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
           <h3 className="text-xl font-bold mb-4">関連記事</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {articleCardData.map((article, index) => (
+            {relatedArticles.map((article) => (
               <ArticleCard
-                key={index}
-                imageUrl={article.imageUrl}
-                altText={article.altText}
+                id={article.id}
+                key={article.id}
+                imageUrl={article.thumbnailUrl ?? ''}
+                altText={article.title}
                 title={article.title}
               />
             ))}
