@@ -3,6 +3,7 @@ import AuthorHeader from '@/components/AuthorHeader';
 import Breadcrumb from '@/components/Breadcrumb';
 import ContactCTA from '@/components/ContactCTA'; // ContactCTAをインポート
 import { prisma } from '@/lib/prisma';
+import ArticleComments from '@/features/article-comments/ArticleComments';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -300,69 +301,9 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
             ))}
           </div>
         </div>
-        {/* コメントセクション */}
+        {/*          コメントセクション */}
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <h3 className="text-xl font-bold mb-4">コメント</h3>
-          {/* コメント投稿フォーム */}
-          <div className="mb-8">
-            <div className="mb-4">
-              <textarea
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                rows={4}
-                placeholder="コメントを入力してください"
-              ></textarea>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="お名前"
-                />
-                <input
-                  type="email"
-                  className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="メールアドレス（非公開）"
-                />
-              </div>
-              <button className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition-colors duration-300 !rounded-button whitespace-nowrap cursor-pointer">
-                コメントを投稿
-              </button>
-            </div>
-          </div>
-          {/* 既存コメント */}
-          <div className="space-y-6">
-            <div className="border-b pb-4">
-              <div className="flex justify-between mb-2">
-                <div className="font-bold">佐藤 健太</div>
-                <div className="text-sm text-gray-500">2025-04-08</div>
-              </div>
-              <p className="text-gray-700">
-                とても参考になる記事でした！特に「ペルソナの精緻化」と「内部リンク構造の最適化」は自社のサイトでもすぐに取り入れたいと思います。質問ですが、内部リンク構造を最適化する際に使用しているツールなどはありますか？
-              </p>
-            </div>
-            <div className="border-b pb-4">
-              <div className="flex justify-between mb-2">
-                <div className="font-bold">
-                  田島 光太郎{' '}
-                  <span className="text-primary text-sm">（著者）</span>
-                </div>
-                <div className="text-sm text-gray-500">2025-04-09</div>
-              </div>
-              <p className="text-gray-700">
-                佐藤様、コメントありがとうございます！内部リンク構造の分析には主にScreamingFrogとAhrefsを使用しています。特にScreamingFrogのビジュアライゼーション機能は、サイト構造の問題点を視覚的に把握するのに役立ちます。また、社内では独自のスプレッドシートでコンテンツインベントリを管理し、リンク機会を定期的に見直しています。
-              </p>
-            </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <div className="font-bold">鈴木 美咲</div>
-                <div className="text-sm text-gray-500">2025-04-10</div>
-              </div>
-              <p className="text-gray-700">
-                「組織文化としてのSEO意識の浸透」が特に印象に残りました。マーケティング部門だけでなく、全社的な取り組みとしてSEOを位置づけることの重要性を再認識しました。弊社でも部門間の壁を取り払い、情報共有を活性化させたいと思います。素晴らしい記事をありがとうございました！
-              </p>
-            </div>
-          </div>
+          <ArticleComments />
         </div>
       </div>
       {/* サイドバー */}
@@ -372,7 +313,7 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
           <h3 className="font-bold text-lg mb-4 border-b pb-2">著者について</h3>
           <Link
             href="/authors/1"
-            className="flex flex-col items-center text-center mb-4 block"
+            className="flex flex-col items-center text-center mb-4"
           >
             <Image
               src="https://readdy.ai/api/search-image?query=Professional%2520headshot%2520of%2520Asian%2520man%2520in%2520business%2520attire%252C%2520neutral%2520background%252C%2520high%2520quality%2520portrait%2520with%2520soft%2520lighting%2520and%2520shallow%2520depth%2520of%2520field&width=120&height=120&seq=19&orientation=squarish"
@@ -381,37 +322,36 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
               height={120}
               className="rounded-full"
             />
-            <a href="/author/tajima-kotaro" className="block">
-              <div className="font-bold hover:text-primary transition-colors duration-300">
-                田島 光太郎
-              </div>
-              <div className="text-sm text-gray-500 mb-2">
-                Xincere マーケティング責任者
-              </div>
-            </a>
+
+            <div className="font-bold hover:text-primary transition-colors duration-300">
+              田島 光太郎
+            </div>
+            <div className="text-sm text-gray-500 mb-2">
+              Xincere マーケティング責任者
+            </div>
           </Link>
           <p className="text-sm text-gray-600 mb-4">
             10年以上のBtoBマーケティング経験を持ち、特にコンテンツマーケティングとSEO戦略に精通。複数の企業でコンテンツ戦略を立案・実行し、オーガニック流入を大幅に増加させた実績を持つ。
           </p>
           <div className="flex justify-center space-x-4">
-            <a
+            <Link
               href="#"
               className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
             >
               <i className="fab fa-twitter text-lg"></i>
-            </a>
-            <a
+            </Link>
+            <Link
               href="#"
               className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
             >
               <i className="fab fa-linkedin-in text-lg"></i>
-            </a>
-            <a
+            </Link>
+            <Link
               href="#"
               className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
             >
               <i className="fas fa-envelope text-lg"></i>
-            </a>
+            </Link>
           </div>
         </div>
         {/* カテゴリー一覧 */}
@@ -419,7 +359,7 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
           <h3 className="font-bold text-lg mb-4 border-b pb-2">カテゴリー</h3>
           <ul>
             <li>
-              <a
+              <Link
                 href="#"
                 className="flex justify-between items-center py-2 hover:bg-primary-light px-2 rounded-md transition-colors duration-300 cursor-pointer"
               >
@@ -427,10 +367,10 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
                 <span className="bg-primary-light text-primary text-xs px-2 py-1 rounded-full">
                   15
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="#"
                 className="flex justify-between items-center py-2 hover:bg-primary-light px-2 rounded-md transition-colors duration-300 cursor-pointer"
               >
@@ -438,10 +378,10 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
                 <span className="bg-primary-light text-primary text-xs px-2 py-1 rounded-full">
                   12
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="#"
                 className="flex justify-between items-center py-2 hover:bg-primary-light px-2 rounded-md transition-colors duration-300 cursor-pointer"
               >
@@ -449,10 +389,10 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
                 <span className="bg-primary-light text-primary text-xs px-2 py-1 rounded-full">
                   8
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="#"
                 className="flex justify-between items-center py-2 hover:bg-primary-light px-2 rounded-md transition-colors duration-300 cursor-pointer"
               >
@@ -460,10 +400,10 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
                 <span className="bg-primary-light text-primary text-xs px-2 py-1 rounded-full">
                   10
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="#"
                 className="flex justify-between items-center py-2 hover:bg-primary-light px-2 rounded-md transition-colors duration-300 cursor-pointer"
               >
@@ -471,10 +411,10 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
                 <span className="bg-primary-light text-primary text-xs px-2 py-1 rounded-full">
                   7
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="#"
                 className="flex justify-between items-center py-2 hover:bg-primary-light px-2 rounded-md transition-colors duration-300 cursor-pointer"
               >
@@ -482,7 +422,7 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
                 <span className="bg-primary-light text-primary text-xs px-2 py-1 rounded-full">
                   6
                 </span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
