@@ -1,9 +1,6 @@
 'use client';
 
-import type {
-  Prisma,
-  Article as PrismaArticle,
-} from '@prisma/client';
+import type { Prisma, Article as PrismaArticle } from '@prisma/client';
 import React, { useState } from 'react';
 import ContactCTA from './ContactCTA';
 import CategoryList from './CategoryList';
