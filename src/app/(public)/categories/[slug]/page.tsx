@@ -198,7 +198,6 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
 
           {/* サイドバー */}
           <div className="w-full lg:w-1/3">
-            {/* 検索ボックス */}
             <Sidebar
               categories={categories}
               popularArticles={popularArticles}
