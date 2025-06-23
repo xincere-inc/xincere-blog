@@ -1,4 +1,3 @@
-import ContactCTA from '@/components/ContactCTA';
 import React from 'react';
 import Pagination from '@/components/Pagination';
 import { prisma } from '@/lib/prisma';
@@ -6,9 +5,8 @@ import { Image } from 'antd';
 import { defaultImageUrl } from '@/data/articleData';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import CategoryList from '@/components/CategoryList';
 import { ArticleStatus } from '@prisma/client';
-import PopularArticles from '@/components/PopularArticles';
+import Sidebar from '@/components/Sidebar';
 
 type CategoryPageProps = {
   params: Promise<{ slug: string }>;
@@ -200,32 +198,11 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
           {/* サイドバー */}
           <div className="w-full lg:w-1/3">
             {/* 検索ボックス */}
-            <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="記事を検索"
-                  className="w-full pl-10 pr-4 py-2 border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
-                />
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary">
-                  <i className="fas fa-search"></i>
-                </div>
-              </div>
-            </div>
-
-            {/* カテゴリー一覧 */}
-            <CategoryList categories={categories} currentSlug={slug} />
-
-            {/* 人気記事 */}
-            <PopularArticles
-              articles={popularArticles}
-              defaultImageUrl={defaultImageUrl}
+            <Sidebar
+              categories={categories}
+              popularArticles={popularArticles}
+              currentSlug={slug}
             />
-
-            {/* CTA */}
-            <div className="sticky top-6">
-              <ContactCTA /> {/* ContactCTAコンポーネントを使用 */}
-            </div>
           </div>
         </div>
       </main>

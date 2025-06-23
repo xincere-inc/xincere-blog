@@ -1,6 +1,9 @@
 'use client';
 
-import type { Category, Article as PrismaArticle } from '@prisma/client';
+import type {
+  Prisma,
+  Article as PrismaArticle,
+} from '@prisma/client';
 import React, { useState } from 'react';
 import ContactCTA from './ContactCTA';
 import CategoryList from './CategoryList';
@@ -9,12 +12,26 @@ import { defaultImageUrl } from '@/data/articleData';
 
 type Article = Pick<PrismaArticle, 'id' | 'title' | 'thumbnailUrl' | 'slug'>;
 
+type Category = Pick<
+  Prisma.CategoryGetPayload<{
+    include: { _count: { select: { articles: true } } };
+  }>,
+  'id' | 'name' | 'slug'
+> & {
+  _count: { articles: number };
+};
+
 interface SidebarProps {
   categories: (Category & { _count: { articles: number } })[];
   popularArticles: Article[];
+  currentSlug?: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ categories, popularArticles }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  categories,
+  popularArticles,
+  currentSlug,
+}) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -38,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, popularArticles }) => {
         </div>
       </div>
       {/* カテゴリー一覧 */}
-      <CategoryList categories={categories} />
+      <CategoryList categories={categories} currentSlug={currentSlug} />
       {/* 人気記事 */}
       <PopularArticles
         articles={popularArticles}
