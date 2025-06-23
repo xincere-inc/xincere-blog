@@ -8,6 +8,7 @@ import { defaultImageUrl } from '@/data/articleData';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import CategoryList from '@/components/CategoryList';
+import { ArticleStatus } from '@prisma/client';
 
 type CategoryPageProps = {
   params: Promise<{ slug: string }>;
@@ -29,7 +30,7 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
         category: {
           slug: slug,
         },
-        // status: 'PUBLISHED',
+        status: ArticleStatus.PUBLISHED,
         deletedAt: null,
       },
       include: {
@@ -39,7 +40,7 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
       skip,
       take: articlesPerPage,
       orderBy: {
-        createdAt: 'desc', // 最新記事から表示
+        createdAt: 'desc',
       },
     }),
     prisma.category.findUnique({
@@ -52,7 +53,14 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
         slug: true,
         description: true,
         _count: {
-          select: { articles: true },
+          select: {
+            articles: {
+              where: {
+                deletedAt: null,
+                status: ArticleStatus.PUBLISHED,
+              }
+            }
+          },
         },
       },
     }),
@@ -61,7 +69,7 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
         deletedAt: null,
         articles: {
           some: {
-            // status: 'PUBLISHED',
+            status: ArticleStatus.PUBLISHED,
             deletedAt: null,
           },
         },
@@ -71,7 +79,14 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
         name: true,
         slug: true,
         _count: {
-          select: { articles: true },
+          select: {
+            articles: {
+              where: {
+                deletedAt: null,
+                status: ArticleStatus.PUBLISHED,
+              }
+            }
+          },
         },
       },
       orderBy: {
