@@ -27,14 +27,14 @@ const ArticlesIndex = async ({ searchParams }: ArticlesPageProps) => {
           {
             title: {
               contains: searchQuery,
-              mode: Prisma.QueryMode.insensitive
-            }
+              mode: Prisma.QueryMode.insensitive,
+            },
           },
           {
             summary: {
               contains: searchQuery,
-              mode: Prisma.QueryMode.insensitive
-            }
+              mode: Prisma.QueryMode.insensitive,
+            },
           },
         ],
       }

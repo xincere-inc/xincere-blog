@@ -30,8 +30,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   popularArticles,
   currentSlug,
 }) => {
-
-
   return (
     <>
       {/* 検索ボックス */}

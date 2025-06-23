@@ -5,14 +5,17 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
-
 type SearchBoxValue = {
   query: string;
-}
+};
 
 const SearchBox = () => {
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors } } = useForm<SearchBoxValue>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SearchBoxValue>();
 
   const handleSearch: SubmitHandler<SearchBoxValue> = (formValue) => {
     const { query } = formValue;
