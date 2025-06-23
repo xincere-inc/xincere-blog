@@ -33,7 +33,7 @@ export async function seedArticles() {
     'utf-8'
   );
   const articles = categories.flatMap((category) => {
-    return Array.from({ length: 10 }).map(() => {
+    return Array.from({ length: 50 }).map(() => {
       return {
         authorId: author.id,
         categoryId: category.id,
