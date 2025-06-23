@@ -3,6 +3,7 @@
 import type { Category } from '@prisma/client';
 import React, { useState } from 'react';
 import ContactCTA from './ContactCTA';
+import CategoryList from './CategoryList';
 
 interface Article {
   id: number;
@@ -39,24 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, popularArticles }) => {
         </div>
       </div>
       {/* カテゴリー一覧 */}
-      <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-        <h3 className="font-bold text-lg mb-4 border-b pb-2">カテゴリー</h3>
-        <ul>
-          {categories.map((category) => (
-            <li key={category.id}>
-              <a
-                href="#"
-                className="flex justify-between items-center py-2 hover:bg-primary-light px-2 rounded-md transition-colors duration-300 cursor-pointer"
-              >
-                <span>{category.name}</span>
-                <span className="bg-primary-light text-primary text-xs px-2 py-1 rounded-full">
-                  {category._count.articles}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <CategoryList categories={categories} />
       {/* 人気記事 */}
       <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
         <h3 className="font-bold text-lg mb-4 border-b pb-2">人気記事</h3>
