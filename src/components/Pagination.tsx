@@ -120,9 +120,10 @@ const Pagination: React.FC<PaginationProps> = ({
     return pages;
   };
 
-
   return (
-    <div className={`flex justify-center items-center space-x-2 mt-8 ${className}`}>
+    <div
+      className={`flex justify-center items-center space-x-2 mt-8 ${className}`}
+    >
       <button
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1 || loading}
@@ -130,9 +131,9 @@ const Pagination: React.FC<PaginationProps> = ({
       >
         前へ
       </button>
-      
+
       {renderPageNumbers()}
-      
+
       <button
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages || loading}

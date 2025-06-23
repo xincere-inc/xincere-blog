@@ -1,8 +1,6 @@
 import ContactCTA from '@/components/ContactCTA';
 import React from 'react';
-import {
-  popularArticles,
-} from '@/data/marketingStrategyData';
+import { popularArticles } from '@/data/marketingStrategyData';
 import Pagination from '@/components/Pagination';
 import { prisma } from '@/lib/prisma';
 import { Image } from 'antd';
@@ -12,9 +10,9 @@ import { redirect } from 'next/navigation';
 import CategoryList from '@/components/CategoryList';
 
 type CategoryPageProps = {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
   searchParams: { page?: string };
-}
+};
 
 const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
   const { slug } = await params;
@@ -29,24 +27,24 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
     prisma.article.findMany({
       where: {
         category: {
-          slug: slug
+          slug: slug,
         },
         // status: 'PUBLISHED',
         deletedAt: null,
       },
-      include: { 
+      include: {
         author: true,
-        category: true
+        category: true,
       },
       skip,
       take: articlesPerPage,
       orderBy: {
-        createdAt: 'desc' // 最新記事から表示
-      }
+        createdAt: 'desc', // 最新記事から表示
+      },
     }),
     prisma.category.findUnique({
       where: {
-        slug: slug
+        slug: slug,
       },
       select: {
         id: true,
@@ -54,9 +52,9 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
         slug: true,
         description: true,
         _count: {
-          select: { articles: true }
-        }
-      }
+          select: { articles: true },
+        },
+      },
     }),
     prisma.category.findMany({
       where: {
@@ -73,22 +71,21 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
         name: true,
         slug: true,
         _count: {
-          select: { articles: true }
-        }
+          select: { articles: true },
+        },
       },
       orderBy: {
-        createdAt: 'asc'
-      }
-    })
+        createdAt: 'asc',
+      },
+    }),
   ]);
 
   // カテゴリーが存在しない場合のエラーハンドリング
   if (!category) {
-    redirect('/')
+    redirect('/');
   }
 
   const totalArticlesCount = category._count.articles;
-
 
   return (
     <div>
@@ -111,9 +108,7 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
         {/* カテゴリーヘッダー */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
           <h1 className="text-3xl font-bold mb-4">{category.name}</h1>
-          <p className="text-gray-600 mb-4">
-            {category.description}
-          </p>
+          <p className="text-gray-600 mb-4">{category.description}</p>
           <div className="flex items-center text-sm text-gray-500">
             <span className="mr-2">記事数:</span>
             <span className="bg-[#E8F0E6] text-primary px-2 py-1 rounded-full">
@@ -134,7 +129,7 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {articles.map((article) => (
                 <Link
-                  href={`/articles/${article.id}`} 
+                  href={`/articles/${article.id}`}
                   key={article.id}
                   className="block"
                 >

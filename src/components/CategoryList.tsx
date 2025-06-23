@@ -2,10 +2,13 @@ import type { Prisma } from '@prisma/client';
 import Link from 'next/link';
 import React from 'react';
 
-type Category = Pick<Prisma.CategoryGetPayload<{
-  include: { _count: { select: { articles: true } } }
-}>, 'id' | 'name' | 'slug'> & {
-  _count: { articles: number }
+type Category = Pick<
+  Prisma.CategoryGetPayload<{
+    include: { _count: { select: { articles: true } } };
+  }>,
+  'id' | 'name' | 'slug'
+> & {
+  _count: { articles: number };
 };
 interface CategoryListProps {
   categories: Category[];
@@ -13,12 +16,14 @@ interface CategoryListProps {
   className?: string;
 }
 
-const CategoryList = ({ categories, currentSlug, className = '' }: CategoryListProps) => {
+const CategoryList = ({
+  categories,
+  currentSlug,
+  className = '',
+}: CategoryListProps) => {
   return (
     <div className={`bg-white p-4 rounded-lg shadow-sm mb-6 ${className}`}>
-      <h3 className="font-bold text-lg mb-4 border-b pb-2">
-        カテゴリー
-      </h3>
+      <h3 className="font-bold text-lg mb-4 border-b pb-2">カテゴリー</h3>
       <ul>
         {categories.map((category) => {
           const isCurrentCategory = category.slug === currentSlug;
