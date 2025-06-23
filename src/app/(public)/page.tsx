@@ -5,7 +5,6 @@ import HeroSection from 'src/components/HeroSection';
 import PickUpArticle from 'src/components/PickUpArticle';
 import Sidebar from 'src/components/Sidebar';
 import H2 from 'src/components/organisms/h2';
-import { popularArticles } from 'src/data/articleData';
 
 const HomePage = async () => {
   const [articles, tabCategories, categories] = await Promise.all([
@@ -73,6 +72,9 @@ const HomePage = async () => {
       },
     }),
   ]);
+
+  // TODO: 閲覧数やいいね数を実装後にに置き換える
+  const popularArticles = articles.slice(0, 4);
 
   return (
     <main className="container mx-auto px-4">

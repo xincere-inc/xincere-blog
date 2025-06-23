@@ -1,6 +1,5 @@
 import ContactCTA from '@/components/ContactCTA';
 import React from 'react';
-import { popularArticles } from '@/data/marketingStrategyData';
 import Pagination from '@/components/Pagination';
 import { prisma } from '@/lib/prisma';
 import { Image } from 'antd';
@@ -9,6 +8,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import CategoryList from '@/components/CategoryList';
 import { ArticleStatus } from '@prisma/client';
+import PopularArticles from '@/components/PopularArticles';
 
 type CategoryPageProps = {
   params: Promise<{ slug: string }>;
@@ -58,8 +58,8 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
               where: {
                 deletedAt: null,
                 status: ArticleStatus.PUBLISHED,
-              }
-            }
+              },
+            },
           },
         },
       },
@@ -84,8 +84,8 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
               where: {
                 deletedAt: null,
                 status: ArticleStatus.PUBLISHED,
-              }
-            }
+              },
+            },
           },
         },
       },
@@ -99,6 +99,9 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
   if (!category) {
     redirect('/');
   }
+
+  // TODO: 閲覧数やいいね数を実装後に置き換える
+  const popularArticles = articles.slice(0, 4);
 
   const totalArticlesCount = category._count.articles;
 
@@ -214,30 +217,10 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
             <CategoryList categories={categories} currentSlug={slug} />
 
             {/* 人気記事 */}
-            <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-              <h3 className="font-bold text-lg mb-4 border-b pb-2">人気記事</h3>
-              <ul className="space-y-4">
-                {popularArticles.map((article) => (
-                  <li
-                    key={article.id}
-                    className="flex space-x-3 cursor-pointer"
-                  >
-                    <div className="w-[100px] h-[70px] overflow-hidden rounded">
-                      <img
-                        src={article.image}
-                        alt={article.title}
-                        className="w-full h-full object-cover object-top"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-sm font-medium line-clamp-3 hover:text-primary transition-colors duration-300">
-                        {article.title}
-                      </h4>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <PopularArticles
+              articles={popularArticles}
+              defaultImageUrl={defaultImageUrl}
+            />
 
             {/* CTA */}
             <div className="sticky top-6">

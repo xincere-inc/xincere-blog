@@ -1,15 +1,13 @@
 'use client';
 
-import type { Category } from '@prisma/client';
+import type { Category, Article as PrismaArticle } from '@prisma/client';
 import React, { useState } from 'react';
 import ContactCTA from './ContactCTA';
 import CategoryList from './CategoryList';
+import PopularArticles from './PopularArticles';
+import { defaultImageUrl } from '@/data/articleData';
 
-interface Article {
-  id: number;
-  title: string;
-  image: string;
-}
+type Article = Pick<PrismaArticle, 'id' | 'title' | 'thumbnailUrl' | 'slug'>;
 
 interface SidebarProps {
   categories: (Category & { _count: { articles: number } })[];
@@ -42,27 +40,10 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, popularArticles }) => {
       {/* カテゴリー一覧 */}
       <CategoryList categories={categories} />
       {/* 人気記事 */}
-      <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-        <h3 className="font-bold text-lg mb-4 border-b pb-2">人気記事</h3>
-        <ul className="space-y-4">
-          {popularArticles.map((article) => (
-            <li key={article.id} className="flex space-x-3 cursor-pointer">
-              <div className="w-[100px] h-[70px] overflow-hidden rounded">
-                <img
-                  src={article.image}
-                  alt={article.title}
-                  className="w-full h-full object-cover object-top"
-                />
-              </div>
-              <div className="flex-1">
-                <h4 className="text-sm font-medium line-clamp-3">
-                  {article.title}
-                </h4>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <PopularArticles
+        articles={popularArticles}
+        defaultImageUrl={defaultImageUrl}
+      />
       {/* CTA */}
       <ContactCTA />
     </>
