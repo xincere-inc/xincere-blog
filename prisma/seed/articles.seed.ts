@@ -16,10 +16,17 @@ export async function seedArticles() {
   if (categories.length === 0)
     throw new Error('No categories found. Please seed categories first.');
 
-  const sampleTitle =
-    'マイクロサービスアーキテクチャで実現した基幹システムの刷新事例';
-  const sampleSummary =
-    '従来の一枚岩システムをマイクロサービス化することで、開発効率と運用保守性を大幅に向上させた事例を詳しく解説します。';
+  // タイトルとサマリーを3種類用意
+  const sampleTitles = [
+    'マイクロサービスアーキテクチャで実現した基幹システムの刷新事例',
+    '生成AIを活用した業務効率化の最前線',
+    'クラウドネイティブ時代のセキュリティ対策とは',
+  ];
+  const sampleSummaries = [
+    '従来の一枚岩システムをマイクロサービス化することで、開発効率と運用保守性を大幅に向上させた事例を詳しく解説します。',
+    '生成AIを活用した最新の業務効率化事例や導入のポイントを紹介します。',
+    'クラウドネイティブ環境におけるセキュリティの課題と対策について解説します。',
+  ];
   const sampleThumbnailUrl =
     'https://readdy.ai/api/search-image?query=SEO%20analytics%20dashboard%20on%20computer%20screen%20in%20modern%20office%20setting%2C%20professional%20environment&width=200&height=300&seq=12&orientation=portrait';
 
@@ -34,14 +41,16 @@ export async function seedArticles() {
   );
   const articles = categories.flatMap((category) => {
     return Array.from({ length: 50 }).map(() => {
+      // ランダムにタイトルとサマリーを選択
+      const idx = faker.number.int({ min: 0, max: 2 });
       return {
         authorId: author.id,
         categoryId: category.id,
-        title: sampleTitle,
+        title: sampleTitles[idx],
         slug: faker.helpers.slugify(
           `${faker.lorem.words(3)}-${faker.string.uuid()}`
         ),
-        summary: sampleSummary,
+        summary: sampleSummaries[idx],
         content: htmlContent,
         markdownContent: markdownContent,
         thumbnailUrl: sampleThumbnailUrl,
@@ -58,6 +67,6 @@ export async function seedArticles() {
   });
 
   console.log(
-    `✅ Seeded ${result.count} articles across ${categories.length} categories.`
+    `Seeded ${result.count} articles across ${categories.length} categories.`
   );
 }
