@@ -15,7 +15,7 @@ type CategoryPageProps = {
 
 const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
   const { slug } = await params;
-  const { page } = await searchParams
+  const { page } = await searchParams;
   const currentPage = Number(page) || 1;
   const articlesPerPage = 9;
 
