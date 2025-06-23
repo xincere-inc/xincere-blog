@@ -142,7 +142,7 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* 記事一覧 */}
-          <div className="w-full lg:w-2/3">
+          <div className="w-full lg:w-2/3 xl:w-3/4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {articles.map((article) => (
                 <Link
@@ -197,7 +197,7 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
           </div>
 
           {/* サイドバー */}
-          <div className="w-full lg:w-1/3">
+          <div className="w-full md:w-1/3 lg:w-1/4">
             <Sidebar
               categories={categories}
               popularArticles={popularArticles}
