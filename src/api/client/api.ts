@@ -22,6 +22,7 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
+import { ArticleStatus } from '@prisma/client';
 
 /**
  * 
@@ -293,6 +294,93 @@ export const AdminCreateUserRequestGenderEnum = {
 } as const;
 
 export type AdminCreateUserRequestGenderEnum = typeof AdminCreateUserRequestGenderEnum[keyof typeof AdminCreateUserRequestGenderEnum];
+
+/**
+ * 
+ * @export
+ * @interface AdminCreateArticleRequest
+ */
+export interface AdminCreateArticleRequest {
+  /**
+   * ID of the author creating the article
+   * 
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  'authorId': string;
+
+  /**
+   * ID of the category this article belongs to
+   * 
+   * @type {number}
+   * @memberof AdminCreateArticleRequest
+   */
+  'categoryId': number;
+
+  /**
+   * Title of the article
+   * 
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  'title': string;
+
+  /**
+   * Slug (URL-friendly identifier for the article)
+   * 
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  'slug': string;
+
+  /**
+   * Short summary or excerpt of the article
+   * 
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  'summary': string;
+
+  /**
+   * Full HTML content of the article
+   * 
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  'content': string;
+
+  /**
+   * Raw markdown version of the content
+   * 
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  'markdownContent': string;
+
+  /**
+   * Status of the article (e.g., draft, published)
+   * 
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  'status': string;
+
+  /**
+   * Optional thumbnail image URL
+   * 
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  'thumbnailUrl'?: string;
+
+  /**
+   * Optional list of tag IDs associated with the article
+   * 
+   * @type {number[]}
+   * @memberof AdminCreateArticleRequest
+   */
+  'tagIds'?: number[];
+}
 
 /**
  * 
@@ -1710,6 +1798,44 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * Creates a new article with content, slug, category, tags, and other metadata.
+         * @summary Create a new article
+         * @param {AdminCreateArticleRequest} adminCreateArticleRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminCreateArticle: async (adminCreateArticleRequest: AdminCreateArticleRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminCreateArticleRequest' is not null or undefined
+            assertParamExists('adminCreateArticle', 'adminCreateArticleRequest', adminCreateArticleRequest)
+            const localVarPath = `/api/admin/articles/create-article`; // <- your route
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            localVarRequestOptions.data = serializeDataIfNeeded(adminCreateArticleRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Deletes categories by their IDs (soft delete, sets deletedAt).
          * @summary Delete categories by IDs
          * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest 
@@ -2132,6 +2258,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['AdminApi.adminCreateUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        async adminCreateArticle(adminCreateArticleRequest: AdminCreateArticleRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Created>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCreateArticle(adminCreateArticleRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminCreateArticle']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
         /**
          * Deletes categories by their IDs (soft delete, sets deletedAt).
          * @summary Delete categories by IDs
@@ -2292,6 +2424,10 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          */
         adminCreateUser(adminCreateUserRequest: AdminCreateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<Created> {
             return localVarFp.adminCreateUser(adminCreateUserRequest, options).then((request) => request(axios, basePath));
+        },
+        /** */
+        adminCreateArticle(adminCreateArticleRequest: AdminCreateArticleRequest, options?: RawAxiosRequestConfig): AxiosPromise<Created> {
+            return localVarFp.adminCreateArticle(adminCreateArticleRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Deletes categories by their IDs (soft delete, sets deletedAt).
