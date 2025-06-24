@@ -6,6 +6,7 @@ import { defaultImageUrl } from '@/data/articleData';
 import Link from 'next/link';
 import { ArticleStatus, Prisma } from '@prisma/client';
 import Sidebar from '@/components/Sidebar';
+import BreadcrumbsContainer from '@/components/BreadcrumbsContainer';
 
 type ArticlesPageProps = {
   searchParams: Promise<{ page?: string; q?: string }>;
@@ -105,16 +106,7 @@ const ArticlesIndex = async ({ searchParams }: ArticlesPageProps) => {
       {/* メインコンテンツ */}
       <main className="container mx-auto px-4 py-8">
         {/* パンくずリスト */}
-        <div className="flex items-center text-sm text-gray-500 mb-6">
-          <a
-            href="/"
-            className="hover:text-primary transition-colors duration-300 cursor-pointer"
-          >
-            Xincere
-          </a>
-          <span className="mx-2">&gt;</span>
-          <span className="text-gray-700">{pageTitle}</span>
-        </div>
+        <BreadcrumbsContainer />
 
         {/* ページヘッダー */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">

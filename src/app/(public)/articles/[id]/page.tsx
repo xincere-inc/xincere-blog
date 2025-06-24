@@ -1,12 +1,12 @@
-import ArticleCard from '@/components/ArticleCard'; // ArticleCardをインポート
+import ArticleCard from '@/components/ArticleCard';
 import AuthorHeader from '@/components/AuthorHeader';
-import Breadcrumb from '@/components/Breadcrumb';
-import ContactCTA from '@/components/ContactCTA'; // ContactCTAをインポート
+import ContactCTA from '@/components/ContactCTA';
 import ArticleComments from '@/features/article-comments/ArticleComments';
 import Image from 'next/image';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import ReactMarkdown from 'react-markdown';
+import BreadcrumbsContainer from '@/components/BreadcrumbsContainer';
 
 export const dynamic = 'force-static';
 export const fetchCache = 'force-cache';
@@ -63,16 +63,7 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
     <div className="flex flex-col lg:flex-row gap-8 mt-8">
       <div className="w-full lg:w-2/3">
         {/* パンくずリスト */}
-        <Breadcrumb
-          items={[
-            { label: 'Xincere', href: '#' },
-            { label: 'テックブログ', href: '#' },
-            {
-              label:
-                '後発のBtoBメディアがコンテンツSEOで勝ち切るために必要だった10のこと',
-            },
-          ]}
-        />
+        <BreadcrumbsContainer title={article.title} />
         {/* 記事ヘッダー */}
         <AuthorHeader />
         {/* 記事本文 */}
