@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ArticleStatus } from '@prisma/client';
 import Sidebar from '@/components/Sidebar';
+import BreadcrumbsContainer from '@/components/BreadcrumbsContainer';
 
 type CategoryPageProps = {
   params: Promise<{ slug: string }>;
@@ -111,17 +112,7 @@ const CategoriesIndex = async ({ params, searchParams }: CategoryPageProps) => {
       {/* メインコンテンツ */}
       <main className="container mx-auto px-4 py-8">
         {/* パンくずリスト */}
-        <div className="flex items-center text-sm text-gray-500 mb-6">
-          <a
-            href="/"
-            className="hover:text-primary transition-colors duration-300 cursor-pointer"
-          >
-            Xincere
-          </a>
-          <span className="mx-2">&gt;</span>
-          <span className="text-gray-700">{category.name}</span>
-        </div>
-
+        <BreadcrumbsContainer title={category.name} />
         {/* カテゴリーヘッダー */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
           <h1 className="text-3xl font-bold mb-4">{category.name}</h1>

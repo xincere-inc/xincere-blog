@@ -1,5 +1,6 @@
 'use client';
 
+import BreadcrumbsContainer from '@/components/BreadcrumbsContainer';
 import React from 'react';
 
 const App: React.FC = () => {
@@ -9,29 +10,7 @@ const App: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* パンくずリスト */}
-        <nav className="text-sm text-gray-500 mb-8">
-          <ol className="flex flex-wrap items-center">
-            <li className="flex items-center">
-              <a href="#" className="hover:text-gray-700 cursor-pointer">
-                ホーム
-              </a>
-              <i className="fas fa-chevron-right text-xs mx-2"></i>
-            </li>
-            <li className="flex items-center">
-              <a href="#" className="hover:text-gray-700 cursor-pointer">
-                ブログ
-              </a>
-              <i className="fas fa-chevron-right text-xs mx-2"></i>
-            </li>
-            <li className="flex items-center">
-              <a href="#" className="hover:text-gray-700 cursor-pointer">
-                著者一覧
-              </a>
-              <i className="fas fa-chevron-right text-xs mx-2"></i>
-            </li>
-            <li className="text-gray-700">田島 光太郎</li>
-          </ol>
-        </nav>
+        <BreadcrumbsContainer title="田島 光太郎" />
 
         {/* プロフィールセクション */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-12">
