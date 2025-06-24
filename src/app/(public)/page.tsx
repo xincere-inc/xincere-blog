@@ -107,9 +107,9 @@ const HomePage = async () => {
       <div className="mb-12">
         <H2 title="PICK UP" />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          {pickupArticles.map((article, index) => (
+          {pickupArticles.map((article) => (
             <PickUpArticle
-              key={index}
+              key={article.id}
               imageUrl={article.thumbnailUrl || defaultImageUrl}
               authorImageUrl={article.author.avatarUrl || defaultManImageUrl}
               authorName={article.author.name}
