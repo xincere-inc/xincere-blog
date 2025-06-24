@@ -22,7 +22,6 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
-import { ArticleStatus } from '@prisma/client';
 
 /**
  * 
