@@ -338,7 +338,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
             disabled={currentPage === 1 || loading}
             className="px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
           >
-            Previous
+            前へ
           </button>
           {renderPageNumbers()}
           <button
@@ -346,7 +346,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
             disabled={currentPage === totalPages || loading}
             className="px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
           >
-            Next
+            次へ
           </button>
         </div>
       )}
