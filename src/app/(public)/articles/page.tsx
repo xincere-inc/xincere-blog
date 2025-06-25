@@ -123,12 +123,12 @@ const ArticlesIndex = async ({ searchParams }: ArticlesPageProps) => {
               {totalArticlesCount}
             </span>
           </div>
-          <a
+          <Link
             href="/"
             className="inline-block mt-4 text-primary hover:underline cursor-pointer"
           >
-            <i className="fas fa-arrow-left"></i>トップページに戻る
-          </a>
+            トップページに戻る
+          </Link>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
