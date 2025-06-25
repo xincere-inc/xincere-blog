@@ -36,6 +36,16 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
       include: {
         author: true,
         category: true,
+        tags: {
+          include: {
+            tag: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     }),
     prisma.category.findMany({
@@ -133,21 +143,15 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
         {/* タグ */}
         <div className="mb-8">
           <div className="flex flex-wrap gap-2">
-            <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-gray-200 transition-colors duration-300">
-              #コンテンツSEO
-            </span>
-            <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-gray-200 transition-colors duration-300">
-              #BtoBマーケティング
-            </span>
-            <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-gray-200 transition-colors duration-300">
-              #SEO戦略
-            </span>
-            <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-gray-200 transition-colors duration-300">
-              #コンテンツ制作
-            </span>
-            <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-gray-200 transition-colors duration-300">
-              #ウェブマーケティング
-            </span>
+            {article.tags.map(({ tag }) => (
+              <Link
+                href={`/tags/${tag.id}`}
+                key={tag.id}
+                className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-gray-200 transition-colors duration-300"
+              >
+                #{tag.name}
+              </Link>
+            ))}
           </div>
         </div>
         {/* 著者情報（モバイル表示用） */}
@@ -222,6 +226,7 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
             facebookUrl="#"
             linkedinUrl="#"
             emailUrl="#"
+            className="justify-center"
           />
         </div>
         <Sidebar categories={categories} popularArticles={popularArticles} />

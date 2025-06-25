@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ArticleStatus, Prisma } from '@prisma/client';
 import Sidebar from '@/components/Sidebar';
 import BreadcrumbsContainer from '@/components/BreadcrumbsContainer';
+import { formatDateJP } from '@/lib/utils/date';
 
 type ArticlesPageProps = {
   searchParams: Promise<{ page?: string; q?: string }>;
@@ -122,12 +123,12 @@ const ArticlesIndex = async ({ searchParams }: ArticlesPageProps) => {
               {totalArticlesCount}
             </span>
           </div>
-          <a
+          <Link
             href="/"
             className="inline-block mt-4 text-primary hover:underline cursor-pointer"
           >
-            <i className="fas fa-arrow-left"></i>トップページに戻る
-          </a>
+            トップページに戻る
+          </Link>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -156,11 +157,7 @@ const ArticlesIndex = async ({ searchParams }: ArticlesPageProps) => {
                             {article.category.name}
                           </span>
                           <span className="text-gray-500 text-xs">
-                            {article.createdAt.toLocaleDateString('ja-JP', {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric',
-                            })}
+                            {formatDateJP(article.createdAt)}
                           </span>
                         </div>
                         <h3 className="font-bold text-lg mb-2 line-clamp-2 hover:text-primary transition-colors duration-300">

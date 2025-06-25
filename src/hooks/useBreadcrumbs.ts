@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 
 // 存在しないパスを定義する配列
-const INVALID_PATHS = ['/categories', '/authors'];
+const INVALID_PATHS = ['/categories', '/authors', '/tags'];
 
 export function useBreadcrumbs(title?: string) {
   const pathname = usePathname();

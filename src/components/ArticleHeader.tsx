@@ -18,7 +18,7 @@ const ArticleHeader = ({
   author,
 }: ArticleHeaderProps) => {
   return (
-    <div className="mb-8">
+    <div className="mb-2">
       <h1 className="text-3xl font-bold mb-4">{title}</h1>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
