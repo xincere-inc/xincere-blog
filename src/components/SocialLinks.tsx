@@ -9,6 +9,7 @@ type SocialLinksProps = {
   linkedinUrl?: string;
   githubUrl?: string;
   emailUrl?: string;
+  className?: string;
 };
 
 const SocialLinks = ({
@@ -17,8 +18,9 @@ const SocialLinks = ({
   linkedinUrl,
   githubUrl,
   emailUrl,
+  className,
 }: SocialLinksProps) => (
-  <div className="flex justify-center space-x-4">
+  <div className={`flex space-x-4 ${className}`}>
     {twitterUrl && (
       <Link
         href={twitterUrl}

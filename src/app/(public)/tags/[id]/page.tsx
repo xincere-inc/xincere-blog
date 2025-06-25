@@ -10,16 +10,13 @@ import Sidebar from '@/components/Sidebar';
 import BreadcrumbsContainer from '@/components/BreadcrumbsContainer';
 import { formatDateJP } from '@/lib/utils/date';
 
-type CategoryArticlesPageProps = {
-  params: Promise<{ slug: string }>;
+type TagArticlesPageProps = {
+  params: Promise<{ id: string }>;
   searchParams: Promise<{ page?: string }>;
 };
 
-const CategoryArticles = async ({
-  params,
-  searchParams,
-}: CategoryArticlesPageProps) => {
-  const { slug } = await params;
+const TagArticles = async ({ params, searchParams }: TagArticlesPageProps) => {
+  const { id } = await params;
   const { page } = await searchParams;
   const currentPage = Number(page) || 1;
   const articlesPerPage = 9;
@@ -27,12 +24,13 @@ const CategoryArticles = async ({
   // ページネーション計算
   const skip = (currentPage - 1) * articlesPerPage;
 
-  const [articles, category, categories] = await Promise.all([
-    // slugに基づいて記事を取得
+  const [articles, tag, categories] = await Promise.all([
     prisma.article.findMany({
       where: {
-        category: {
-          slug: slug,
+        tags: {
+          some: {
+            tagId: Number(id),
+          },
         },
         status: ArticleStatus.PUBLISHED,
         deletedAt: null,
@@ -47,21 +45,21 @@ const CategoryArticles = async ({
         createdAt: 'desc',
       },
     }),
-    prisma.category.findUnique({
+    prisma.tag.findUnique({
       where: {
-        slug: slug,
+        id: Number(id),
       },
       select: {
         id: true,
         name: true,
-        slug: true,
-        description: true,
         _count: {
           select: {
             articles: {
               where: {
-                deletedAt: null,
-                status: ArticleStatus.PUBLISHED,
+                article: {
+                  deletedAt: null,
+                  status: ArticleStatus.PUBLISHED,
+                },
               },
             },
           },
@@ -99,28 +97,24 @@ const CategoryArticles = async ({
     }),
   ]);
 
-  // カテゴリーが存在しない場合のエラーハンドリング
-  if (!category) {
+  if (!tag) {
     redirect('/');
   }
 
   // TODO: 閲覧数やいいね数を実装後に置き換える
   const popularArticles = articles.slice(0, 4);
 
-  const totalArticlesCount = category._count.articles;
+  const totalArticlesCount = tag._count.articles;
 
   return (
     <div>
-      {/* ヘッダー */}
-
       {/* メインコンテンツ */}
       <main className="container mx-auto px-4 py-8">
         {/* パンくずリスト */}
-        <BreadcrumbsContainer title={category.name} />
-        {/* カテゴリーヘッダー */}
+        <BreadcrumbsContainer title={tag.name} />
+        {/* タグヘッダー */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
-          <h1 className="text-3xl font-bold mb-4">{category.name}</h1>
-          <p className="text-gray-600 mb-4">{category.description}</p>
+          <h1 className="text-3xl font-bold mb-4">{tag.name}</h1>
           <div className="flex items-center text-sm text-gray-500">
             <span className="mr-2">記事数:</span>
             <span className="bg-[#E8F0E6] text-primary px-2 py-1 rounded-full">
@@ -134,7 +128,6 @@ const CategoryArticles = async ({
             <i className="fas fa-arrow-left"></i>トップページに戻る
           </a>
         </div>
-
         <div className="flex flex-col lg:flex-row gap-8">
           {/* 記事一覧 */}
           <div className="w-full lg:w-2/3 xl:w-3/4">
@@ -157,7 +150,7 @@ const CategoryArticles = async ({
                     <div className="p-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="inline-block bg-[#E8F0E6] text-primary text-xs px-3 py-1 rounded-full">
-                          {article.category.name}
+                          {tag.name}
                         </span>
                         <span className="text-gray-500 text-xs">
                           {formatDateJP(article.createdAt)}
@@ -192,7 +185,6 @@ const CategoryArticles = async ({
             <Sidebar
               categories={categories}
               popularArticles={popularArticles}
-              currentSlug={slug}
             />
           </div>
         </div>
@@ -201,4 +193,4 @@ const CategoryArticles = async ({
   );
 };
 
-export default CategoryArticles;
+export default TagArticles;

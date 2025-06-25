@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import SocialLinks from './SocialLinks';
 
 interface AuthorCardProps {
   name: string;
@@ -11,10 +10,7 @@ interface AuthorCardProps {
 
 const AuthorCard = ({ name, role, imageUrl, profileUrl }: AuthorCardProps) => {
   return (
-    <div className="flex items-center p-4 bg-gray-50 rounded-lg relative">
-      <div className="absolute top-2 right-2">
-        <SocialLinks twitterUrl="#" facebookUrl="#" linkedinUrl="#" />
-      </div>
+    <div className="flex items-center p-4 bg-gray-50 rounded-lg">
       <Image
         src={imageUrl}
         alt={name}
