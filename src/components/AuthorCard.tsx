@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import SocialLinks from './SocialLinks';
 
 interface AuthorCardProps {
   name: string;
@@ -10,7 +11,10 @@ interface AuthorCardProps {
 
 const AuthorCard = ({ name, role, imageUrl, profileUrl }: AuthorCardProps) => {
   return (
-    <div className="flex items-center p-4 bg-gray-50 rounded-lg">
+    <div className="flex items-center p-4 bg-gray-50 rounded-lg relative">
+      <div className="absolute top-2 right-2">
+        <SocialLinks twitterUrl="#" facebookUrl="#" linkedinUrl="#" />
+      </div>
       <Image
         src={imageUrl}
         alt={name}
@@ -20,7 +24,7 @@ const AuthorCard = ({ name, role, imageUrl, profileUrl }: AuthorCardProps) => {
       />
       <div>
         {profileUrl ? (
-          <Link href="/authors/1" className="block">
+          <Link href={profileUrl} className="block">
             <div className="font-bold hover:text-primary transition-colors duration-300">
               {name}
             </div>

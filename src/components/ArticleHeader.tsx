@@ -1,8 +1,6 @@
 import AuthorCard from '@/components/AuthorCard';
 import { defaultManImageUrl } from '@/data/authorData';
 import type { Author } from '@prisma/client';
-import { FaFacebook, FaLinkedin } from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
 
 type ArticleHeaderProps = {
   title: string;
@@ -36,32 +34,12 @@ const ArticleHeader = ({
             </span>
           )}
         </div>
-        <div className="flex space-x-3">
-          <a
-            href="#"
-            className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
-          >
-            <FaXTwitter fontSize={24} />
-          </a>
-          <a
-            href="#"
-            className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
-          >
-            <FaFacebook fontSize={24} />
-          </a>
-          <a
-            href="#"
-            className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
-          >
-            <FaLinkedin fontSize={24} />
-          </a>
-        </div>
       </div>
       <AuthorCard
         name={author.name}
         role={author.title}
         imageUrl={author.avatarUrl || defaultManImageUrl}
-        profileUrl={`/author/${author.id}`}
+        profileUrl={`/authors/${author.id}`}
       />
     </div>
   );

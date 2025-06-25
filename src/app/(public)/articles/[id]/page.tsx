@@ -10,6 +10,7 @@ import { formatDateJP } from '@/lib/utils/date';
 import Sidebar from '@/components/Sidebar';
 import { ArticleStatus } from '@prisma/client';
 import { defaultManImageUrl } from '@/data/authorData';
+import SocialLinks from '@/components/SocialLinks';
 
 export const dynamic = 'force-static';
 export const fetchCache = 'force-cache';
@@ -202,7 +203,7 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
           >
             <Image
               src={article.author.avatarUrl || defaultManImageUrl}
-              alt="田島光太郎"
+              alt={article.author.name}
               width={120}
               height={120}
               className="rounded-full mb-2"
@@ -216,26 +217,12 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
             </div>
           </Link>
           <p className="text-sm text-gray-600 mb-4">{article.author.bio}</p>
-          <div className="flex justify-center space-x-4">
-            <Link
-              href="#"
-              className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
-            >
-              <i className="fab fa-twitter text-lg"></i>
-            </Link>
-            <Link
-              href="#"
-              className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
-            >
-              <i className="fab fa-linkedin-in text-lg"></i>
-            </Link>
-            <Link
-              href="#"
-              className="text-gray-500 hover:text-primary transition-colors duration-300 cursor-pointer"
-            >
-              <i className="fas fa-envelope text-lg"></i>
-            </Link>
-          </div>
+          <SocialLinks
+            twitterUrl="#"
+            facebookUrl="#"
+            linkedinUrl="#"
+            emailUrl="#"
+          />
         </div>
         <Sidebar categories={categories} popularArticles={popularArticles} />
       </div>

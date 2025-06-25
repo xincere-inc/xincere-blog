@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { FaFacebook, FaGithub, FaLinkedin } from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
+import SocialLinks from './SocialLinks';
 
 const Footer = () => {
   return (
@@ -52,32 +51,12 @@ const Footer = () => {
           </div>
           <div>
             <h4 className="text-lg font-bold mb-4">フォロー</h4>
-            <div className="flex space-x-4">
-              <a
-                href="#"
-                className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
-              >
-                <FaXTwitter fontSize={24} />
-              </a>
-              <a
-                href="#"
-                className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
-              >
-                <FaFacebook fontSize={24} />
-              </a>
-              <a
-                href="#"
-                className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
-              >
-                <FaLinkedin fontSize={24} />
-              </a>
-              <a
-                href="#"
-                className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
-              >
-                <FaGithub fontSize={24} />
-              </a>
-            </div>
+            <SocialLinks
+              twitterUrl="#"
+              facebookUrl="#"
+              linkedinUrl="#"
+              githubUrl="#"
+            />
           </div>
         </div>
         <div className="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm">
