@@ -16,7 +16,10 @@ export async function seedArticles() {
   if (categories.length === 0)
     throw new Error('No categories found. Please seed categories first.');
 
-  // タイトルとサマリーを3種類用意
+  const tags = await prisma.tag.findMany();
+  if (tags.length === 0)
+    throw new Error('No tags found. Please seed tags first.');
+
   const sampleTitles = [
     'マイクロサービスアーキテクチャで実現した基幹システムの刷新事例',
     '生成AIを活用した業務効率化の最前線',
@@ -39,34 +42,41 @@ export async function seedArticles() {
     new URL('./articleContent.md', import.meta.url),
     'utf-8'
   );
-  const articles = categories.flatMap((category) => {
-    return Array.from({ length: 50 }).map(() => {
-      // ランダムにタイトルとサマリーを選択
-      const idx = faker.number.int({ min: 0, max: 2 });
-      return {
-        authorId: author.id,
-        categoryId: category.id,
-        title: sampleTitles[idx],
-        slug: faker.helpers.slugify(
-          `${faker.lorem.words(3)}-${faker.string.uuid()}`
-        ),
-        summary: sampleSummaries[idx],
-        content: htmlContent,
-        markdownContent: markdownContent,
-        thumbnailUrl: sampleThumbnailUrl,
-        status: faker.helpers.arrayElement(Object.values(ArticleStatus)),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-    });
-  });
 
-  const result = await prisma.article.createMany({
-    data: articles,
-    skipDuplicates: true,
-  });
+  let createdCount = 0;
+
+  for (const category of categories) {
+    for (let i = 0; i < 30; i++) {
+      const idx = faker.number.int({ min: 0, max: 2 });
+      const chosenTags = faker.helpers.arrayElements(tags, 2);
+
+      await prisma.article.create({
+        data: {
+          authorId: author.id,
+          categoryId: category.id,
+          title: sampleTitles[idx],
+          slug: faker.helpers.slugify(
+            `${faker.lorem.words(3)}-${faker.string.uuid()}`
+          ),
+          summary: sampleSummaries[idx],
+          content: htmlContent,
+          markdownContent: markdownContent,
+          thumbnailUrl: sampleThumbnailUrl,
+          status: faker.helpers.arrayElement(Object.values(ArticleStatus)),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          tags: {
+            create: chosenTags.map((tag) => ({
+              tag: { connect: { id: tag.id } },
+            })),
+          },
+        },
+      });
+      createdCount++;
+    }
+  }
 
   console.log(
-    `Seeded ${result.count} articles across ${categories.length} categories.`
+    `Seeded ${createdCount} articles across ${categories.length} categories.`
   );
 }

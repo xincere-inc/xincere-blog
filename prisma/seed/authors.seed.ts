@@ -27,6 +27,9 @@ const profiles = [
   },
 ];
 
+const defaultManImageUrl =
+  'https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20Asian%20man%20in%20business%20attire%2C%20neutral%20background&width=40&height=40&seq=13&orientation=squarish';
+
 export async function seedAuthors() {
   console.log('Seeding authors...');
 
@@ -38,7 +41,7 @@ export async function seedAuthors() {
       name: fakerJA.person.fullName(),
       title: profile.title,
       bio: profile.bio,
-      avatarUrl: fakerJA.image.avatar(),
+      avatarUrl: defaultManImageUrl,
       createdAt: fakerJA.date.past(),
       updatedAt: new Date(),
     };
