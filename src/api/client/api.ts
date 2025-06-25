@@ -745,6 +745,206 @@ export interface AdminGetUsersRequest {
 /**
  * 
  * @export
+ * @interface AdminGetArticlesRequest
+ */
+export interface AdminGetArticlesRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetArticlesRequest
+     */
+    'page'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetArticlesRequest
+     */
+    'limit'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticlesRequest
+     */
+    'search'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetArticles200Response
+ */
+export interface AdminGetArticles200Response {
+    /**
+     * 
+     * @type {Array<AdminGetArticles200ResponseDataInner>}
+     * @memberof AdminGetArticles200Response
+     */
+    'data'?: Array<AdminGetArticles200ResponseDataInner>;
+    /**
+     * 
+     * @type {AdminGetArticles200ResponsePagination}
+     * @memberof AdminGetArticles200Response
+     */
+    'pagination'?: AdminGetArticles200ResponsePagination;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetArticles200ResponseDataInner
+ */
+export interface AdminGetArticles200ResponseDataInner {
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    'title'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    'slug'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    'summary'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    'status'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    'thumbnailUrl'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    author?: {
+        name: string;
+        [key: string]: any;
+    };
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    category?: {
+        name: string;
+        [key: string]: any;
+    };
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    'tags'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    'createdAt'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    'updatedAt'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetArticles200ResponsePagination
+ */
+export interface AdminGetArticles200ResponsePagination {
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetArticles200ResponsePagination
+     */
+    'page'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetArticles200ResponsePagination
+     */
+    'limit'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetArticles200ResponsePagination
+     */
+    'showPerPage'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetArticles200ResponsePagination
+     */
+    'totalArticles'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetArticles200ResponsePagination
+     */
+    'totalPages'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetArticles400Response
+ */
+export interface AdminGetArticles400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles400Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {Array<AdminGetArticles400ResponseErrorsInner>}
+     * @memberof AdminGetArticles400Response
+     */
+    'errors'?: Array<AdminGetArticles400ResponseErrorsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetArticles400ResponseErrorsInner
+ */
+export interface AdminGetArticles400ResponseErrorsInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles400ResponseErrorsInner
+     */
+    'path'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles400ResponseErrorsInner
+     */
+    'message'?: string;
+}
+
+
+/**
+ * 
+ * @export
  * @interface AdminUpdateCategory200Response
  */
 export interface AdminUpdateCategory200Response {
@@ -2093,6 +2293,44 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * Retrieves articles from the database with pagination and optional search.
+         * @summary Fetch articles with pagination and search
+         * @param {AdminGetArticlesRequest} adminGetArticlesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetArticles: async (adminGetArticlesRequest: AdminGetArticlesRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminGetArticlesRequest' is not null or undefined
+            assertParamExists('adminGetArticles', 'adminGetArticlesRequest', adminGetArticlesRequest)
+            const localVarPath = `/api/admin/articles/get-article`; // <-- adjust route if needed
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            localVarRequestOptions.data = serializeDataIfNeeded(adminGetArticlesRequest, localVarRequestOptions, configuration);
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Updates details of an existing category based on the provided category ID.
          * @summary Update category details
          * @param {AdminUpdateCategoryRequest} adminUpdateCategoryRequest 
@@ -2346,6 +2584,19 @@ export const AdminApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * Retrieves articles from the database with pagination and optional search.
+         * @summary Fetch articles with pagination and search
+         * @param {AdminGetArticlesRequest} adminGetArticlesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminGetArticles(adminGetArticlesRequest: AdminGetArticlesRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminGetArticles200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetArticles(adminGetArticlesRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminGetArticles']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Updates details of an existing category based on the provided category ID.
          * @summary Update category details
          * @param {AdminUpdateCategoryRequest} adminUpdateCategoryRequest 
@@ -2491,6 +2742,16 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          */
         adminGetUsers(adminGetUsersRequest: AdminGetUsersRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminGetUsers200Response> {
             return localVarFp.adminGetUsers(adminGetUsersRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves articles from the database with pagination and optional search.
+         * @summary Fetch articles with pagination and search
+         * @param {AdminGetArticlesRequest} adminGetArticlesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetArticles(adminGetArticlesRequest: AdminGetArticlesRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminGetArticles200Response> {
+            return localVarFp.adminGetArticles(adminGetArticlesRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Updates details of an existing category based on the provided category ID.
