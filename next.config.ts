@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: false,
+  // next/imageコンポーネントで外部画像を使用する際に許可するドメインの一覧
   images: {
     remotePatterns: [
       {
@@ -20,6 +21,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'www.gravatar.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
       },
     ],
   },
