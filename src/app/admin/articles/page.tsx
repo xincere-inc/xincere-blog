@@ -1,5 +1,5 @@
 'use client'
-import { GetArticles200ResponseArticlesInner } from "@/api/client";
+import { AdminGetArticles200ResponseDataInner } from "@/api/client";
 import ApiAdminArticles from "@/api/ApiAdminArticles";
 import { Table } from "antd";
 import { useState, useRef, useEffect } from "react";
@@ -49,7 +49,7 @@ export default function ArticleTable() {
     setLoading(true);
     console.log('Get Article before fetch');
     try {
-      const response = await ApiAdminArticles.getArticles({
+      const response = await ApiAdminArticles.adminGetArticles({
         page,
         limit: pageSize,
         search,
@@ -59,7 +59,7 @@ export default function ArticleTable() {
       if (response.status === 200) {
         const articles = 
           response.data?.data?.map(
-            (article: GetArticles200ResponseArticlesInner) => ({
+            (article: AdminGetArticles200ResponseDataInner) => ({
               ...article,
               id: article.id || 0,
               author: article.author?.name || '',
@@ -68,7 +68,7 @@ export default function ArticleTable() {
               slug: article.slug || '',
               summary: article.summary || '',
               status: article.status || '',
-              tags: article.tags || '',
+              tags: Array.isArray(article.tags) ? article.tags.join(', ') : article.tags || '',
               thumbnailUrl: article.thumbnailUrl || ''
             })
           ) || [];
