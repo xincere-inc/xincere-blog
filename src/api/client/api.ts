@@ -378,7 +378,7 @@ export interface AdminCreateArticleRequest {
    * @type {number[]}
    * @memberof AdminCreateArticleRequest
    */
-  'tagIds'?: number[];
+  'tags'?: number[];
 }
 
 /**
@@ -851,7 +851,7 @@ export interface AdminGetArticles200ResponseDataInner {
      * @type {Array<string>}
      * @memberof AdminGetArticles200ResponseDataInner
      */
-    'tags'?: Array<string>;
+    'tags'?: string[];
     /**
      * 
      * @type {string}
@@ -1244,6 +1244,275 @@ export const AdminUpdateUserRequestRoleEnum = {
 } as const;
 
 export type AdminUpdateUserRequestRoleEnum = typeof AdminUpdateUserRequestRoleEnum[keyof typeof AdminUpdateUserRequestRoleEnum];
+
+/**
+ * 
+ * @export
+ * @interface AdminUpdateArticleRequest
+ */
+export interface AdminUpdateArticleRequest {
+    /**
+     * The ID of the article to update.
+     * @type {number}
+     * @memberof AdminUpdateArticleRequest
+     */
+    'id': number;
+
+    /**
+     * The title of the article.
+     * @type {string}
+     * @memberof AdminUpdateArticleRequest
+     */
+    'title'?: string;
+
+    /**
+     * The slug of the article.
+     * @type {string}
+     * @memberof AdminUpdateArticleRequest
+     */
+    'slug'?: string;
+
+    /**
+     * The summary of the article.
+     * @type {string}
+     * @memberof AdminUpdateArticleRequest
+     */
+    'summary'?: string;
+
+    /**
+     * The content of the article in HTML.
+     * @type {string}
+     * @memberof AdminUpdateArticleRequest
+     */
+    'content'?: string;
+
+    /**
+     * The markdown content of the article.
+     * @type {string}
+     * @memberof AdminUpdateArticleRequest
+     */
+    'markdownContent'?: string;
+
+    /**
+     * The status of the article.
+     * @type {AdminUpdateArticleRequestStatusEnum}
+     * @memberof AdminUpdateArticleRequest
+     */
+    'status'?: AdminUpdateArticleRequestStatusEnum;
+
+    /**
+     * The ID of the author of the article.
+     * @type {string}
+     * @memberof AdminUpdateArticleRequest
+     */
+    'authorId'?: string;
+
+    /**
+     * The ID of the category the article belongs to.
+     * @type {number}
+     * @memberof AdminUpdateArticleRequest
+     */
+    'categoryId'?: number;
+
+    /**
+     * The URL of the article's thumbnail.
+     * @type {string}
+     * @memberof AdminUpdateArticleRequest
+     */
+    'thumbnailUrl'?: string;
+
+    /**
+     * The tag IDs associated with the article.
+     * @type {number[]}
+     * @memberof AdminUpdateArticleRequest
+     */
+    'tagIds'?: number[];
+}
+
+export const AdminUpdateArticleRequestStatusEnum = {
+    Draft: 'draft',
+    Published: 'published',
+    Archived: 'archived'
+} as const;
+
+export type AdminUpdateArticleRequestStatusEnum = typeof AdminUpdateArticleRequestStatusEnum[keyof typeof AdminUpdateArticleRequestStatusEnum];
+
+/**
+ * 
+ * @export
+ * @interface AdminUpdateArticle200Response
+ */
+export interface AdminUpdateArticle200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle200Response
+     */
+    'message'?: string;
+
+    /**
+     * 
+     * @type {AdminUpdateArticle200ResponseArticle}
+     * @memberof AdminUpdateArticle200Response
+     */
+    'article'?: AdminUpdateArticle200ResponseArticle;
+}
+/**
+ * 
+ * @export
+ * @interface AdminUpdateArticle200ResponseArticle
+ */
+export interface AdminUpdateArticle200ResponseArticle {
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminUpdateArticle200ResponseArticle
+     */
+    'id'?: number;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle200ResponseArticle
+     */
+    'title'?: string;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle200ResponseArticle
+     */
+    'slug'?: string;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle200ResponseArticle
+     */
+    'summary'?: string;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle200ResponseArticle
+     */
+    'content'?: string;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle200ResponseArticle
+     */
+    'markdownContent'?: string;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle200ResponseArticle
+     */
+    'status'?: AdminUpdateArticleRequestStatusEnum;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle200ResponseArticle
+     */
+    'authorId'?: string;
+
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminUpdateArticle200ResponseArticle
+     */
+    'categoryId'?: number;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle200ResponseArticle
+     */
+    'thumbnailUrl'?: string;
+
+    /**
+     * 
+     * @type {number[]}
+     * @memberof AdminUpdateArticle200ResponseArticle
+     */
+    'tagIds'?: number[];
+}
+/**
+ * 
+ * @export
+ * @interface AdminUpdateArticle400Response
+ */
+export interface AdminUpdateArticle400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle400Response
+     */
+    'error'?: string;
+
+    /**
+     * 
+     * @type {Array<AdminUpdateArticle400ResponseErrorsInner>}
+     * @memberof AdminUpdateArticle400Response
+     */
+    'errors'?: Array<AdminUpdateArticle400ResponseErrorsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface AdminUpdateArticle400ResponseErrorsInner
+ */
+export interface AdminUpdateArticle400ResponseErrorsInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle400ResponseErrorsInner
+     */
+    'path'?: string;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle400ResponseErrorsInner
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminUpdateArticle404Response
+ */
+export interface AdminUpdateArticle404Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle404Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminUpdateArticle500Response
+ */
+export interface AdminUpdateArticle500Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle500Response
+     */
+    'error'?: string;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminUpdateArticle500Response
+     */
+    'message'?: string;
+}
 
 /**
  * 
@@ -2446,6 +2715,57 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Update details of an existing article based on the provided article ID.
+         * @summary Update article details
+         * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminUpdateArticle: async (adminUpdateArticleRequest: AdminUpdateArticleRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'adminUpdateArticleRequest' is not null or undefined
+            assertParamExists('adminUpdateArticle', 'adminUpdateArticleRequest', adminUpdateArticleRequest);
+
+            const localVarPath = `/api/admin/articles/update-article`; // ← adjust to your actual backend route
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options };
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {
+                ...localVarHeaderParameter,
+                ...headersFromBaseOptions,
+                ...options.headers,
+            };
+
+            localVarRequestOptions.data = serializeDataIfNeeded(
+                adminUpdateArticleRequest,
+                localVarRequestOptions,
+                configuration
+            );
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+
     }
 };
 
@@ -2635,6 +2955,24 @@ export const AdminApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['AdminApi.adminUpdateUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * Update details of an existing article based on the provided article ID.
+         * @summary Update article details
+         * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminUpdateArticle(
+        adminUpdateArticleRequest: AdminUpdateArticleRequest,
+        options?: RawAxiosRequestConfig
+        ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminUpdateArticle200Response>> {
+        const localVarAxiosArgs = await localVarAxiosParamCreator.adminUpdateArticle(adminUpdateArticleRequest, options);
+        const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+        const localVarOperationServerBasePath = operationServerMap['AdminApi.adminUpdateArticle']?.[localVarOperationServerIndex]?.url;
+
+        return (axios, basePath) =>
+            createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        }
     }
 };
 
@@ -2782,6 +3120,16 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          */
         adminUpdateUser(adminUpdateUserRequest: AdminUpdateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminUpdateUser200Response> {
             return localVarFp.adminUpdateUser(adminUpdateUserRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Update details of an existing article based on the provided user ID.
+         * @summary Update article details
+         * @param {AdminUpdateArticleRequest} adminUpdateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminUpdateArticle(adminUpdateArticleRequest: AdminUpdateArticleRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminUpdateArticle200Response> {
+            return localVarFp.adminUpdateArticle(adminUpdateArticleRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
