@@ -410,6 +410,20 @@ export interface AdminDeleteUsersRequest {
 /**
  * 
  * @export
+ * @interface AdminDeleteArticlesRequest
+ */
+export interface AdminDeleteArticlesRequest {
+  /**
+   * A list of article IDs to delete.
+   * @type {number[]}
+   * @memberof AdminDeleteArticlesRequest
+   */
+  'articleIds': number[];
+}
+
+/**
+ * 
+ * @export
  * @interface AdminGetCategories200Response
  */
 export interface AdminGetCategories200Response {
@@ -2419,6 +2433,34 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
                 options: localVarRequestOptions,
             };
         },
+        adminDeleteArticles: async (adminDeleteArticlesRequest: AdminDeleteArticlesRequest,options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            assertParamExists('adminDeleteArticles', 'adminDeleteArticlesRequest', adminDeleteArticlesRequest);
+
+            const localVarPath = `/api/admin/articles/delete-article`;
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options };
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions?.headers ?? {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            localVarRequestOptions.data = serializeDataIfNeeded(adminDeleteArticlesRequest, localVarRequestOptions, configuration);
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * Retrieves categories from the database with pagination and optional search using query parameters.
          * @summary Fetch categories with pagination and search
@@ -2861,6 +2903,19 @@ export const AdminApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * Admin can delete articles by their IDs (soft delete, sets deletedAt).
+         * @summary Delete articles by IDs
+         * @param {AdminDeleteArticlesRequest} adminDeleteArticlesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDeleteArticles(adminDeleteArticlesRequest: AdminDeleteArticlesRequest,options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDeleteArticles(adminDeleteArticlesRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminDeleteArticles']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios,localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Retrieves categories from the database with pagination and optional search using query parameters.
          * @summary Fetch categories with pagination and search
          * @param {number} page The page number for pagination.
@@ -3047,6 +3102,18 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
         adminDeleteUsers(adminDeleteUsersRequest: AdminDeleteUsersRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
             return localVarFp.adminDeleteUsers(adminDeleteUsersRequest, options).then((request) => request(axios, basePath));
         },
+        /**
+         * Admin can delete articles by their IDs (soft delete, sets deletedAt).
+         * @summary Delete articles by IDs
+         * @param {AdminDeleteArticlesRequest} adminDeleteArticlesRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDeleteArticles(adminDeleteArticlesRequest: AdminDeleteArticlesRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
+            return localVarFp.adminDeleteArticles(adminDeleteArticlesRequest, options).then((request) => request(axios, basePath)
+        );
+        },
+
         /**
          * Retrieves categories from the database with pagination and optional search using query parameters.
          * @summary Fetch categories with pagination and search

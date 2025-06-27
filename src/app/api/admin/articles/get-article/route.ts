@@ -54,9 +54,7 @@ export async function POST(
         author: {
           select: {
             id: true,
-            email: true,
-            firstName: true,
-            lastName: true,
+            name: true,
           },
         },
         category: {
@@ -85,8 +83,7 @@ export async function POST(
       updatedAt: article.updatedAt.toISOString(),
       author: {
         id: article.author.id,
-        name: `${article.author.firstName} ${article.author.lastName}`,
-        email: article.author.email,
+        name: `${article.author.name}`,
       },
       category: {
         id: article.category.id,
