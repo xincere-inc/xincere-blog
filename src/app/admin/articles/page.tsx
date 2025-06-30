@@ -44,6 +44,7 @@ export default function ArticleTable() {
   const [article, setArticle] = useState<Article | null>(null);
   const [authors, setAuthors] = useState<{ id: string; name: string }[]>([]);
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
 
   const fetchData = async (page: number, pageSize: number, search: string) => {
     setLoading(true);
@@ -265,30 +266,38 @@ export default function ArticleTable() {
 
   const fetchCategories = async () => {
     try {
-      // TODO update based on actual API
-      // const response = await ApiAdminArticles.adminGetCategories(); 
-      const response = {
-        status: 200,
-        data: {
-          data: [
-            { id: 1, name: 'Tech' },
-            { id: 2, name: 'Lifestyle' },
-            { id: 3, name: 'Education' },
-          ],
-        },
-      };
+      const response = await fetch('/api/admin/categories/get-category?page=1&limit=1000');
+      const result = await response.json();
 
-      if (response.status === 200) {
-        setCategories(response.data.data);
-      }
+      const categoryList =
+        result?.data?.map((cat: { id: number; name: string }) => ({
+          id: cat.id,
+          name: cat.name,
+        })) || [];
+
+      setCategories(categoryList);
     } catch (error) {
-      console.error("Failed to fetch categories", error);
+      console.error('Failed to fetch categories', error);
+    }
+  };
+
+  
+
+  const fetchTags = async () => {
+    try {
+      const res = await fetch('/api/admin/tags/get-tags?page=1&limit=1000');
+      const result = await res.json();
+      const tagNames = result?.data?.map((tag: { name: string }) => tag.name) || [];
+      setTags(tagNames);
+    } catch (error) {
+      console.error('Failed to fetch tags', error);
     }
   };
 
   useEffect(() => {
     fetchAuthors();
     fetchCategories();
+    fetchTags();
     fetchData(pagination.current, pagination.pageSize, searchText);
   }, [pagination.current, pagination.pageSize, searchText]);
 
@@ -323,6 +332,7 @@ export default function ArticleTable() {
         formRef={createFormRef}
         authors={authors}
         categories={categories}
+        tags={tags}
       />
       <ArticleEditModal
         visible={isEditModalVisible}
@@ -330,7 +340,10 @@ export default function ArticleTable() {
         onEdit={updateArticle}
         loading={loading}
         article={article}
-        serverError={serverError} authors={[]} categories={[]}
+        serverError={serverError} 
+        authors={[]} 
+        categories={[]}
+        tags={[]}
       />
     </div>
   );

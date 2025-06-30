@@ -10,6 +10,7 @@ interface ArticleCreateModalProps {
   formRef?: React.RefObject<FormInstance>;
   authors: { id: string; name: string }[];
   categories: { id: number; name: string }[];
+  tags: string[];
 }
 
 export function ArticleCreateModal({
@@ -21,6 +22,7 @@ export function ArticleCreateModal({
   formRef,
   authors = [],
   categories = [],
+  tags = [],
 }: ArticleCreateModalProps) {
   const [form] = Form.useForm();
   useImperativeHandle(formRef, () => form);
@@ -54,7 +56,11 @@ export function ArticleCreateModal({
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item label="Author" name="authorId" rules={[{ required: true }]}>
+            <Form.Item
+              label="Author"
+              name="authorId"
+              rules={[{ required: true }]}
+            >
               <Select placeholder="Select an author">
                 {authors.map((author) => (
                   <Select.Option key={author.id} value={author.id}>
@@ -65,7 +71,11 @@ export function ArticleCreateModal({
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Category" name="categoryId" rules={[{ required: true }]}>
+            <Form.Item
+              label="Category"
+              name="categoryId"
+              rules={[{ required: true }]}
+            >
               <Select placeholder="Select a category">
                 {categories.map((category) => (
                   <Select.Option key={category.id} value={category.id}>
@@ -101,13 +111,18 @@ export function ArticleCreateModal({
         </Form.Item>
 
         <Form.Item label="Tags" name="tags">
-          <Select mode="tags" style={{ width: '100%' }} placeholder="Enter tags">
-          </Select>
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            placeholder="Enter or select tags"
+            options={tags.map(tag => ({ label: tag, value: tag }))}
+          />
         </Form.Item>
 
         <Button type="primary" htmlType="submit" loading={loading}>
           Create Article
         </Button>
+
         <Row>
           <Col span={24}>
             {serverError && (
@@ -122,5 +137,4 @@ export function ArticleCreateModal({
       </Form>
     </Modal>
   );
-
 }
