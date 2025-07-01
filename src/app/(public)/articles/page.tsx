@@ -42,7 +42,7 @@ const ArticlesIndex = async ({ searchParams }: ArticlesPageProps) => {
       }
     : {};
 
-  const [articles, totalArticlesCount, categories] = await Promise.all([
+  const [articles, totalArticlesCount] = await Promise.all([
     prisma.article.findMany({
       where: {
         status: ArticleStatus.PUBLISHED,
@@ -66,39 +66,7 @@ const ArticlesIndex = async ({ searchParams }: ArticlesPageProps) => {
         ...searchFilter,
       },
     }),
-    prisma.category.findMany({
-      where: {
-        deletedAt: null,
-        articles: {
-          some: {
-            status: ArticleStatus.PUBLISHED,
-            deletedAt: null,
-          },
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        _count: {
-          select: {
-            articles: {
-              where: {
-                deletedAt: null,
-                status: ArticleStatus.PUBLISHED,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'asc',
-      },
-    }),
   ]);
-
-  // TODO: 閲覧数やいいね数を実装後に置き換える
-  const popularArticles = articles.slice(0, 4);
 
   const pageTitle = searchQuery ? `"${searchQuery}"の検索結果` : '記事一覧';
 
@@ -197,10 +165,7 @@ const ArticlesIndex = async ({ searchParams }: ArticlesPageProps) => {
 
           {/* サイドバー */}
           <div className="w-full md:w-1/3 lg:w-1/4">
-            <Sidebar
-              categories={categories}
-              popularArticles={popularArticles}
-            />
+            <Sidebar />
           </div>
         </div>
       </main>

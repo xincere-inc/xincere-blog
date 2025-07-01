@@ -24,7 +24,7 @@ const TagArticles = async ({ params, searchParams }: TagArticlesPageProps) => {
   // ページネーション計算
   const skip = (currentPage - 1) * articlesPerPage;
 
-  const [articles, tag, categories] = await Promise.all([
+  const [articles, tag] = await Promise.all([
     prisma.article.findMany({
       where: {
         tags: {
@@ -66,43 +66,11 @@ const TagArticles = async ({ params, searchParams }: TagArticlesPageProps) => {
         },
       },
     }),
-    prisma.category.findMany({
-      where: {
-        deletedAt: null,
-        articles: {
-          some: {
-            status: ArticleStatus.PUBLISHED,
-            deletedAt: null,
-          },
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        _count: {
-          select: {
-            articles: {
-              where: {
-                deletedAt: null,
-                status: ArticleStatus.PUBLISHED,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'asc',
-      },
-    }),
   ]);
 
   if (!tag) {
     redirect('/');
   }
-
-  // TODO: 閲覧数やいいね数を実装後に置き換える
-  const popularArticles = articles.slice(0, 4);
 
   const totalArticlesCount = tag._count.articles;
 
@@ -182,10 +150,7 @@ const TagArticles = async ({ params, searchParams }: TagArticlesPageProps) => {
 
           {/* サイドバー */}
           <div className="w-full md:w-1/3 lg:w-1/4">
-            <Sidebar
-              categories={categories}
-              popularArticles={popularArticles}
-            />
+            <Sidebar />
           </div>
         </div>
       </main>
