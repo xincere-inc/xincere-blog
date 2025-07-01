@@ -1823,6 +1823,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
+  /api/articles/{id}/view:
+    post:
+      summary: Increment article view count
+      tags: [Articles]
+      operationId: incrementArticleViewCount
+      description: Increments the view count for an article and returns the updated count.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the article to view.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: View count incremented successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  viewsCount:
+                    type: integer
+                    description: The updated view count for the article.
+                    example: 42
+        '400':
+          description: Invalid article ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Invalid article ID'
+        '404':
+          description: Article not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Article not found'
   /api/comments:
     post:
       summary: Post a comment on an article

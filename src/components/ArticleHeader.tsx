@@ -1,6 +1,7 @@
 import AuthorCard from '@/components/AuthorCard';
 import { defaultManImageUrl } from '@/data/authorData';
 import type { Author } from '@prisma/client';
+import ArticleViewCounter from './ArticleViewCounter';
 
 type ArticleHeaderProps = {
   title: string;
@@ -8,6 +9,8 @@ type ArticleHeaderProps = {
   createdDate: string;
   updatedDate?: string;
   author: Author;
+  articleId: string;
+  initialViewCount: number;
 };
 
 const ArticleHeader = ({
@@ -16,6 +19,8 @@ const ArticleHeader = ({
   createdDate,
   updatedDate,
   author,
+  articleId,
+  initialViewCount,
 }: ArticleHeaderProps) => {
   return (
     <div className="mb-2">
@@ -28,9 +33,24 @@ const ArticleHeader = ({
           <span className="text-gray-500 text-sm ml-4">
             公開日：{createdDate}
           </span>
-          {updatedDate && createdDate !== updatedDate && (
+          {updatedDate && createdDate !== updatedDate ? (
+            <>
+              <span className="text-gray-500 text-sm ml-4">
+                最終更新日：{updatedDate}
+              </span>
+              <span className="text-gray-500 text-sm ml-4">
+                <ArticleViewCounter
+                  articleId={articleId}
+                  initial={initialViewCount}
+                />
+              </span>
+            </>
+          ) : (
             <span className="text-gray-500 text-sm ml-4">
-              最終更新日：{updatedDate}
+              <ArticleViewCounter
+                articleId={articleId}
+                initial={initialViewCount}
+              />
             </span>
           )}
         </div>

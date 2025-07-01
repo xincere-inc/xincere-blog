@@ -1,35 +1,60 @@
-'use client';
-
-import type { Prisma, Article as PrismaArticle } from '@prisma/client';
 import React from 'react';
 import ContactCTA from './ContactCTA';
 import CategoryList from './CategoryList';
 import PopularArticles from './PopularArticles';
 import { defaultImageUrl } from '@/data/articleData';
 import SearchBox from './SearchBox';
-
-type Article = Pick<PrismaArticle, 'id' | 'title' | 'thumbnailUrl' | 'slug'>;
-
-type Category = Pick<
-  Prisma.CategoryGetPayload<{
-    include: { _count: { select: { articles: true } } };
-  }>,
-  'id' | 'name' | 'slug'
-> & {
-  _count: { articles: number };
-};
+import { prisma } from '@/lib/prisma';
+import { ArticleStatus } from '@prisma/client';
 
 interface SidebarProps {
-  categories: (Category & { _count: { articles: number } })[];
-  popularArticles: Article[];
   currentSlug?: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  categories,
-  popularArticles,
-  currentSlug,
-}) => {
+const Sidebar = async ({ currentSlug }: SidebarProps) => {
+  const [popularArticles, categories] = await Promise.all([
+    prisma.article.findMany({
+      where: {
+        status: ArticleStatus.PUBLISHED,
+        deletedAt: null,
+        analytics: {
+          isNot: null,
+        },
+      },
+      orderBy: {
+        analytics: {
+          viewsCount: 'desc',
+        },
+      },
+      take: 4,
+    }),
+    prisma.category.findMany({
+      where: {
+        articles: {
+          some: {
+            status: ArticleStatus.PUBLISHED,
+            deletedAt: null,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        _count: {
+          select: {
+            articles: {
+              where: {
+                status: ArticleStatus.PUBLISHED,
+                deletedAt: null,
+              },
+            },
+          },
+        },
+      },
+    }),
+  ]);
+
   return (
     <>
       {/* 検索ボックス */}

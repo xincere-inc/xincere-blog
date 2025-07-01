@@ -9,94 +9,75 @@ import Sidebar from 'src/components/Sidebar';
 import H2 from 'src/components/organisms/h2';
 
 const HomePage = async () => {
-  const [articles, pickupArticles, tabCategories, categories] =
-    await Promise.all([
-      prisma.article.findMany({
-        take: 9,
-        skip: 0,
-        where: {
-          status: ArticleStatus.PUBLISHED,
-          deletedAt: null,
+  const [articles, pickupArticles, tabCategories] = await Promise.all([
+    prisma.article.findMany({
+      take: 9,
+      skip: 0,
+      where: {
+        status: ArticleStatus.PUBLISHED,
+        deletedAt: null,
+      },
+      include: {
+        category: {
+          select: { id: true, name: true, slug: true },
         },
-        include: {
-          category: {
-            select: { id: true, name: true, slug: true },
-          },
-          author: {
-            select: { id: true, name: true },
-          },
+        author: {
+          select: { id: true, name: true },
         },
-        orderBy: {
-          createdAt: 'desc',
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    }),
+    // TODO: ピックアップ記事の取得方法を確認する、ひとまず最新の２件を取得する
+    prisma.article.findMany({
+      take: 2,
+      where: {
+        status: ArticleStatus.PUBLISHED,
+        deletedAt: null,
+      },
+      include: {
+        category: {
+          select: { id: true, name: true, slug: true },
         },
-      }),
-      // TODO: ピックアップ記事の取得方法を確認する、ひとまず最新の２件を取得する
-      prisma.article.findMany({
-        take: 2,
-        where: {
-          status: ArticleStatus.PUBLISHED,
-          deletedAt: null,
+        author: {
+          select: { id: true, name: true, avatarUrl: true },
         },
-        include: {
-          category: {
-            select: { id: true, name: true, slug: true },
-          },
-          author: {
-            select: { id: true, name: true, avatarUrl: true },
-          },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      }),
-      prisma.category.findMany({
-        take: 6,
-        skip: 0,
-        where: {
-          articles: {
-            some: {
-              status: ArticleStatus.PUBLISHED,
-              deletedAt: null,
-            },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    }),
+    prisma.category.findMany({
+      where: {
+        articles: {
+          some: {
+            status: ArticleStatus.PUBLISHED,
+            deletedAt: null,
           },
         },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      }),
-      prisma.category.findMany({
-        where: {
-          articles: {
-            some: {
-              status: ArticleStatus.PUBLISHED,
-              deletedAt: null,
-            },
-          },
-        },
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          description: true,
-          createdAt: true,
-          updatedAt: true,
-          deletedAt: true,
-          _count: {
-            select: {
-              articles: {
-                where: {
-                  status: ArticleStatus.PUBLISHED,
-                  deletedAt: null,
-                },
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
+        _count: {
+          select: {
+            articles: {
+              where: {
+                status: ArticleStatus.PUBLISHED,
+                deletedAt: null,
               },
             },
           },
         },
-      }),
-    ]);
-
-  // TODO: 閲覧数やいいね数を実装後にに置き換える
-  const popularArticles = articles.slice(0, 4);
+      },
+    }),
+  ]);
 
   return (
     <main className="container mx-auto px-4">
@@ -128,7 +109,7 @@ const HomePage = async () => {
 
         {/* サイドバー */}
         <div className="w-full md:w-1/3 lg:w-1/4">
-          <Sidebar categories={categories} popularArticles={popularArticles} />
+          <Sidebar />
         </div>
       </div>
     </main>

@@ -27,7 +27,7 @@ const CategoryArticles = async ({
   // ページネーション計算
   const skip = (currentPage - 1) * articlesPerPage;
 
-  const [articles, category, categories] = await Promise.all([
+  const [articles, category] = await Promise.all([
     // slugに基づいて記事を取得
     prisma.article.findMany({
       where: {
@@ -103,9 +103,6 @@ const CategoryArticles = async ({
   if (!category) {
     redirect('/');
   }
-
-  // TODO: 閲覧数やいいね数を実装後に置き換える
-  const popularArticles = articles.slice(0, 4);
 
   const totalArticlesCount = category._count.articles;
 
@@ -189,11 +186,7 @@ const CategoryArticles = async ({
 
           {/* サイドバー */}
           <div className="w-full md:w-1/3 lg:w-1/4">
-            <Sidebar
-              categories={categories}
-              popularArticles={popularArticles}
-              currentSlug={slug}
-            />
+            <Sidebar currentSlug={slug} />
           </div>
         </div>
       </main>

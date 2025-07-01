@@ -12,16 +12,17 @@ import { ArticleStatus } from '@prisma/client';
 import { defaultManImageUrl } from '@/data/authorData';
 import SocialLinks from '@/components/SocialLinks';
 
-export const dynamic = 'force-static';
-export const fetchCache = 'force-cache';
-export const revalidate = 3600;
+// TODO: 閲覧数のインクリメントの反映が遅れる問題を解消して、SSG＋ISRを導入する
+// export const dynamic = 'force-static';
+// export const fetchCache = 'force-cache';
+// export const revalidate = 3600;
 
-export async function generateStaticParams() {
-  const articles = await prisma.article.findMany({ select: { id: true } });
-  return articles.map((a) => ({
-    params: { id: a.id.toString() },
-  }));
-}
+// export async function generateStaticParams() {
+//   const articles = await prisma.article.findMany({ select: { id: true } });
+//   return articles.map((a) => ({
+//     params: { id: a.id.toString() },
+//   }));
+// }
 
 type ArticleDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -30,64 +31,28 @@ type ArticleDetailPageProps = {
 const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
   const { id } = await params;
 
-  const [article, categories, popularArticles] = await Promise.all([
-    prisma.article.findUnique({
-      where: { id: Number(id) },
-      include: {
-        author: true,
-        category: true,
-        tags: {
-          include: {
-            tag: {
-              select: {
-                id: true,
-                name: true,
-              },
+  const article = await prisma.article.findUnique({
+    where: { id: Number(id) },
+    include: {
+      author: true,
+      category: true,
+      tags: {
+        include: {
+          tag: {
+            select: {
+              id: true,
+              name: true,
             },
           },
         },
       },
-    }),
-    prisma.category.findMany({
-      where: {
-        deletedAt: null,
-        articles: {
-          some: {
-            status: ArticleStatus.PUBLISHED,
-            deletedAt: null,
-          },
+      analytics: {
+        select: {
+          viewsCount: true,
         },
       },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        _count: {
-          select: {
-            articles: {
-              where: {
-                deletedAt: null,
-                status: ArticleStatus.PUBLISHED,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'asc',
-      },
-    }),
-    prisma.article.findMany({
-      where: {
-        status: ArticleStatus.PUBLISHED,
-        deletedAt: null,
-      },
-      take: 4,
-      orderBy: {
-        createdAt: 'desc',
-      },
-    }),
-  ]);
+    },
+  });
 
   if (!article) {
     return (
@@ -131,6 +96,8 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
           createdDate={formatDateJP(article.createdAt)}
           updatedDate={formatDateJP(article.updatedAt)}
           author={article.author}
+          articleId={id}
+          initialViewCount={article.analytics?.viewsCount || 0}
         />
         {/* 記事本文 */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
@@ -229,7 +196,7 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
             className="justify-center"
           />
         </div>
-        <Sidebar categories={categories} popularArticles={popularArticles} />
+        <Sidebar />
       </div>
     </div>
   );
