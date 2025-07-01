@@ -1415,6 +1415,45 @@ export interface GetComments200ResponseCommentsInner {
 /**
  * 
  * @export
+ * @interface IncrementArticleViewCount200Response
+ */
+export interface IncrementArticleViewCount200Response {
+    /**
+     * The updated view count for the article.
+     * @type {number}
+     * @memberof IncrementArticleViewCount200Response
+     */
+    'viewsCount'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface IncrementArticleViewCount400Response
+ */
+export interface IncrementArticleViewCount400Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof IncrementArticleViewCount400Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface IncrementArticleViewCount404Response
+ */
+export interface IncrementArticleViewCount404Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof IncrementArticleViewCount404Response
+     */
+    'error'?: string;
+}
+/**
+ * 
+ * @export
  * @interface InternalServerError
  */
 export interface InternalServerError {
@@ -2758,6 +2797,40 @@ export const ArticlesApiAxiosParamCreator = function (configuration?: Configurat
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Increments the view count for an article and returns the updated count.
+         * @summary Increment article view count
+         * @param {string} id ID of the article to view.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incrementArticleViewCount: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('incrementArticleViewCount', 'id', id)
+            const localVarPath = `/api/articles/{id}/view`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -2783,6 +2856,19 @@ export const ArticlesApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['ArticlesApi.getArticles']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * Increments the view count for an article and returns the updated count.
+         * @summary Increment article view count
+         * @param {string} id ID of the article to view.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async incrementArticleViewCount(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IncrementArticleViewCount200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.incrementArticleViewCount(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ArticlesApi.incrementArticleViewCount']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -2804,6 +2890,16 @@ export const ArticlesApiFactory = function (configuration?: Configuration, baseP
          */
         getArticles(skip: number, take: number, category?: string, options?: RawAxiosRequestConfig): AxiosPromise<GetArticles200Response> {
             return localVarFp.getArticles(skip, take, category, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Increments the view count for an article and returns the updated count.
+         * @summary Increment article view count
+         * @param {string} id ID of the article to view.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incrementArticleViewCount(id: string, options?: RawAxiosRequestConfig): AxiosPromise<IncrementArticleViewCount200Response> {
+            return localVarFp.incrementArticleViewCount(id, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2827,6 +2923,18 @@ export class ArticlesApi extends BaseAPI {
      */
     public getArticles(skip: number, take: number, category?: string, options?: RawAxiosRequestConfig) {
         return ArticlesApiFp(this.configuration).getArticles(skip, take, category, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Increments the view count for an article and returns the updated count.
+     * @summary Increment article view count
+     * @param {string} id ID of the article to view.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticlesApi
+     */
+    public incrementArticleViewCount(id: string, options?: RawAxiosRequestConfig) {
+        return ArticlesApiFp(this.configuration).incrementArticleViewCount(id, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
