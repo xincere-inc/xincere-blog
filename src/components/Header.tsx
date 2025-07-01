@@ -27,7 +27,7 @@ const Header = () => {
           <nav className="hidden md:flex items-center space-x-4">
             <Link
               href="/contacts"
-              className="text-sm sm:text-md bg-primary text-white p-2 sm:p-4 rounded-md hover:bg-primary-dark transition-colors duration-300 flex items-center !rounded-button whitespace-nowrap cursor-pointer"
+              className="bg-primary text-white p-2 sm:p-4 rounded-md hover:bg-primary-dark transition-colors duration-300 flex items-center !rounded-button whitespace-nowrap cursor-pointer font-semibold"
             >
               無料相談
             </Link>
@@ -103,7 +103,7 @@ const Header = () => {
         <div className="flex flex-col p-4 space-y-4">
           <Link
             href="/contacts"
-            className="text-md bg-primary text-white p-3 rounded-md hover:bg-primary-dark transition-colors duration-300 text-center"
+            className="text-md bg-primary text-white p-3 rounded-md hover:bg-primary-dark transition-colors duration-300 text-center font-semibold"
             onClick={toggleMenu}
           >
             無料相談
