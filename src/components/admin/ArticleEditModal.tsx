@@ -21,6 +21,7 @@ interface ArticleEditModalProps {
   article: Article | null;
   authors: { id: string; name: string }[];
   categories: { id: number; name: string }[];
+  tags: string[];
 }
 
 export function ArticleEditModal({
@@ -32,6 +33,7 @@ export function ArticleEditModal({
   article,
   authors = [],
   categories = [],
+  tags = [],
 }: ArticleEditModalProps) {
   const [form] = Form.useForm();
 
@@ -127,7 +129,12 @@ export function ArticleEditModal({
         </Form.Item>
 
         <Form.Item label="Tags" name="tags">
-          <Select mode="tags" style={{ width: '100%' }} placeholder="Enter tags" />
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            placeholder="Enter or select tags"
+            options={tags.map(tag => ({ label: tag, value: tag }))}
+          />
         </Form.Item>
 
         <Button type="primary" htmlType="submit" loading={loading}>

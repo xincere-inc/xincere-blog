@@ -1,6 +1,7 @@
 'use client'
-import { AdminGetArticles200ResponseDataInner } from "@/api/client";
+import { AdminCreateCategory201ResponseCategory, AdminGetArticles200ResponseDataInner } from "@/api/client";
 import ApiAdminArticles from "@/api/ApiAdminArticles";
+import ApiAdminCategory from "@/api/ApiAdminCategory";
 import { Table } from "antd";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -48,14 +49,12 @@ export default function ArticleTable() {
 
   const fetchData = async (page: number, pageSize: number, search: string) => {
     setLoading(true);
-    console.log('Get Article before fetch');
     try {
       const response = await ApiAdminArticles.adminGetArticles({
         page,
         limit: pageSize,
         search,
       });
-      console.log('get article:', response);
       
       if (response.status === 200) {
         const articles = 
@@ -90,10 +89,12 @@ export default function ArticleTable() {
     }
   };
 
-  const deleteArticle = async (ids: string[]) => {
+  const deleteArticle = async (ids: number[]) => {
     setSelectedRowKeys([]);
     try {
-      const response = await ApiAdminArticles.adminDeleteArticles({ids});
+      const response = await ApiAdminArticles.adminDeleteArticles({
+        articleIds: ids
+      });
       if (response.status !== 200) {
         toast.error(response?.data?.message || 'Failed to delete Article data.', {
           position: 'bottom-right',
@@ -198,7 +199,7 @@ export default function ArticleTable() {
 
   const handleDelete = (record: Article) => {
     if(record.id) {
-      deleteArticle([record.id.toString()]);
+      deleteArticle([record.id]);
     }
   };
 
@@ -236,7 +237,7 @@ export default function ArticleTable() {
 
   const handleBulkDelete = () => {
     if (selectedRowKeys.length > 0) {
-      deleteArticle(selectedRowKeys as string[]);
+      deleteArticle(selectedRowKeys as number[]);
     } else {
       toast.error('No article selected.', { position: 'bottom-right' });
     }
@@ -266,22 +267,34 @@ export default function ArticleTable() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/admin/categories/get-category?page=1&limit=1000');
-      const result = await response.json();
-
-      const categoryList =
-        result?.data?.map((cat: { id: number; name: string }) => ({
-          id: cat.id,
-          name: cat.name,
-        })) || [];
-
-      setCategories(categoryList);
-    } catch (error) {
-      console.error('Failed to fetch categories', error);
+      const response = await ApiAdminCategory.adminGetCategories(
+        1,
+        100
+      );
+      console.log('fetch categories', response);
+      if (response.status === 200) {
+        const categories =
+          response.data?.data?.map(
+            (category: AdminCreateCategory201ResponseCategory) => ({
+              id: category.id || 0,
+              name: category.name || '',
+            })
+          ) || [];
+        setCategories(categories);
+      } else {
+        toast.error('Failed to get categories data.', {
+          position: 'bottom-right',
+        });
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data.message || 'Something went wrong.', {
+        position: 'bottom-right',
+        autoClose: 3000,
+      });
+    } finally {
+      setLoading(false);
     }
   };
-
-  
 
   const fetchTags = async () => {
     try {
@@ -343,7 +356,7 @@ export default function ArticleTable() {
         serverError={serverError} 
         authors={[]} 
         categories={[]}
-        tags={[]}
+        tags={tags}
       />
     </div>
   );
