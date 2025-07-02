@@ -46,6 +46,7 @@ export async function POST(
       `,
     });
 
+    // TODO: メール送信に成功しないとエラーになり、contactレコード自体が削除される
     if (!emailResponse.success) {
       // Delete the submission if email sending fails
       await prisma.contact.delete({
