@@ -2810,6 +2810,55 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * Retrieves authors from the database with pagination and optional search.
+         * @summary Fetch authors with pagination and search
+         * @param {AdminGetAuthorsRequest} adminGetAuthorsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetAuthors: async (
+            adminGetAuthorsRequest: AdminGetAuthorsRequest,
+            options: RawAxiosRequestConfig = {}
+        ): Promise<RequestArgs> => {
+            // verify required parameter 'adminGetAuthorsRequest' is not null or undefined
+            assertParamExists('adminGetAuthors', 'adminGetAuthorsRequest', adminGetAuthorsRequest);
+
+            const localVarPath = `/api/admin/authors/get-author`;
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+
+            const headersFromBaseOptions =
+                baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {
+                ...localVarHeaderParameter,
+                ...headersFromBaseOptions,
+                ...options.headers,
+            };
+
+            localVarRequestOptions.data = serializeDataIfNeeded(
+                adminGetAuthorsRequest,
+                localVarRequestOptions,
+                configuration
+            );
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Updates details of an existing tag based on the provided tag ID.
          * @summary Update tag details
          * @param {AdminUpdateTagRequest} adminUpdateTagRequest 
@@ -3155,7 +3204,28 @@ export const AdminApiFp = function(configuration?: Configuration) {
 
         return (axios, basePath) =>
             createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        }
+        },
+        /**
+         * Retrieves authors from the database with pagination and optional search.
+         * @summary Fetch authors with pagination and search
+         * @param {AdminGetAuthorsRequest} adminGetAuthorsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminGetAuthors(
+            adminGetAuthorsRequest: AdminGetAuthorsRequest,
+            options?: RawAxiosRequestConfig
+        ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminGetAuthors200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminGetAuthors(adminGetAuthorsRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath =
+                operationServerMap['AdminApi.adminGetAuthors']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) =>
+                createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(
+                axios,
+                localVarOperationServerBasePath || basePath
+                );
+        },
     }
 };
 
@@ -3325,6 +3395,16 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          */
         adminUpdateArticle(adminUpdateArticleRequest: AdminUpdateArticleRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminUpdateArticle200Response> {
             return localVarFp.adminUpdateArticle(adminUpdateArticleRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves authors from the database with pagination and optional search.
+         * @summary Fetch authors with pagination and search
+         * @param {AdminGetAuthorsRequest} adminGetAuthorsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminGetAuthors(adminGetAuthorsRequest: AdminGetAuthorsRequest, options?: RawAxiosRequestConfig): AxiosPromise<AdminGetAuthors200Response> {
+            return localVarFp.adminGetAuthors(adminGetAuthorsRequest, options).then((request) => request(axios, basePath));
         },
     };
 };

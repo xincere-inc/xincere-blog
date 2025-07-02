@@ -1,7 +1,11 @@
 'use client'
-import { AdminCreateCategory201ResponseCategory, AdminGetArticles200ResponseDataInner } from "@/api/client";
+import { 
+  AdminCreateCategory201ResponseCategory,
+  AdminGetArticles200ResponseDataInner,
+} from "@/api/client";
 import ApiAdminArticles from "@/api/ApiAdminArticles";
 import ApiAdminCategory from "@/api/ApiAdminCategory";
+import ApiAdminAuthors from "@/api/ApiAdminAuthors";
 import { Table } from "antd";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -245,25 +249,28 @@ export default function ArticleTable() {
 
   const fetchAuthors = async () => {
     try {
-      // TODO update based on actual API
-      // const response = await ApiAdminArticles.adminGetAuthors(); 
-      const response = {
-        status: 200,
-        data: {
-          data: [
-            { id: '1', name: 'John Doe' },
-            { id: '2', name: 'Jane Smith' },
-            { id: '3', name: 'Alice Johnson' },
-          ],
-        },
-      };
+      const response = await ApiAdminAuthors.adminGetAuthors({
+        page: 1,
+        limit: 100,
+        search: ''
+      });
+
       if (response.status === 200) {
-        setAuthors(response.data.data); // assumes the data is an array of { id, name }
+        const authorsData = response.data?.data ?? [];
+        const formatted = authorsData.map((author) => ({
+          id: author.id,
+          name: author.name,
+        }));
+        setAuthors(formatted);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch authors', error);
+      toast.error(error.response?.data?.message || 'Error fetching authors', {
+        position: 'bottom-right',
+      });
     }
   };
+
 
   const fetchCategories = async () => {
     try {
@@ -354,8 +361,8 @@ export default function ArticleTable() {
         loading={loading}
         article={article}
         serverError={serverError} 
-        authors={[]} 
-        categories={[]}
+        authors={authors}
+        categories={categories}
         tags={tags}
       />
     </div>
