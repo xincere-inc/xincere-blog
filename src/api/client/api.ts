@@ -954,6 +954,134 @@ export interface AdminGetArticles400ResponseErrorsInner {
      */
     'message'?: string;
 }
+/**
+ * 
+ * @export
+ * @interface AdminGetAuthorsRequest
+ */
+export interface AdminGetAuthorsRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetAuthorsRequest
+     */
+    'page'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetAuthorsRequest
+     */
+    'limit'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetAuthorsRequest
+     */
+    'search'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetAuthors200Response
+ */
+export interface AdminGetAuthors200Response {
+    /**
+     * 
+     * @type {Array<AdminGetAuthors200ResponseDataInner>}
+     * @memberof AdminGetAuthors200Response
+     */
+    'data'?: Array<AdminGetAuthors200ResponseDataInner>;
+    /**
+     * 
+     * @type {AdminGetAuthors200ResponsePagination}
+     * @memberof AdminGetAuthors200Response
+     */
+    'pagination'?: AdminGetAuthors200ResponsePagination;
+}
+/**
+ * 
+ * @export
+ * @interface AdminGetAuthors200ResponseDataInner
+ */
+export interface AdminGetAuthors200ResponseDataInner {
+  /**
+   * 
+   * @type {string}
+   * @memberof AdminGetAuthors200ResponseDataInner
+   */
+  id: string;
+
+  /**
+   * 
+   * @type {string}
+   * @memberof AdminGetAuthors200ResponseDataInner
+   */
+  name: string;
+
+  /**
+   * 
+   * @type {string}
+   * @memberof AdminGetAuthors200ResponseDataInner
+   */
+  title: string;
+
+  /**
+   * 
+   * @type {string}
+   * @memberof AdminGetAuthors200ResponseDataInner
+   */
+  bio: string;
+
+  /**
+   * 
+   * @type {string}
+   * @memberof AdminGetAuthors200ResponseDataInner
+   */
+  avatarUrl: string;
+
+  /**
+   * 
+   * @type {string}
+   * @memberof AdminGetAuthors200ResponseDataInner
+   */
+  createdAt: string;
+
+  /**
+   * 
+   * @type {string}
+   * @memberof AdminGetAuthors200ResponseDataInner
+   */
+  updatedAt: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface AdminGetAuthors200ResponsePagination
+ */
+export interface AdminGetAuthors200ResponsePagination {
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetAuthors200ResponsePagination
+     */
+    'totalAuthors': number;
+
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetAuthors200ResponsePagination
+     */
+    'currentPage': number;
+
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminGetAuthors200ResponsePagination
+     */
+    'totalPages': number;
+}
+
 
 
 /**
