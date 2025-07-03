@@ -71,13 +71,13 @@ export default function ArticleTable() {
               slug: article.slug || '',
               summary: article.summary || '',
               status: article.status || '',
-              content: article.content || '', // if needed for markdownContent
+              content: article.content || '',
               thumbnailUrl: article.thumbnailUrl || '',
               author: article.author?.name || '',
-              authorId: article.author?.id || null, // ✅ NEW
+              authorId: article.author?.id || null,
               category: article.category?.name || '',
-              categoryId: article.category?.id || null, // ✅ NEW
-              tags: Array.isArray(article.tags) ? article.tags : [], // ✅ array, not joined string
+              categoryId: article.category?.id || null,
+              tags: Array.isArray(article.tags) ? article.tags : [],
               createdAt: article.createdAt,
               updatedAt: article.updatedAt,
             })

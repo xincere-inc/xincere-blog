@@ -830,6 +830,12 @@ export interface AdminGetArticles200ResponseDataInner {
      * @memberof AdminGetArticles200ResponseDataInner
      */
     'summary'?: string;
+     /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
+    'content'?: string;
     /**
      * 
      * @type {string}
