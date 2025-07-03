@@ -19,14 +19,16 @@ import { marked } from 'marked';
 export interface Article {
   id?: number;
   author?: string;
+  authorId?: string;
   title?: string;
   category?: string;
+  categoryId?: number;
   slug?: string;
   summary?: string;
   content?: string;
   thumbnailUrl: any;
   status?: string;
-  tags?: string;
+  tags?: string[];
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -64,16 +66,20 @@ export default function ArticleTable() {
         const articles = 
           response.data?.data?.map(
             (article: AdminGetArticles200ResponseDataInner) => ({
-              ...article,
               id: article.id || 0,
-              author: article.author?.name || '',
               title: article.title || '',
-              category: article.category?.name || '',
               slug: article.slug || '',
               summary: article.summary || '',
               status: article.status || '',
-              tags: Array.isArray(article.tags) ? article.tags.join(', ') : article.tags || '',
-              thumbnailUrl: article.thumbnailUrl || ''
+              content: article.content || '', // if needed for markdownContent
+              thumbnailUrl: article.thumbnailUrl || '',
+              author: article.author?.name || '',
+              authorId: article.author?.id || null, // ✅ NEW
+              category: article.category?.name || '',
+              categoryId: article.category?.id || null, // ✅ NEW
+              tags: Array.isArray(article.tags) ? article.tags : [], // ✅ array, not joined string
+              createdAt: article.createdAt,
+              updatedAt: article.updatedAt,
             })
           ) || [];
 

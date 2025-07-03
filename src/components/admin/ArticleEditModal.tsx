@@ -46,7 +46,7 @@ export function ArticleEditModal({
         markdownContent: article.content,
         thumbnailUrl: article.thumbnailUrl,
         status: article.status,
-        tags: article.tags?.split(',').map((tag) => tag.trim()) || [],
+        tags: article.tags || [],
         authorId: (article as any).authorId,
         categoryId: (article as any).categoryId,
       });
