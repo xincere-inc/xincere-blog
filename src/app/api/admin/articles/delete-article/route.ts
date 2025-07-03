@@ -25,16 +25,23 @@ export async function DELETE(
 
   try {
     const body: AdminDeleteArticlesRequest = await req.json();
+
     const validation = await validateIDsSchema.safeParseAsync({
-      ids: body.ids,
+      ids: body.articleIds,
     });
 
     if (!validation.success) {
       return validationErrorResponse(validation.error);
     }
 
+    await prisma.articleTag.deleteMany({
+      where: {
+        articleId: { in: body.articleIds },
+      },
+    });
+
     const deleted = await prisma.article.deleteMany({
-      where: { id: { in: body.ids } },
+      where: { id: { in: body.articleIds } },
     });
 
     return NextResponse.json(

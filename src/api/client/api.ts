@@ -3314,8 +3314,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         adminDeleteArticles(adminDeleteArticlesRequest: AdminDeleteArticlesRequest, options?: RawAxiosRequestConfig): AxiosPromise<Success> {
-            return localVarFp.adminDeleteArticles(adminDeleteArticlesRequest, options).then((request) => request(axios, basePath)
-        );
+            return localVarFp.adminDeleteArticles(adminDeleteArticlesRequest, options).then((request) => request(axios, basePath));
         },
 
         /**
