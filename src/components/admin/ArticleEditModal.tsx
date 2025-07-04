@@ -43,7 +43,7 @@ export function ArticleEditModal({
         title: article.title,
         slug: article.slug,
         summary: article.summary,
-        markdownContent: article.content,
+        markdownContent: article.markdownContent,
         thumbnailUrl: article.thumbnailUrl,
         status: article.status,
         tags: article.tags || [],

@@ -841,6 +841,12 @@ export interface AdminGetArticles200ResponseDataInner {
      * @type {string}
      * @memberof AdminGetArticles200ResponseDataInner
      */
+    'markdownContent'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminGetArticles200ResponseDataInner
+     */
     'status'?: string;
     /**
      * 

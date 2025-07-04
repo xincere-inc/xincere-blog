@@ -26,6 +26,7 @@ export interface Article {
   slug?: string;
   summary?: string;
   content?: string;
+  markdownContent?: string;
   thumbnailUrl: any;
   status?: string;
   tags?: string[];
@@ -72,6 +73,7 @@ export default function ArticleTable() {
               summary: article.summary || '',
               status: article.status || '',
               content: article.content || '',
+              markdownContent: article.markdownContent || '',
               thumbnailUrl: article.thumbnailUrl || '',
               author: article.author?.name || '',
               authorId: article.author?.id || null,
