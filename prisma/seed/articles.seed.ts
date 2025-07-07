@@ -49,6 +49,7 @@ export async function seedArticles() {
     for (let i = 0; i < 30; i++) {
       const idx = faker.number.int({ min: 0, max: 2 });
       const chosenTags = faker.helpers.arrayElements(tags, 2);
+      const isPickup = faker.datatype.boolean();
 
       await prisma.article.create({
         data: {
@@ -63,6 +64,7 @@ export async function seedArticles() {
           markdownContent: markdownContent,
           thumbnailUrl: sampleThumbnailUrl,
           status: faker.helpers.arrayElement(Object.values(ArticleStatus)),
+          isPickup,
           createdAt: new Date(),
           updatedAt: new Date(),
           tags: {

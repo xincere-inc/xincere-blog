@@ -29,11 +29,11 @@ const HomePage = async () => {
         createdAt: 'desc',
       },
     }),
-    // TODO: ピックアップ記事の取得方法を確認する、ひとまず最新の２件を取得する
     prisma.article.findMany({
       take: 2,
       where: {
         status: ArticleStatus.PUBLISHED,
+        isPickup: true,
         deletedAt: null,
       },
       include: {
