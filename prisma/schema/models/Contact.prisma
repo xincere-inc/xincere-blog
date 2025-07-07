@@ -6,6 +6,7 @@ model Contact {
   phone         String
   inquiry       String
   privacyPolicy Boolean
+  status        ContactStatus @default(OPEN) @map("status")
   createdAt     DateTime  @default(now()) @map("created_at")
 
   @@map("contacts")

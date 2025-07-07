@@ -1,6 +1,7 @@
 import {
   AppstoreAddOutlined,
   DashboardOutlined,
+  MailOutlined,
   SettingOutlined,
   TagsOutlined,
   UserOutlined,
@@ -50,6 +51,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       key: '/settings',
       icon: <SettingOutlined />,
       label: <Link href="/admin/#">Settings</Link>,
+    },
+    {
+      key: '/contacts',
+      icon: <MailOutlined />,
+      label: <Link href="/admin/contacts">contacts</Link>,
     },
   ];
 

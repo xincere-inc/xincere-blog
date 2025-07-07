@@ -458,6 +458,123 @@ export interface AdminGetCategories200ResponsePagination {
 /**
  *
  * @export
+ * @interface AdminGetContacts200Response
+ */
+export interface AdminGetContacts200Response {
+  /**
+   *
+   * @type {Array<AdminGetContacts200ResponseDataInner>}
+   * @memberof AdminGetContacts200Response
+   */
+  data?: Array<AdminGetContacts200ResponseDataInner>;
+  /**
+   *
+   * @type {AdminGetContacts200ResponsePagination}
+   * @memberof AdminGetContacts200Response
+   */
+  pagination?: AdminGetContacts200ResponsePagination;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetContacts200ResponseDataInner
+ */
+export interface AdminGetContacts200ResponseDataInner {
+  /**
+   * The unique identifier for the contact.
+   * @type {number}
+   * @memberof AdminGetContacts200ResponseDataInner
+   */
+  id?: number;
+  /**
+   * The name of the company.
+   * @type {string}
+   * @memberof AdminGetContacts200ResponseDataInner
+   */
+  companyName?: string;
+  /**
+   * The name of the contact person.
+   * @type {string}
+   * @memberof AdminGetContacts200ResponseDataInner
+   */
+  contactName?: string;
+  /**
+   * The email address of the contact person.
+   * @type {string}
+   * @memberof AdminGetContacts200ResponseDataInner
+   */
+  email?: string;
+  /**
+   * The phone number of the contact person.
+   * @type {string}
+   * @memberof AdminGetContacts200ResponseDataInner
+   */
+  phone?: string;
+  /**
+   * The content of the inquiry.
+   * @type {string}
+   * @memberof AdminGetContacts200ResponseDataInner
+   */
+  inquiry?: string;
+  /**
+   * The status of the contact.
+   * @type {string}
+   * @memberof AdminGetContacts200ResponseDataInner
+   */
+  status?: string;
+  /**
+   * Agreement to the privacy policy.
+   * @type {boolean}
+   * @memberof AdminGetContacts200ResponseDataInner
+   */
+  privacyPolicy?: boolean;
+  /**
+   * The date and time when the contact was created.
+   * @type {string}
+   * @memberof AdminGetContacts200ResponseDataInner
+   */
+  createdAt?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetContacts200ResponsePagination
+ */
+export interface AdminGetContacts200ResponsePagination {
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetContacts200ResponsePagination
+   */
+  page?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetContacts200ResponsePagination
+   */
+  limit?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetContacts200ResponsePagination
+   */
+  showPerPage?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetContacts200ResponsePagination
+   */
+  totalContacts?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetContacts200ResponsePagination
+   */
+  totalPages?: number;
+}
+/**
+ *
+ * @export
  * @interface AdminGetTags200Response
  */
 export interface AdminGetTags200Response {
@@ -735,6 +852,83 @@ export interface AdminUpdateCategoryRequest {
    */
   description?: string | null;
 }
+/**
+ *
+ * @export
+ * @interface AdminUpdateContact200Response
+ */
+export interface AdminUpdateContact200Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateContact200Response
+   */
+  message?: string;
+  /**
+   *
+   * @type {AdminUpdateContact200ResponseContact}
+   * @memberof AdminUpdateContact200Response
+   */
+  contact?: AdminUpdateContact200ResponseContact;
+}
+/**
+ *
+ * @export
+ * @interface AdminUpdateContact200ResponseContact
+ */
+export interface AdminUpdateContact200ResponseContact {
+  /**
+   *
+   * @type {number}
+   * @memberof AdminUpdateContact200ResponseContact
+   */
+  id?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateContact200ResponseContact
+   */
+  status?: AdminUpdateContact200ResponseContactStatusEnum;
+}
+
+export const AdminUpdateContact200ResponseContactStatusEnum = {
+  Open: 'OPEN',
+  Inprogress: 'INPROGRESS',
+  Closed: 'CLOSED',
+} as const;
+
+export type AdminUpdateContact200ResponseContactStatusEnum =
+  (typeof AdminUpdateContact200ResponseContactStatusEnum)[keyof typeof AdminUpdateContact200ResponseContactStatusEnum];
+
+/**
+ *
+ * @export
+ * @interface AdminUpdateContactRequest
+ */
+export interface AdminUpdateContactRequest {
+  /**
+   * The ID of the contact to update.
+   * @type {number}
+   * @memberof AdminUpdateContactRequest
+   */
+  id: number;
+  /**
+   * The new status for the contact.
+   * @type {string}
+   * @memberof AdminUpdateContactRequest
+   */
+  status: AdminUpdateContactRequestStatusEnum;
+}
+
+export const AdminUpdateContactRequestStatusEnum = {
+  Open: 'OPEN',
+  Inprogress: 'INPROGRESS',
+  Closed: 'CLOSED',
+} as const;
+
+export type AdminUpdateContactRequestStatusEnum =
+  (typeof AdminUpdateContactRequestStatusEnum)[keyof typeof AdminUpdateContactRequestStatusEnum];
+
 /**
  *
  * @export
@@ -2039,6 +2233,64 @@ export const AdminApiAxiosParamCreator = function (
       };
     },
     /**
+     * Deletes contacts by their IDs.
+     * @summary Delete contacts by IDs
+     * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminDeleteContacts: async (
+      adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminDeleteCategoriesRequest' is not null or undefined
+      assertParamExists(
+        'adminDeleteContacts',
+        'adminDeleteCategoriesRequest',
+        adminDeleteCategoriesRequest
+      );
+      const localVarPath = `/api/admin/contacts/delete-contact`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'DELETE',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminDeleteCategoriesRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
      * Deletes tags by their IDs (soft delete, sets deletedAt).
      * @summary Delete tags by IDs
      * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
@@ -2170,6 +2422,71 @@ export const AdminApiAxiosParamCreator = function (
       // verify required parameter 'limit' is not null or undefined
       assertParamExists('adminGetCategories', 'limit', limit);
       const localVarPath = `/api/admin/categories/get-category`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      if (page !== undefined) {
+        localVarQueryParameter['page'] = page;
+      }
+
+      if (limit !== undefined) {
+        localVarQueryParameter['limit'] = limit;
+      }
+
+      if (search !== undefined) {
+        localVarQueryParameter['search'] = search;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Retrieves contacts from the database with pagination and optional search using query parameters.
+     * @summary Fetch contacts with pagination and search
+     * @param {number} page The page number for pagination.
+     * @param {number} limit The number of contacts to return per page.
+     * @param {string} [search] Optional search term to filter contacts by company name, contact name, or email.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminGetContacts: async (
+      page: number,
+      limit: number,
+      search?: string,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'page' is not null or undefined
+      assertParamExists('adminGetContacts', 'page', page);
+      // verify required parameter 'limit' is not null or undefined
+      assertParamExists('adminGetContacts', 'limit', limit);
+      const localVarPath = `/api/admin/contacts/get-contact`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -2383,6 +2700,64 @@ export const AdminApiAxiosParamCreator = function (
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
         adminUpdateCategoryRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Update only the status of a contact by ID.
+     * @summary Update contact status
+     * @param {AdminUpdateContactRequest} adminUpdateContactRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUpdateContact: async (
+      adminUpdateContactRequest: AdminUpdateContactRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminUpdateContactRequest' is not null or undefined
+      assertParamExists(
+        'adminUpdateContact',
+        'adminUpdateContactRequest',
+        adminUpdateContactRequest
+      );
+      const localVarPath = `/api/admin/contacts/update-contact`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'PUT',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminUpdateContactRequest,
         localVarRequestOptions,
         configuration
       );
@@ -2643,6 +3018,37 @@ export const AdminApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
+     * Deletes contacts by their IDs.
+     * @summary Delete contacts by IDs
+     * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminDeleteContacts(
+      adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Success>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminDeleteContacts(
+          adminDeleteCategoriesRequest,
+          options
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminDeleteContacts']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
      * Deletes tags by their IDs (soft delete, sets deletedAt).
      * @summary Delete tags by IDs
      * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
@@ -2733,6 +3139,46 @@ export const AdminApiFp = function (configuration?: Configuration) {
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
         operationServerMap['AdminApi.adminGetCategories']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Retrieves contacts from the database with pagination and optional search using query parameters.
+     * @summary Fetch contacts with pagination and search
+     * @param {number} page The page number for pagination.
+     * @param {number} limit The number of contacts to return per page.
+     * @param {string} [search] Optional search term to filter contacts by company name, contact name, or email.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminGetContacts(
+      page: number,
+      limit: number,
+      search?: string,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminGetContacts200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminGetContacts(
+          page,
+          limit,
+          search,
+          options
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminGetContacts']?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -2839,6 +3285,40 @@ export const AdminApiFp = function (configuration?: Configuration) {
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
         operationServerMap['AdminApi.adminUpdateCategory']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Update only the status of a contact by ID.
+     * @summary Update contact status
+     * @param {AdminUpdateContactRequest} adminUpdateContactRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminUpdateContact(
+      adminUpdateContactRequest: AdminUpdateContactRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminUpdateContact200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminUpdateContact(
+          adminUpdateContactRequest,
+          options
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminUpdateContact']?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -2990,6 +3470,21 @@ export const AdminApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     * Deletes contacts by their IDs.
+     * @summary Delete contacts by IDs
+     * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminDeleteContacts(
+      adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<Success> {
+      return localVarFp
+        .adminDeleteContacts(adminDeleteCategoriesRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * Deletes tags by their IDs (soft delete, sets deletedAt).
      * @summary Delete tags by IDs
      * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
@@ -3039,6 +3534,25 @@ export const AdminApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     * Retrieves contacts from the database with pagination and optional search using query parameters.
+     * @summary Fetch contacts with pagination and search
+     * @param {number} page The page number for pagination.
+     * @param {number} limit The number of contacts to return per page.
+     * @param {string} [search] Optional search term to filter contacts by company name, contact name, or email.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminGetContacts(
+      page: number,
+      limit: number,
+      search?: string,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminGetContacts200Response> {
+      return localVarFp
+        .adminGetContacts(page, limit, search, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * Retrieves tags from the database with pagination and optional search using query parameters.
      * @summary Fetch tags with pagination and search
      * @param {number} page The page number for pagination.
@@ -3085,6 +3599,21 @@ export const AdminApiFactory = function (
     ): AxiosPromise<AdminUpdateCategory200Response> {
       return localVarFp
         .adminUpdateCategory(adminUpdateCategoryRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     * Update only the status of a contact by ID.
+     * @summary Update contact status
+     * @param {AdminUpdateContactRequest} adminUpdateContactRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUpdateContact(
+      adminUpdateContactRequest: AdminUpdateContactRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminUpdateContact200Response> {
+      return localVarFp
+        .adminUpdateContact(adminUpdateContactRequest, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -3196,6 +3725,23 @@ export class AdminApi extends BaseAPI {
   }
 
   /**
+   * Deletes contacts by their IDs.
+   * @summary Delete contacts by IDs
+   * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminDeleteContacts(
+    adminDeleteCategoriesRequest: AdminDeleteCategoriesRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminDeleteContacts(adminDeleteCategoriesRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
    * Deletes tags by their IDs (soft delete, sets deletedAt).
    * @summary Delete tags by IDs
    * @param {AdminDeleteCategoriesRequest} adminDeleteCategoriesRequest
@@ -3251,6 +3797,27 @@ export class AdminApi extends BaseAPI {
   }
 
   /**
+   * Retrieves contacts from the database with pagination and optional search using query parameters.
+   * @summary Fetch contacts with pagination and search
+   * @param {number} page The page number for pagination.
+   * @param {number} limit The number of contacts to return per page.
+   * @param {string} [search] Optional search term to filter contacts by company name, contact name, or email.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminGetContacts(
+    page: number,
+    limit: number,
+    search?: string,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminGetContacts(page, limit, search, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
    * Retrieves tags from the database with pagination and optional search using query parameters.
    * @summary Fetch tags with pagination and search
    * @param {number} page The page number for pagination.
@@ -3302,6 +3869,23 @@ export class AdminApi extends BaseAPI {
   ) {
     return AdminApiFp(this.configuration)
       .adminUpdateCategory(adminUpdateCategoryRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Update only the status of a contact by ID.
+   * @summary Update contact status
+   * @param {AdminUpdateContactRequest} adminUpdateContactRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminUpdateContact(
+    adminUpdateContactRequest: AdminUpdateContactRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminUpdateContact(adminUpdateContactRequest, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

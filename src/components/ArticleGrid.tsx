@@ -5,6 +5,7 @@ import ApiCategory from '@/api/ApiCategory';
 import { ApiArticle as ApiArticleType } from '@/types/article';
 import { ArticleStatus, Category } from '@prisma/client';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import ArticleIndexCard from './ArticleIndexCard';
 
@@ -187,7 +188,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
 
   const renderPageNumbers = () => {
     const pages = [];
-    const maxVisiblePages = 5;
+    const maxVisiblePages = 1;
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
@@ -336,17 +337,19 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1 || loading}
-            className="px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
+            className="p-3 bg-primary text-white rounded-md disabled:opacity-50"
+            aria-label="前のページへ"
           >
-            前へ
+            <FaChevronLeft />
           </button>
           {renderPageNumbers()}
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages || loading}
-            className="px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
+            className="p-3 bg-primary text-white rounded-md disabled:opacity-50"
+            aria-label="次のページへ"
           >
-            次へ
+            <FaChevronRight />
           </button>
         </div>
       )}

@@ -1,3 +1,5 @@
+import { FaDownload } from 'react-icons/fa6';
+
 const HeroSection = () => {
   return (
     <div className="bg-primary-light rounded-lg p-8 mb-12 mt-8">
@@ -12,9 +14,9 @@ const HeroSection = () => {
           <br />
           システム開発やAI推進に関する実践的な情報をお届けします。
         </p>
-        <div className="flex gap-4 flex-wrap">
-          <div className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-dark transition-colors duration-300 flex items-center !rounded-button whitespace-nowrap cursor-pointer h-[50px]">
-            <i className="fas fa-download mr-2"></i>
+        <div className="flex gap-4 flex-wrap justify-center md:justify-start">
+          <div className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-dark transition-colors duration-300 flex items-center !rounded-button whitespace-nowrap cursor-pointer h-[50px] font-semibold">
+            <FaDownload className="mr-2 text-white" />
             会社案内ダウンロード
           </div>
           <a
