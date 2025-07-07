@@ -10,7 +10,6 @@ type ArticleHeaderProps = {
   updatedDate?: string;
   author: Author;
   articleId: string;
-  initialViewCount: number;
 };
 
 const ArticleHeader = ({
@@ -20,7 +19,6 @@ const ArticleHeader = ({
   updatedDate,
   author,
   articleId,
-  initialViewCount,
 }: ArticleHeaderProps) => {
   return (
     <div className="mb-2">
@@ -33,26 +31,14 @@ const ArticleHeader = ({
           <span className="text-gray-500 text-sm ml-4">
             公開日：{createdDate}
           </span>
-          {updatedDate && createdDate !== updatedDate ? (
+          {updatedDate && createdDate !== updatedDate && (
             <>
               <span className="text-gray-500 text-sm ml-4">
                 最終更新日：{updatedDate}
               </span>
-              <span className="text-gray-500 text-sm ml-4">
-                <ArticleViewCounter
-                  articleId={articleId}
-                  initial={initialViewCount}
-                />
-              </span>
             </>
-          ) : (
-            <span className="text-gray-500 text-sm ml-4">
-              <ArticleViewCounter
-                articleId={articleId}
-                initial={initialViewCount}
-              />
-            </span>
           )}
+          <ArticleViewCounter articleId={articleId} />
         </div>
       </div>
       <AuthorCard
