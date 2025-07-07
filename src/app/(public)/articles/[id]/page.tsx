@@ -96,7 +96,6 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
           updatedDate={formatDateJP(article.updatedAt)}
           author={article.author}
           articleId={id}
-          initialViewCount={article.analytics?.viewsCount || 0}
         />
         {/* 記事本文 */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
