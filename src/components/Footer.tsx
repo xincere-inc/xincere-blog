@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SocialLinks from './SocialLinks';
+import { xincereSocialLinks } from '@/data/socialLinks';
 
 const Footer = () => {
   return (
@@ -28,10 +29,10 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-bold mb-4">フォロー</h4>
             <SocialLinks
-              twitterUrl="#"
-              facebookUrl="#"
-              linkedinUrl="#"
-              githubUrl="#"
+              twitterUrl={xincereSocialLinks.twitter}
+              facebookUrl={xincereSocialLinks.facebook}
+              linkedinUrl={xincereSocialLinks.linkedin}
+              githubUrl={xincereSocialLinks.github}
             />
           </div>
         </div>
