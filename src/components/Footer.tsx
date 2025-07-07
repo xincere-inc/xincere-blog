@@ -16,30 +16,6 @@ const Footer = () => {
             <h4 className="text-lg font-bold mb-4">リンク</h4>
             <ul className="space-y-2">
               <li>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
-                >
-                  会社概要
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
-                >
-                  サービス
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
-                >
-                  実績
-                </a>
-              </li>
-              <li>
                 <Link
                   href="/contacts"
                   className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
