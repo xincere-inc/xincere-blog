@@ -21,3 +21,9 @@ enum ArticleStatus {
   PUBLISHED
   ARCHIVED
 }
+
+enum ContactStatus {
+  OPEN
+  INPROGRESS
+  CLOSED
+}
