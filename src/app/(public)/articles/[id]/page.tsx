@@ -1,5 +1,4 @@
 import ArticleCard from '@/components/ArticleCard';
-import ArticleComments from '@/features/article-comments/ArticleComments';
 import Image from 'next/image';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
@@ -157,10 +156,6 @@ const ArticleDetailPage = async ({ params }: ArticleDetailPageProps) => {
               />
             ))}
           </div>
-        </div>
-        {/*          コメントセクション */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <ArticleComments />
         </div>
       </div>
       {/* サイドバー */}
