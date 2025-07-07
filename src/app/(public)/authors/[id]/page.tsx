@@ -159,7 +159,7 @@ const AuthorDetail = async ({ params, searchParams }: AuthorDetailProps) => {
             マーケティングでお困りですか？
           </h2>
           <p className="text-lg mb-8 max-w-2xl mx-auto">
-            田島がBtoBマーケティングの課題解決をサポートします。無料相談やお役立ち資料をご活用ください。
+            BtoBマーケティングの課題解決をサポートします。無料相談やお役立ち資料をご活用ください。
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
