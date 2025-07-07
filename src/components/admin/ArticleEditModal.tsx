@@ -8,9 +8,15 @@ import {
   Row,
   Select,
   Radio,
+  Upload,
+  message,
 } from 'antd';
 import { useEffect } from 'react';
 import { Article } from '@/app/admin/articles/page';
+import { UploadOutlined } from '@ant-design/icons';
+import ReactMarkdownEditorLite from 'react-markdown-editor-lite';
+import 'react-markdown-editor-lite/lib/index.css';
+import { marked } from 'marked';
 
 interface ArticleEditModalProps {
   visible: boolean;
@@ -44,14 +50,42 @@ export function ArticleEditModal({
         slug: article.slug,
         summary: article.summary,
         markdownContent: article.markdownContent,
+        content: article.content,
         thumbnailUrl: article.thumbnailUrl,
         status: article.status,
         tags: article.tags || [],
-        authorId: (article as any).authorId,
-        categoryId: (article as any).categoryId,
+        authorId: article.authorId,
+        categoryId: article.categoryId,
       });
     }
   }, [visible, article, form]);
+
+  const handleEditorChange = ({ text, html }: { text: string; html: string }) => {
+    form.setFieldsValue({
+      markdownContent: text,
+      content: html,
+    });
+  };
+
+  const handleThumbnailUpload = async ({ file, onSuccess, onError }: any) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/admin/uploads/article-thumbnail', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Upload failed');
+      form.setFieldsValue({ thumbnailUrl: data.url });
+      onSuccess?.(data, file);
+    } catch (error: any) {
+      onError?.(error);
+      message.error('Failed to upload thumbnail.');
+    }
+  };
 
   return (
     <Modal
@@ -80,30 +114,19 @@ export function ArticleEditModal({
           </Col>
         </Row>
 
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item label="Author" name="authorId" rules={[{ required: true }]}>
-              <Select placeholder="Select an author">
-                {authors.map((author) => (
-                  <Select.Option key={author.id} value={author.id}>
-                    {author.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item label="Category" name="categoryId" rules={[{ required: true }]}>
-              <Select placeholder="Select a category">
-                {categories.map((category) => (
-                  <Select.Option key={category.id} value={category.id}>
-                    {category.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
+        <Form.Item
+          label="Category"
+          name="categoryId"
+          rules={[{ required: true }]}
+        >
+          <Select placeholder="Select a category">
+            {categories.map((category) => (
+              <Select.Option key={category.id} value={category.id}>
+                {category.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
 
         <Form.Item label="Summary" name="summary" rules={[{ required: true }]}>
           <Input.TextArea />
@@ -114,11 +137,24 @@ export function ArticleEditModal({
           name="markdownContent"
           rules={[{ required: true }]}
         >
-          <Input.TextArea rows={4} />
+          <ReactMarkdownEditorLite
+            style={{ height: 300 }}
+            renderHTML={(text) => marked(text)}
+            onChange={handleEditorChange}
+          />
         </Form.Item>
 
+        <Form.Item name="content" hidden />
+
         <Form.Item label="Thumbnail Image" name="thumbnailUrl">
-          <Input type="url" placeholder="https://example.com/image.png" />
+          <Upload
+            name="file"
+            listType="picture"
+            showUploadList={false}
+            customRequest={handleThumbnailUpload}
+          >
+            <Button icon={<UploadOutlined />}>Upload Thumbnail</Button>
+          </Upload>
         </Form.Item>
 
         <Form.Item label="Status" name="status" rules={[{ required: true }]}>
@@ -133,7 +169,7 @@ export function ArticleEditModal({
             mode="tags"
             style={{ width: '100%' }}
             placeholder="Enter or select tags"
-            options={tags.map(tag => ({ label: tag, value: tag }))}
+            options={tags.map((tag) => ({ label: tag, value: tag }))}
           />
         </Form.Item>
 
