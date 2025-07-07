@@ -38,9 +38,7 @@ const ArticleHeader = ({
               </span>
             </>
           )}
-          <span className="text-gray-500 text-sm ml-4">
-            <ArticleViewCounter articleId={articleId} />
-          </span>
+          <ArticleViewCounter articleId={articleId} />
         </div>
       </div>
       <AuthorCard
