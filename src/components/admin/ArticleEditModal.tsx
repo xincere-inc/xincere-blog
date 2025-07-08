@@ -45,18 +45,21 @@ export function ArticleEditModal({
 
   useEffect(() => {
     if (visible && article) {
-      form.setFieldsValue({
-        title: article.title,
-        slug: article.slug,
-        summary: article.summary,
-        markdownContent: article.markdownContent,
-        content: article.content,
-        thumbnailUrl: article.thumbnailUrl,
-        status: article.status,
-        tags: article.tags || [],
-        authorId: article.authorId,
-        categoryId: article.categoryId,
-      });
+      // Delay setting values to ensure ReactMarkdownEditorLite mounts first
+      setTimeout(() => {
+        form.setFieldsValue({
+          title: article.title,
+          slug: article.slug,
+          summary: article.summary,
+          markdownContent: article.markdownContent || '',
+          content: article.content || '',
+          thumbnailUrl: article.thumbnailUrl,
+          status: article.status,
+          tags: article.tags || [],
+          authorId: article.authorId,
+          categoryId: article.categoryId,
+        });
+      }, 0);
     }
   }, [visible, article, form]);
 
@@ -98,7 +101,6 @@ export function ArticleEditModal({
       footer={null}
       destroyOnHidden
       centered
-      style={{ margin: '20px 0px' }}
     >
       <Form form={form} onFinish={onEdit} layout="vertical">
         <Row gutter={16}>
@@ -139,7 +141,8 @@ export function ArticleEditModal({
         >
           <ReactMarkdownEditorLite
             style={{ height: 300 }}
-            renderHTML={(text) => marked(text)}
+            value={form.getFieldValue('markdownContent') || ''}
+            renderHTML={(content) => marked(content)}
             onChange={handleEditorChange}
           />
         </Form.Item>
