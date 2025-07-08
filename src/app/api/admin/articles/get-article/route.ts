@@ -77,6 +77,8 @@ export async function POST(
       title: article.title,
       slug: article.slug,
       summary: article.summary ?? '',
+      content: article.content ?? '',
+      markdownContent: article.markdownContent ?? '',
       thumbnailUrl: article.thumbnailUrl ?? '',
       status: article.status,
       createdAt: article.createdAt.toISOString(),
