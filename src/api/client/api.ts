@@ -301,14 +301,6 @@ export type AdminCreateUserRequestGenderEnum = typeof AdminCreateUserRequestGend
  */
 export interface AdminCreateArticleRequest {
   /**
-   * ID of the author creating the article
-   * 
-   * @type {string}
-   * @memberof AdminCreateArticleRequest
-   */
-  'authorId': string;
-
-  /**
    * ID of the category this article belongs to
    * 
    * @type {number}

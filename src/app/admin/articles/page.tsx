@@ -128,7 +128,6 @@ export default function ArticleTable() {
     try {
       const htmlContent: string = await marked(values.markdownContent || '');
       const response = await ApiAdminArticles.adminCreateArticle({
-        authorId: '12345678-aaaa-bbbb-cccc-1234567890ab', // values.authorId, // To be change later
         categoryId: values.categoryId,
         title: values.title,
         slug: values.slug,
