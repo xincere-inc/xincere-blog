@@ -37,10 +37,23 @@ export async function POST(
       );
     }
 
+    // Always use the first author
+    const defaultAuthor = await prisma.author.findFirst();
+    if (!defaultAuthor) {
+      return NextResponse.json(
+        {
+          error: 'No author found. Please create an author before creating articles.',
+        },
+        { status: 500 }
+      );
+    }
+
+    // Create the article with the first author
     const createdArticle = await prisma.article.create({
       data: {
         ...articleData,
         slug,
+        authorId: defaultAuthor.id,
       },
     });
 
