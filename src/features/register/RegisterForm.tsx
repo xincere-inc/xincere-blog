@@ -51,7 +51,7 @@ const RegisterForm = () => {
   const genderOptions: GenderOption[] = [
     { value: 'male', label: 'Male' },
     { value: 'female', label: 'Female' },
-    { value: 'others', label: 'Others' },
+    { value: 'other', label: 'Others' },
   ];
 
   const onSubmit: SubmitHandler<RegisterRequest> = async (formData) => {
