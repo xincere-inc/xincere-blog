@@ -4,18 +4,11 @@ import Link from 'next/link';
 interface AuthorCardProps {
   name: string;
   role: string;
-  description: string;
   imageUrl: string;
   profileUrl?: string;
 }
 
-const AuthorCard = ({
-  name,
-  role,
-  description,
-  imageUrl,
-  profileUrl,
-}: AuthorCardProps) => {
+const AuthorCard = ({ name, role, imageUrl, profileUrl }: AuthorCardProps) => {
   return (
     <div className="flex items-center p-4 bg-gray-50 rounded-lg">
       <Image
@@ -27,7 +20,7 @@ const AuthorCard = ({
       />
       <div>
         {profileUrl ? (
-          <Link href="/authors/1" className="block">
+          <Link href={profileUrl} className="block">
             <div className="font-bold hover:text-primary transition-colors duration-300">
               {name}
             </div>
@@ -36,7 +29,6 @@ const AuthorCard = ({
           <div className="font-bold">{name}</div>
         )}
         <p className="text-sm text-gray-600">{role}</p>
-        <p className="text-sm text-gray-600">{description}</p>
       </div>
     </div>
   );

@@ -71,7 +71,7 @@ Ensure the following are installed on your system:
 
    - `DATABASE_URL`: PostgreSQL connection string.
    - `NODE_ENV`: `development` or `production`.
-   - `NEXT_PUBLIC_API_URL`: Frontend URL.
+   - `NEXT_PUBLIC_API_URL`: Base URL of the running application or API.
    - `NEXTAUTH_SECRET`: Secret key for `next-auth`.
    - `SMTP_USERNAME`: Secret key for `smtp`.
    - `SMTP_PASSWORD`: Secret key for `smtp`.

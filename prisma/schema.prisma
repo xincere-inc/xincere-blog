@@ -22,7 +22,7 @@ generator erd {
 }
 
 //
-// analytics.prisma
+// Analytics.prisma
 //
 
 model Analytics {
@@ -61,6 +61,7 @@ model Article {
   comments        Comment[]
   likes           Like[]
   analytics       Analytics?
+  isPickup        Boolean       @default(false) @map("is_pickup")
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
   deletedAt       DateTime?     @map("deleted_at")
@@ -69,7 +70,7 @@ model Article {
 }
 
 //
-// articleTag.prisma
+// ArticleTag.prisma
 //
 
 model ArticleTag {
@@ -101,7 +102,7 @@ model Author {
 }
 
 //
-// category.prisma
+// Category.prisma
 //
 
 model Category {
@@ -118,7 +119,7 @@ model Category {
 }
 
 //
-// comment.prisma
+// Comment.prisma
 //
 
 model Comment {
@@ -143,14 +144,15 @@ model Comment {
 //
 
 model Contact {
-  id            Int      @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   companyName   String
   contactName   String
   email         String
   phone         String
   inquiry       String
   privacyPolicy Boolean
-  createdAt     DateTime @default(now()) @map("created_at")
+  status        ContactStatus @default(OPEN) @map("status")
+  createdAt     DateTime      @default(now()) @map("created_at")
 
   @@map("contacts")
 }
@@ -183,8 +185,14 @@ enum ArticleStatus {
   ARCHIVED
 }
 
+enum ContactStatus {
+  OPEN
+  INPROGRESS
+  CLOSED
+}
+
 //
-// like.prisma
+// Like.prisma
 //
 
 model Like {
@@ -201,7 +209,7 @@ model Like {
 }
 
 //
-// media.prisma
+// Media.prisma
 //
 
 model Media {
@@ -220,7 +228,7 @@ model Media {
 }
 
 //
-// siteSetting.prisma
+// SiteSetting.prisma
 //
 
 model SiteSetting {
@@ -234,7 +242,7 @@ model SiteSetting {
 }
 
 //
-// tag.prisma
+// Tag.prisma
 //
 
 model Tag {
@@ -249,7 +257,7 @@ model Tag {
 }
 
 //
-// user.prisma
+// User.prisma
 //
 
 model User {

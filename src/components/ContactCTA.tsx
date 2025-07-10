@@ -9,7 +9,7 @@ const ContactCTA = () => {
       </p>
 
       <Link href="/contacts">
-        <div className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-dark transition-colors duration-300  !rounded-button whitespace-nowrap cursor-pointer h-[50px]">
+        <div className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-dark transition-colors duration-300  !rounded-button whitespace-nowrap cursor-pointer h-[50px] font-semibold">
           無料相談を予約する
         </div>
       </Link>

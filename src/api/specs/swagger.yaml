@@ -1171,6 +1171,172 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
+  /api/admin/contacts/get-contact:
+    get:
+      summary: Fetch contacts with pagination and search
+      description: Retrieves contacts from the database with pagination and optional search using query parameters.
+      operationId: adminGetContacts
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+            default: 1
+          description: The page number for pagination.
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 10
+            default: 10
+          description: The number of contacts to return per page.
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 'John'
+          description: Optional search term to filter contacts by company name, contact name, or email.
+      responses:
+        '200':
+          description: Successfully retrieved contacts with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for the contact.
+                        companyName:
+                          type: string
+                          description: The name of the company.
+                        contactName:
+                          type: string
+                          description: The name of the contact person.
+                        email:
+                          type: string
+                          description: The email address of the contact person.
+                        phone:
+                          type: string
+                          description: The phone number of the contact person.
+                        inquiry:
+                          type: string
+                          description: The content of the inquiry.
+                        status:
+                          type: string
+                          description: The status of the contact.
+                        privacyPolicy:
+                          type: boolean
+                          description: Agreement to the privacy policy.
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: The date and time when the contact was created.
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 10
+                      showPerPage:
+                        type: integer
+                        example: 10
+                      totalContacts:
+                        type: integer
+                        example: 50
+                      totalPages:
+                        type: integer
+                        example: 5
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/admin/contacts/delete-contact:
+    delete:
+      summary: Delete contacts by IDs
+      description: Deletes contacts by their IDs.
+      operationId: adminDeleteContacts
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ids
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                  example:
+                    - 1
+                    - 2
+      responses:
+        '200':
+          description: Contacts deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '404':
+          description: Some contacts not found with the provided IDs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /api/auth/change-password:
     post:
       summary: Change user password
@@ -1817,6 +1983,130 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /api/articles/{id}/view:
+    post:
+      summary: Increment article view count
+      tags: [Articles]
+      operationId: incrementArticleViewCount
+      description: Increments the view count for an article and returns the updated count.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the article to view.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: View count incremented successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  viewsCount:
+                    type: integer
+                    description: The updated view count for the article.
+                    example: 42
+        '400':
+          description: Invalid article ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Invalid article ID'
+        '404':
+          description: Article not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Article not found'
+  /api/admin/contacts/update-contact:
+    put:
+      summary: Update contact status
+      description: Update only the status of a contact by ID.
+      operationId: adminUpdateContact
+      tags:
+        - Admin
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - status
+              properties:
+                id:
+                  type: integer
+                  description: The ID of the contact to update.
+                  example: 1
+                status:
+                  type: string
+                  description: The new status for the contact.
+                  enum:
+                    - OPEN
+                    - INPROGRESS
+                    - CLOSED
+                  example: OPEN
+      responses:
+        '200':
+          description: Contact status updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Contact status updated successfully
+                  contact:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        enum:
+                          - OPEN
+                          - INPROGRESS
+                          - CLOSED
+                        example: OPEN
+        '400':
+          description: Validation errors or malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnAuthorizedError'
+        '404':
+          description: Contact not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
         '500':
           description: Internal server error
           content:

@@ -5,17 +5,24 @@ import ApiCategory from '@/api/ApiCategory';
 import { ApiArticle as ApiArticleType } from '@/types/article';
 import { ArticleStatus, Category } from '@prisma/client';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import ArticleIndexCard from './ArticleIndexCard';
 
 interface ArticleGridProps {
+  articles: ApiArticleType[];
   initialCategories: Category[];
 }
 
-const ArticleGrid: React.FC<ArticleGridProps> = ({ initialCategories }) => {
+const ArticleGrid: React.FC<ArticleGridProps> = ({
+  articles: initialArticles,
+  initialCategories,
+}) => {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [activeTab, setActiveTab] = useState<string>('all');
-  const [articles, setArticles] = useState<ApiArticleType[] | []>([]);
+  const [articles, setArticles] = useState<ApiArticleType[] | []>(
+    initialArticles || []
+  );
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
@@ -181,7 +188,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({ initialCategories }) => {
 
   const renderPageNumbers = () => {
     const pages = [];
-    const maxVisiblePages = 5;
+    const maxVisiblePages = 1;
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
@@ -298,23 +305,25 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({ initialCategories }) => {
           ))}
         </div>
 
-        <button
-          onClick={() => scrollTabs('right')}
-          disabled={loading}
-          aria-label="Load more categories"
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-green-800 rounded-full hover:bg-primary"
-        >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            stroke="#fff"
-            strokeWidth="2"
-            fill="none"
+        {showRightScroll && (
+          <button
+            onClick={() => scrollTabs('right')}
+            disabled={loading}
+            aria-label="Load more categories"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-green-800 rounded-full hover:bg-primary"
           >
-            <path d="M9 6l6 6-6 6" />
-          </svg>
-        </button>
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              stroke="#fff"
+              strokeWidth="2"
+              fill="none"
+            >
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -328,17 +337,19 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({ initialCategories }) => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1 || loading}
-            className="px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
+            className="p-3 bg-primary text-white rounded-md disabled:opacity-50"
+            aria-label="前のページへ"
           >
-            Previous
+            <FaChevronLeft />
           </button>
           {renderPageNumbers()}
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages || loading}
-            className="px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
+            className="p-3 bg-primary text-white rounded-md disabled:opacity-50"
+            aria-label="次のページへ"
           >
-            Next
+            <FaChevronRight />
           </button>
         </div>
       )}
