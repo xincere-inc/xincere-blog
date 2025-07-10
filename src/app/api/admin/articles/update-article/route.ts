@@ -1,5 +1,4 @@
 import {
-  AdminUpdateArticleRequest,
   InternalServerError,
   Success,
   UnAuthorizedError,
@@ -11,6 +10,8 @@ import { adminUpdateArticleSchema } from '@/lib/zod/admin/article-management/art
 import { ArticleStatus } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+
+type AdminUpdateArticleRequest = z.infer<typeof adminUpdateArticleSchema>;
 
 export async function PUT(
   req: Request

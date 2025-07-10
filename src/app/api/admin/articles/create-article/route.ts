@@ -1,5 +1,4 @@
 import {
-  AdminCreateArticleRequest,
   Created,
   InternalServerError,
   UnAuthorizedError,
@@ -10,6 +9,8 @@ import { authorizeAdmin } from '@/lib/utils/authorize-admin';
 import { adminCreateArticleSchema } from '@/lib/zod/admin/article-management/article';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+
+type AdminCreateArticleRequest = z.infer<typeof adminCreateArticleSchema>;
 
 type CreateResponse =
   | UnAuthorizedError

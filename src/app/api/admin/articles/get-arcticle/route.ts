@@ -1,6 +1,4 @@
 import {
-  AdminGetArticlesRequest,
-  AdminGetArticles200Response,
   InternalServerError,
   UnAuthorizedError,
   ValidationError,
@@ -11,16 +9,9 @@ import { paginationWithSearchSchema } from '@/lib/zod/common/common';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-export async function POST(
-  req: Request
-): Promise<
-  NextResponse<
-    | AdminGetArticles200Response
-    | ValidationError
-    | InternalServerError
-    | UnAuthorizedError
-  >
-> {
+type AdminGetArticlesRequest = z.infer<typeof paginationWithSearchSchema>;
+
+export async function POST(req: Request): Promise<NextResponse> {
   try {
     const adminAuthError = await authorizeAdmin();
     if (adminAuthError) return adminAuthError;

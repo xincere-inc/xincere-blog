@@ -1,5 +1,4 @@
 import {
-  AdminDeleteArticlesRequest,
   InternalServerError,
   Success,
   UnAuthorizedError,
@@ -10,6 +9,8 @@ import { authorizeAdmin } from '@/lib/utils/authorize-admin';
 import { validateIDsSchema } from '@/lib/zod/common/common';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+
+type AdminDeleteArticlesRequest = z.infer<typeof validateIDsSchema>;
 
 type DeleteResponse =
   | UnAuthorizedError
