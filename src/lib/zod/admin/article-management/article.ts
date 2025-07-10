@@ -27,6 +27,8 @@ export const adminCreateArticleSchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
+export type AdminCreateArticleRequest = z.infer<typeof adminCreateArticleSchema>;
+
 // Define the Zod schema for updating an existing article by admin
 export const adminUpdateArticleSchema = z.object({
   id: z.number().int('Article ID must be an integer'),
@@ -59,3 +61,5 @@ export const adminUpdateArticleSchema = z.object({
   categoryId: z.number().int('Category ID must be an integer').optional(),
   tags: z.array(z.string()).optional(),
 });
+
+export type AdminUpdateArticleRequest = z.infer<typeof adminUpdateArticleSchema>;

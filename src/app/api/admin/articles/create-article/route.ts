@@ -1,10 +1,10 @@
 import {
-  AdminCreateArticleRequest,
   Created,
   InternalServerError,
   UnAuthorizedError,
   ValidationError,
 } from '@/api/client';
+import { AdminCreateArticleRequest } from '@/lib/zod/admin/article-management/article';
 import { prisma } from '@/lib/prisma';
 import { authorizeAdmin } from '@/lib/utils/authorize-admin';
 import { adminCreateArticleSchema } from '@/lib/zod/admin/article-management/article';
