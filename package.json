@@ -26,7 +26,7 @@
     "db:reset": "DATABASE_URL='postgresql://postgres:password@localhost:5432/xincere_blog?schema=public' sh -c 'npx prisma migrate reset --skip-generate && npx prisma db seed'",
     "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client",
     "prepare": "husky install",
-    "test": "echo \"No tests specified\" && exit 0"
+    "test": "jest"
   },
   "lint-staged": {
     "*.{ts,tsx}": "prettier --write",
@@ -81,6 +81,7 @@
     "@tailwindcss/postcss": "^4.1.8",
     "@tailwindcss/typography": "^0.5.16",
     "@types/bcrypt": "^5.0.2",
+    "@types/jest": "^30.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.19.0",
     "@types/nodemailer": "^6.4.17",
@@ -99,11 +100,13 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "husky": "^9.1.7",
+    "jest": "^30.0.4",
     "postcss": "^8.5.4",
     "prettier": "^3.5.3",
     "prisma": "^6.9.0",
     "prisma-erd-generator": "^2.0.4",
     "tailwindcss": "^4.1.8",
+    "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
