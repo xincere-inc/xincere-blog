@@ -23,6 +23,19 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadminroot
     command: server /data --console-address ":9001"
+  create-buckets:
+    image: quay.io/minio/mc:RELEASE.2025-03-12T17-29-24Z
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      mc alias set local http://minio:9000 minioadmin minioadminroot;
+      mc mb local/xincere-blog;
+      mc policy set public local/xincere-blog;  # バケットをPublicに設定
+      echo 'Bucket created and set to public access';
+      exit 0;
+      "
     volumes:
       - minio_data:/data
 

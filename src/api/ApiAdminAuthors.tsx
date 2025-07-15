@@ -1,5 +1,5 @@
-import { AdminApiFactory } from "./client";
-import { commonApiFactoryArgs } from "./AxiosInstance";
+import { AdminApiFactory } from './client';
+import { commonApiFactoryArgs } from './AxiosInstance';
 
 const ApiAdminAuthors = AdminApiFactory(...commonApiFactoryArgs);
 

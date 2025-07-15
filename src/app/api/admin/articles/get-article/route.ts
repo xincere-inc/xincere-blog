@@ -63,6 +63,16 @@ export async function POST(
             name: true,
           },
         },
+        tags: {
+          include: {
+            tag: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
@@ -91,6 +101,10 @@ export async function POST(
         id: article.category.id,
         name: article.category.name,
       },
+      tags: article.tags.map((t) => ({
+        id: t.tag.id,
+        name: t.tag.name,
+      })),
     }));
 
     return NextResponse.json(

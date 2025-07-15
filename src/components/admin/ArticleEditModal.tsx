@@ -11,11 +11,10 @@ import {
   Upload,
   message,
 } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Article } from '@/app/admin/articles/page';
 import { UploadOutlined } from '@ant-design/icons';
-import ReactMarkdownEditorLite from 'react-markdown-editor-lite';
-import 'react-markdown-editor-lite/lib/index.css';
+import MarkdownEditor from '@uiw/react-markdown-editor';
 import { marked } from 'marked';
 
 interface ArticleEditModalProps {
@@ -25,7 +24,6 @@ interface ArticleEditModalProps {
   loading: boolean;
   serverError?: string | null;
   article: Article | null;
-  authors: { id: string; name: string }[];
   categories: { id: number; name: string }[];
   tags: string[];
 }
@@ -37,15 +35,16 @@ export function ArticleEditModal({
   loading,
   serverError,
   article,
-  authors = [],
   categories = [],
   tags = [],
 }: ArticleEditModalProps) {
   const [form] = Form.useForm();
+  const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (visible && article) {
-      // Delay setting values to ensure ReactMarkdownEditorLite mounts first
+      // モーダルが表示され、記事データがある場合は初期値をセット
       setTimeout(() => {
         form.setFieldsValue({
           title: article.title,
@@ -59,35 +58,63 @@ export function ArticleEditModal({
           authorId: article.authorId,
           categoryId: article.categoryId,
         });
+
+        // 既存のサムネイルURLをステートにセット
+        setThumbnailUrl(article.thumbnailUrl || '');
       }, 0);
     }
   }, [visible, article, form]);
 
-  const handleEditorChange = ({ text, html }: { text: string; html: string }) => {
+  const handleEditorChange = (value: string) => {
     form.setFieldsValue({
-      markdownContent: text,
-      content: html,
+      markdownContent: value,
+      content: marked(value),
     });
   };
 
   const handleThumbnailUpload = async ({ file, onSuccess, onError }: any) => {
+    setUploading(true);
     try {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('/api/admin/uploads/article-thumbnail', {
+      const response = await fetch('/api/admin/uploads/article-images', {
         method: 'POST',
         body: formData,
       });
 
       const data = await response.json();
+
       if (!response.ok) throw new Error(data.message || 'Upload failed');
+
+      setThumbnailUrl(data.url);
       form.setFieldsValue({ thumbnailUrl: data.url });
+
+      message.success('Thumbnail uploaded successfully');
       onSuccess?.(data, file);
     } catch (error: any) {
+      console.error('Upload error:', error);
       onError?.(error);
       message.error('Failed to upload thumbnail.');
+    } finally {
+      setUploading(false);
     }
+  };
+
+  // サブミット前に値を整形するハンドラを追加
+  const handleSubmit = (values: any) => {
+    const formattedValues = {
+      ...values,
+      thumbnailUrl:
+        typeof values.thumbnailUrl === 'object' &&
+        values.thumbnailUrl?.response?.url
+          ? values.thumbnailUrl.response.url
+          : thumbnailUrl || values.thumbnailUrl,
+    };
+
+    console.log('Submitting form with values:', formattedValues); // デバッグ用ログ
+
+    onEdit(formattedValues);
   };
 
   return (
@@ -97,12 +124,36 @@ export function ArticleEditModal({
       onCancel={() => {
         onCancel();
         form.resetFields();
+        setThumbnailUrl('');
       }}
-      footer={null}
+      footer={[
+        <Button
+          key="cancel"
+          onClick={() => {
+            onCancel();
+            form.resetFields();
+            setThumbnailUrl('');
+          }}
+          className="mr-2"
+        >
+          Cancel
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          htmlType="submit"
+          loading={loading}
+          onClick={() => form.submit()}
+        >
+          Update Article
+        </Button>,
+      ]}
       destroyOnHidden
       centered
+      closable={false}
+      width={800}
     >
-      <Form form={form} onFinish={onEdit} layout="vertical">
+      <Form form={form} onFinish={handleSubmit} layout="vertical">
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item label="Title" name="title" rules={[{ required: true }]}>
@@ -139,10 +190,9 @@ export function ArticleEditModal({
           name="markdownContent"
           rules={[{ required: true }]}
         >
-          <ReactMarkdownEditorLite
-            style={{ height: 300 }}
+          <MarkdownEditor
+            height="300px"
             value={form.getFieldValue('markdownContent') || ''}
-            renderHTML={(content) => marked(content)}
             onChange={handleEditorChange}
           />
         </Form.Item>
@@ -150,14 +200,30 @@ export function ArticleEditModal({
         <Form.Item name="content" hidden />
 
         <Form.Item label="Thumbnail Image" name="thumbnailUrl">
-          <Upload
-            name="file"
-            listType="picture"
-            showUploadList={false}
-            customRequest={handleThumbnailUpload}
-          >
-            <Button icon={<UploadOutlined />}>Upload Thumbnail</Button>
-          </Upload>
+          <div>
+            <Upload
+              name="file"
+              listType="picture"
+              showUploadList={true}
+              customRequest={handleThumbnailUpload}
+              maxCount={1}
+            >
+              <Button icon={<UploadOutlined />} loading={uploading}>
+                Upload Thumbnail
+              </Button>
+            </Upload>
+
+            {/* サムネイルプレビュー表示 */}
+            {thumbnailUrl && (
+              <div style={{ marginTop: '8px' }}>
+                <img
+                  src={thumbnailUrl}
+                  alt="Thumbnail preview"
+                  style={{ maxWidth: '100%', maxHeight: '150px' }}
+                />
+              </div>
+            )}
+          </div>
         </Form.Item>
 
         <Form.Item label="Status" name="status" rules={[{ required: true }]}>
@@ -175,10 +241,6 @@ export function ArticleEditModal({
             options={tags.map((tag) => ({ label: tag, value: tag }))}
           />
         </Form.Item>
-
-        <Button type="primary" htmlType="submit" loading={loading}>
-          Update Article
-        </Button>
 
         {serverError && (
           <Row style={{ marginTop: 10 }}>

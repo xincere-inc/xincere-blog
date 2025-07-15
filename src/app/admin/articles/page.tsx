@@ -1,19 +1,18 @@
-'use client'
-import { 
+'use client';
+import {
   AdminCreateCategory201ResponseCategory,
   AdminGetArticles200ResponseDataInner,
-} from "@/api/client";
-import ApiAdminArticles from "@/api/ApiAdminArticles";
-import ApiAdminCategory from "@/api/ApiAdminCategory";
-import ApiAdminAuthors from "@/api/ApiAdminAuthors";
-import { Table } from "antd";
-import { useState, useRef, useEffect } from "react";
-import { toast } from "react-toastify";
-import { ArticleSearchBar } from "@/components/admin/ArticleSearchBar";
-import { ArticleSelection } from "@/components/admin/ArticleSelection";
-import { ArticleActions } from "@/components/admin/ArticleActions";
-import { ArticleCreateModal } from "@/components/admin/ArticleCreateModal";
-import { ArticleEditModal } from "@/components/admin/ArticleEditModal";
+} from '@/api/client';
+import ApiAdminArticles from '@/api/ApiAdminArticles';
+import ApiAdminCategory from '@/api/ApiAdminCategory';
+import { Table } from 'antd';
+import { useState, useRef, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { ArticleSearchBar } from '@/components/admin/ArticleSearchBar';
+import { ArticleSelection } from '@/components/admin/ArticleSelection';
+import { ArticleActions } from '@/components/admin/ArticleActions';
+import { ArticleCreateModal } from '@/components/admin/ArticleCreateModal';
+import { ArticleEditModal } from '@/components/admin/ArticleEditModal';
 import { marked } from 'marked';
 
 export interface Article {
@@ -42,16 +41,17 @@ export default function ArticleTable() {
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
-    total:0
+    total: 0,
   });
   const createFormRef = useRef<any>(null);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [article, setArticle] = useState<Article | null>(null);
-  const [authors, setAuthors] = useState<{ id: string; name: string }[]>([]);
-  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>(
+    []
+  );
   const [tags, setTags] = useState<string[]>([]);
 
   const fetchData = async (page: number, pageSize: number, search: string) => {
@@ -62,9 +62,9 @@ export default function ArticleTable() {
         limit: pageSize,
         search,
       });
-      
+
       if (response.status === 200) {
-        const articles = 
+        const articles =
           response.data?.data?.map(
             (article: AdminGetArticles200ResponseDataInner) => ({
               id: article.id || 0,
@@ -75,11 +75,15 @@ export default function ArticleTable() {
               content: article.content || '',
               markdownContent: article.markdownContent || '',
               thumbnailUrl: article.thumbnailUrl || '',
-              author: article.author?.name || '',
-              authorId: article.author?.id || null,
-              category: article.category?.name || '',
-              categoryId: article.category?.id || null,
-              tags: Array.isArray(article.tags) ? article.tags : [],
+              author: article.author!.name || '',
+              authorId: article.author!.id,
+              category: article.category!.name || '',
+              categoryId: article.category!.id,
+              tags: Array.isArray(article.tags)
+                ? article.tags
+                    .map((t) => t.name)
+                    .filter((name): name is string => !!name)
+                : [],
               createdAt: article.createdAt,
               updatedAt: article.updatedAt,
             })
@@ -105,12 +109,15 @@ export default function ArticleTable() {
     setSelectedRowKeys([]);
     try {
       const response = await ApiAdminArticles.adminDeleteArticles({
-        articleIds: ids
+        articleIds: ids,
       });
       if (response.status !== 200) {
-        toast.error(response?.data?.message || 'Failed to delete Article data.', {
-          position: 'bottom-right',
-        });
+        toast.error(
+          response?.data?.message || 'Failed to delete Article data.',
+          {
+            position: 'bottom-right',
+          }
+        );
       } else {
         fetchData(pagination.current, pagination.pageSize, searchText);
         toast.success(response?.data?.message, { position: 'bottom-right' });
@@ -153,7 +160,7 @@ export default function ArticleTable() {
         });
       }
     } catch (error: any) {
-       console.error("Create Article Error:", error);
+      console.error('Create Article Error:', error);
       setServerError(error?.response?.data?.error || 'Error creating article');
     } finally {
       setLoading(false);
@@ -170,7 +177,7 @@ export default function ArticleTable() {
           ...values,
         });
 
-        if(response.status === 200) {
+        if (response.status === 200) {
           toast.success('Article updated successfully', {
             position: 'bottom-right',
           });
@@ -181,7 +188,9 @@ export default function ArticleTable() {
           toast.error('Failed to update article', { position: 'bottom-right' });
         }
       } catch (error: any) {
-        setServerError(error?.response?.data?.error || 'Error updating article');
+        setServerError(
+          error?.response?.data?.error || 'Error updating article'
+        );
       } finally {
         setLoading(false);
       }
@@ -199,7 +208,7 @@ export default function ArticleTable() {
   };
 
   const handleEdit = (record: Article) => {
-    setArticle({ ...record});
+    setArticle({ ...record });
     setIsEditModalVisible(true);
   };
 
@@ -209,11 +218,30 @@ export default function ArticleTable() {
   };
 
   const handleDelete = (record: Article) => {
-    if(record.id) {
+    if (record.id) {
       deleteArticle([record.id]);
     }
   };
 
+  // チェックボックス選択ハンドラ
+  const handleSelectChange = (record: Article) => {
+    if (typeof record.id !== 'number') return;
+    const newSelectedRowKeys = selectedRowKeys.includes(record.id)
+      ? selectedRowKeys.filter((key) => key !== record.id)
+      : [...selectedRowKeys, record.id];
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  // 一括削除
+  const handleBulkDelete = async () => {
+    if (selectedRowKeys.length > 0) {
+      await deleteArticle(selectedRowKeys as number[]);
+    } else {
+      toast.error('No article selected.', { position: 'bottom-right' });
+    }
+  };
+
+  // テーブルのcolumns修正
   const columns = [
     {
       title: 'Select',
@@ -222,7 +250,7 @@ export default function ArticleTable() {
         <ArticleSelection
           record={record}
           selectedRowKeys={selectedRowKeys}
-          onSelectChange={handleSearchChange}
+          onSelectChange={handleSelectChange}
         />
       ),
     },
@@ -246,45 +274,9 @@ export default function ArticleTable() {
     },
   ];
 
-  const handleBulkDelete = () => {
-    if (selectedRowKeys.length > 0) {
-      deleteArticle(selectedRowKeys as number[]);
-    } else {
-      toast.error('No article selected.', { position: 'bottom-right' });
-    }
-  };
-
-  const fetchAuthors = async () => {
-    try {
-      const response = await ApiAdminAuthors.adminGetAuthors({
-        page: 1,
-        limit: 100,
-        search: ''
-      });
-
-      if (response.status === 200) {
-        const authorsData = response.data?.data ?? [];
-        const formatted = authorsData.map((author) => ({
-          id: author.id,
-          name: author.name,
-        }));
-        setAuthors(formatted);
-      }
-    } catch (error: any) {
-      console.error('Failed to fetch authors', error);
-      toast.error(error.response?.data?.message || 'Error fetching authors', {
-        position: 'bottom-right',
-      });
-    }
-  };
-
-
   const fetchCategories = async () => {
     try {
-      const response = await ApiAdminCategory.adminGetCategories(
-        1,
-        100
-      );
+      const response = await ApiAdminCategory.adminGetCategories(1, 100);
       console.log('fetch categories', response);
       if (response.status === 200) {
         const categories =
@@ -314,7 +306,8 @@ export default function ArticleTable() {
     try {
       const res = await fetch('/api/admin/tags/get-tags?page=1&limit=1000');
       const result = await res.json();
-      const tagNames = result?.data?.map((tag: { name: string }) => tag.name) || [];
+      const tagNames =
+        result?.data?.map((tag: { name: string }) => tag.name) || [];
       setTags(tagNames);
     } catch (error) {
       console.error('Failed to fetch tags', error);
@@ -322,7 +315,6 @@ export default function ArticleTable() {
   };
 
   useEffect(() => {
-    fetchAuthors();
     fetchCategories();
     fetchTags();
     fetchData(pagination.current, pagination.pageSize, searchText);
@@ -357,7 +349,6 @@ export default function ArticleTable() {
         loading={loading}
         serverError={serverError}
         formRef={createFormRef}
-        authors={authors}
         categories={categories}
         tags={tags}
       />
@@ -367,8 +358,7 @@ export default function ArticleTable() {
         onEdit={updateArticle}
         loading={loading}
         article={article}
-        serverError={serverError} 
-        authors={authors}
+        serverError={serverError}
         categories={categories}
         tags={tags}
       />

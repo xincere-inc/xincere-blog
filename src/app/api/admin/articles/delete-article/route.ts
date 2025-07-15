@@ -34,20 +34,40 @@ export async function DELETE(
       return validationErrorResponse(validation.error);
     }
 
-    await prisma.articleTag.deleteMany({
+    const existingArticles = await prisma.article.count({
       where: {
-        articleId: { in: body.articleIds },
+        id: { in: body.articleIds },
       },
     });
 
-    const deleted = await prisma.article.deleteMany({
-      where: { id: { in: body.articleIds } },
+    if (existingArticles !== body.articleIds.length) {
+      return NextResponse.json(
+        {
+          message: 'Some articles not found.',
+        },
+        { status: 404 }
+      );
+    }
+
+    const deleteResult = await prisma.$transaction(async (tx) => {
+      // 先に紐付けタグを削除（外部キー制約のため）
+      await tx.articleTag.deleteMany({
+        where: {
+          articleId: { in: body.articleIds },
+        },
+      });
+
+      const deletedArticles = await tx.article.deleteMany({
+        where: { id: { in: body.articleIds } },
+      });
+
+      return deletedArticles;
     });
 
     return NextResponse.json(
       {
-        message: `Deleted ${deleted.count} article(s).`,
-        count: deleted.count,
+        message: `Deleted ${deleteResult.count} article(s).`,
+        count: deleteResult.count,
       },
       { status: 200 }
     );

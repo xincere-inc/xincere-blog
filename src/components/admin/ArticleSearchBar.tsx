@@ -2,11 +2,11 @@ import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Popconfirm } from 'antd';
 
 interface ArticleSearchBarProps {
-    searchText: string;
-    onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onCreateClick: () => void;
-    onBulkDeleteClick: () => void;
-    selectedRowCount: number;
+  searchText: string;
+  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onCreateClick: () => void;
+  onBulkDeleteClick: () => void;
+  selectedRowCount: number;
 }
 
 export function ArticleSearchBar({

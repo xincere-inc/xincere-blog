@@ -42,7 +42,8 @@ export async function POST(
     if (!defaultAuthor) {
       return NextResponse.json(
         {
-          error: 'No author found. Please create an author before creating articles.',
+          error:
+            'No author found. Please create an author before creating articles.',
         },
         { status: 500 }
       );
@@ -63,10 +64,8 @@ export async function POST(
         select: { id: true, name: true },
       });
 
-      const existingTagNames = existingTags.map((t) => t.name);
-      const newTagNames = tags.filter(
-        (name) => !existingTagNames.includes(name)
-      );
+      const existingTagNames = new Set(existingTags.map((t) => t.name));
+      const newTagNames = tags.filter((name) => !existingTagNames.has(name));
 
       if (newTagNames.length > 0) {
         const newTags = await prisma.$transaction(

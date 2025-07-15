@@ -8,7 +8,7 @@ export function ArticleSelection({
   record,
   selectedRowKeys,
   onSelectChange,
-}: ArticleSelectionProps){
+}: ArticleSelectionProps) {
   return (
     <input
       type="checkbox"

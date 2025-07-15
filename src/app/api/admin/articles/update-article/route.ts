@@ -8,7 +8,6 @@ import {
 import { prisma } from '@/lib/prisma';
 import { authorizeAdmin } from '@/lib/utils/authorize-admin';
 import { adminUpdateArticleSchema } from '@/lib/zod/admin/article-management/article';
-import { ArticleStatus } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -24,8 +23,11 @@ export async function PUT(
     if (authError) return authError;
 
     const body: AdminUpdateArticleRequest = await req.json();
+
     const parsed = await validateRequestBody(body);
-    if (!parsed.success) return parsed.errorResponse;
+
+    if (!parsed.success)
+      return parsed.errorResponse as NextResponse<ValidationError>;
 
     const article = await prisma.article.findUnique({
       where: { id: parsed.data.id },
@@ -41,10 +43,50 @@ export async function PUT(
       );
     }
 
+    // tagsの処理
+    const { tags, ...updateData } = parsed.data;
+
     const updatedArticle = await prisma.article.update({
       where: { id: parsed.data.id },
-      data: buildUpdatePayload(parsed.data),
+      data: buildUpdatePayload(updateData, article.authorId),
     });
+
+    // tagsが渡されている場合は紐付け直し
+    if (tags && Array.isArray(tags)) {
+      // 既存タグ取得
+      const existingTags = await prisma.tag.findMany({
+        where: { name: { in: tags } },
+        select: { id: true, name: true },
+      });
+
+      const existingTagNames = new Set(existingTags.map((t) => t.name));
+      const newTagNames = tags.filter((name) => !existingTagNames.has(name));
+
+      // 新規タグ作成
+      let newTags: { id: number; name: string }[] = [];
+      if (newTagNames.length > 0) {
+        newTags = await prisma.$transaction(
+          newTagNames.map((name) => prisma.tag.create({ data: { name } }))
+        );
+      }
+
+      const allTags = [...existingTags, ...newTags];
+
+      // 記事とタグの紐付けを一度全削除して再作成
+      await prisma.articleTag.deleteMany({
+        where: { articleId: updatedArticle.id },
+      });
+
+      if (allTags.length > 0) {
+        await prisma.articleTag.createMany({
+          data: allTags.map((tag) => ({
+            articleId: updatedArticle.id,
+            tagId: tag.id,
+          })),
+          skipDuplicates: true,
+        });
+      }
+    }
 
     const responsePayload = {
       message: 'Article updated successfully',
@@ -62,7 +104,12 @@ export async function PUT(
   }
 }
 
-async function validateRequestBody(body: AdminUpdateArticleRequest) {
+async function validateRequestBody(
+  body: AdminUpdateArticleRequest
+): Promise<
+  | { success: true; data: AdminUpdateArticleRequest }
+  | { success: false; errorResponse: NextResponse<ValidationError> }
+> {
   const result = await adminUpdateArticleSchema.safeParseAsync(body);
   if (!result.success) {
     const errorResponse = NextResponse.json(
@@ -94,7 +141,10 @@ async function isSlugConflict(id: number, slug?: string) {
   return !!existing;
 }
 
-function buildUpdatePayload(data: AdminUpdateArticleRequest) {
+function buildUpdatePayload(
+  data: AdminUpdateArticleRequest,
+  defaultAuthorId: string
+) {
   const {
     title,
     slug,
@@ -115,8 +165,10 @@ function buildUpdatePayload(data: AdminUpdateArticleRequest) {
     ...(markdownContent && { markdownContent }),
     ...(typeof thumbnailUrl !== 'undefined' && { thumbnailUrl }),
     ...(status && { status }),
-    ...(categoryId && { categoryId }),
-    ...(authorId && { authorId }),
+    ...(categoryId && { category: { connect: { id: categoryId } } }),
+    ...(authorId
+      ? { author: { connect: { id: authorId } } }
+      : { author: { connect: { id: defaultAuthorId } } }),
   };
 }
 
