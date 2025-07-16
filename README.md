@@ -201,6 +201,23 @@ To access the admin page, follow these steps:
 
 ---
 
+## About MinIO Admin Console & Buckets
+
+MinIO is used for storing images and other files. Please refer to the following for accessing the admin console and managing buckets.
+
+1. **Accessing the MinIO Admin Console:**
+   - Visit [http://localhost:9001](http://localhost:9001).
+   - Username: `minioadmin`
+   - Password: `minioadminroot`
+
+2. **Automatic Bucket Creation:**
+   - The `local/xincere-blog` bucket is automatically created when Docker is started for the first time.
+
+3. **If Images Cannot Be Loaded:**
+   - If images saved in MinIO are not displayed in the application, please change the bucket (`xincere-blog`) permission to "public" from the minio admin console.
+
+---
+
 ## Contributing
 
 We welcome contributions! Please follow these steps:

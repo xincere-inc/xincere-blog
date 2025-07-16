@@ -23,21 +23,35 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadminroot
     command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
   create-buckets:
     image: quay.io/minio/mc:RELEASE.2025-03-12T17-29-24Z
     depends_on:
-      - minio
+      minio:
+        condition: service_healthy
     entrypoint: >
       /bin/sh -c "
-      sleep 5;
-      mc alias set local http://minio:9000 minioadmin minioadminroot;
-      mc mb local/xincere-blog;
-      mc policy set public local/xincere-blog;  # バケットをPublicに設定
-      echo 'Bucket created and set to public access';
+      echo 'Configuring MinIO client...';
+      until mc alias set local http://minio:9000 minioadmin minioadminroot; do
+        echo 'Waiting for MinIO to be ready...';
+        sleep 2;
+      done;
+      echo 'Creating bucket...';
+      mc mb local/xincere-blog --ignore-existing;
+      echo 'Setting bucket to public access...';
+      mc anonymous set public local/xincere-blog;
+      echo 'Verifying anonymous policy...';
+      mc anonymous get local/xincere-blog;
+      echo 'Setup completed successfully';
       exit 0;
       "
-    volumes:
-      - minio_data:/data
 
 volumes:
   pg_data:
