@@ -255,6 +255,7 @@ export function ArticleEditModal({
           <MarkdownEditor
             ref={editorRef}
             height="300px"
+            visible={true}
             value={form.getFieldValue('markdownContent') || ''}
             onChange={handleEditorChange}
             toolbars={getMarkdownToolbarCommands([imageCommand])}

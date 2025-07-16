@@ -236,8 +236,10 @@ export function ArticleCreateModal({
           <MarkdownEditor
             ref={editorRef}
             height="300px"
+            visible={true}
             onChange={handleEditorChange}
             toolbars={getMarkdownToolbarCommands([imageCommand])}
+            previewProps={{ className: 'markdown-body' }}
           />
         </Form.Item>
 
