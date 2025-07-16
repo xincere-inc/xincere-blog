@@ -270,7 +270,11 @@ export function ArticleEditModal({
           accept="image/*"
         />
 
-        <Form.Item label="Thumbnail Image" name="thumbnailUrl">
+        <Form.Item
+          label="Thumbnail Image"
+          name="thumbnailUrl"
+          rules={[{ required: true, message: 'Please upload a thumbnail image.' }]}
+        >
           <div>
             <Upload
               name="file"
