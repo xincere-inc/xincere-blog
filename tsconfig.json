@@ -28,8 +28,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    "src/lib/generateSwagger.js"
+    "src/types/react-markdown-editor.d.ts"
   ],
   "exclude": ["node_modules"]
 }

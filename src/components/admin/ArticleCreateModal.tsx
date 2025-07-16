@@ -3,20 +3,21 @@ import {
   Button,
   Col,
   Form,
-  FormInstance,
   Input,
   Modal,
+  Radio,
   Row,
   Select,
-  Radio,
   Upload,
   message,
+  Image,
 } from 'antd';
-import { useImperativeHandle, useState } from 'react';
-import { UploadOutlined } from '@ant-design/icons';
-import MarkdownEditor from '@uiw/react-markdown-editor';
+import { FormInstance } from 'antd/lib/form';
 import { marked } from 'marked';
-import Image from 'next/image';
+import { useImperativeHandle, useRef, useState } from 'react';
+import MarkdownEditor, { ICommand } from '@uiw/react-markdown-editor';
+import { UploadOutlined } from '@ant-design/icons';
+import { getMarkdownToolbarCommands } from '@/lib/utils/markdown-editor-config';
 
 interface ArticleCreateModalProps {
   visible: boolean;
@@ -42,6 +43,8 @@ export function ArticleCreateModal({
   const [form] = Form.useForm();
   const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
   const [uploading, setUploading] = useState(false);
+  const editorRef = useRef<any>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useImperativeHandle(formRef, () => form);
 
@@ -52,12 +55,11 @@ export function ArticleCreateModal({
     });
   };
 
-  const handleThumbnailUpload = async ({ file, onSuccess, onError }: any) => {
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
+  const handleImageUpload = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file);
 
+    try {
       const response = await fetch('/api/admin/uploads/article-images', {
         method: 'POST',
         body: formData,
@@ -65,14 +67,77 @@ export function ArticleCreateModal({
 
       const data = await response.json();
 
-      if (!response.ok) throw new Error(data.message || 'Upload failed');
+      if (!response.ok) {
+        throw new Error(data.message || 'Image upload failed');
+      }
 
-      setThumbnailUrl(data.url);
+      return data.url;
+    } catch (error) {
+      console.error('Image upload error:', error);
+      message.error('Failed to upload image.');
+      return '';
+    }
+  };
 
-      form.setFieldsValue({ thumbnailUrl: data.url });
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      const url = await handleImageUpload(file);
 
-      message.success('Thumbnail uploaded successfully');
-      onSuccess?.(data, file);
+      if (url && editorRef.current && editorRef.current.editor) {
+        const { view } = editorRef.current.editor.current;
+        if (view) {
+          const { state, dispatch } = view;
+          const { from, to } = state.selection.main;
+          dispatch(
+            state.update({
+              changes: { from, to, insert: `![](${url})` },
+              selection: { anchor: from + 2 },
+            })
+          );
+        }
+      }
+      if (event.target) {
+        event.target.value = '';
+      }
+    }
+  };
+
+  const imageCommand: ICommand = {
+    name: 'image',
+    keyCommand: 'image',
+    button: { 'aria-label': 'Insert image' },
+    icon: (
+      <svg width="12" height="12" viewBox="0 0 20 20">
+        <path
+          fill="currentColor"
+          d="M15.25 15.25H4.75a.75.75 0 0 1-.75-.75V5.5a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 .75.75v9a.75.75 0 0 1-.75.75zM4.75 4a2.25 2.25 0 0 0-2.25 2.25v9A2.25 2.25 0 0 0 4.75 17.5h10.5A2.25 2.25 0 0 0 17.5 15.25V5.5A2.25 2.25 0 0 0 15.25 4H4.75z"
+        />
+        <path
+          fill="currentColor"
+          d="M6.5 8.5a1 1 0 1 1-2 0a1 1 0 0 1 2 0zM15.25 12.414l-3.558-3.557a.75.75 0 0 0-1.06 0L6.87 12.62a.75.75 0 0 1-1.12.002l-.75-.75a.75.75 0 0 0-1.06 1.06l1.28 1.28a.75.75 0 0 0 1.06 0l3.766-3.765a.75.75 0 0 1 1.06 0l3.56 3.558a.75.75 0 1 0 1.06-1.06z"
+        />
+      </svg>
+    ),
+    execute: () => {
+      fileInputRef.current?.click();
+    },
+  };
+
+  const handleThumbnailUpload = async ({ file, onSuccess, onError }: any) => {
+    setUploading(true);
+    try {
+      const url = await handleImageUpload(file);
+      if (url) {
+        setThumbnailUrl(url);
+        form.setFieldsValue({ thumbnailUrl: url });
+        message.success('Thumbnail uploaded successfully');
+        onSuccess?.({ url }, file);
+      } else {
+        throw new Error('Upload failed');
+      }
     } catch (error: any) {
       console.error('Upload error:', error);
       onError?.(error);
@@ -169,13 +234,21 @@ export function ArticleCreateModal({
           rules={[{ required: true }]}
         >
           <MarkdownEditor
+            ref={editorRef}
             height="300px"
-            value=""
             onChange={handleEditorChange}
+            toolbars={getMarkdownToolbarCommands([imageCommand])}
           />
         </Form.Item>
 
         <Form.Item name="content" hidden />
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+          accept="image/*"
+        />
 
         <Form.Item label="Thumbnail Image" name="thumbnailUrl">
           <div>
@@ -196,9 +269,8 @@ export function ArticleCreateModal({
                 <Image
                   src={thumbnailUrl}
                   alt="Thumbnail preview"
-                  width={150}
-                  height={150}
-                  unoptimized={true}
+                  width={500}
+                  height={500}
                   style={{ borderRadius: '8px', marginBottom: '8px' }}
                 />
               </div>
