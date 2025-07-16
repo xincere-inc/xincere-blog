@@ -1,3 +1,4 @@
+import '@ant-design/v5-patch-for-react-19';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { Providers } from '@/providers/provider';

@@ -243,7 +243,6 @@ export function ArticleCreateModal({
           />
         </Form.Item>
 
-        <Form.Item name="content" hidden />
         <input
           type="file"
           ref={fileInputRef}

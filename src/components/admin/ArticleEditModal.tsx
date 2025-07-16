@@ -256,13 +256,12 @@ export function ArticleEditModal({
             ref={editorRef}
             height="300px"
             visible={true}
-            value={form.getFieldValue('markdownContent') || ''}
             onChange={handleEditorChange}
             toolbars={getMarkdownToolbarCommands([imageCommand])}
+            previewProps={{ className: 'markdown-body' }}
           />
         </Form.Item>
 
-        <Form.Item name="content" hidden />
         <input
           type="file"
           ref={fileInputRef}
