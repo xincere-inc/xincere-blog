@@ -1263,12 +1263,6 @@ export interface AdminUpdateArticleRequest {
    */
   status?: AdminUpdateArticleRequestStatusEnum;
   /**
-   * The ID of the author (optional).
-   * @type {number}
-   * @memberof AdminUpdateArticleRequest
-   */
-  authorId?: number | null;
-  /**
    * List of tag names to associate with the article (optional). All tag associations will be replaced.
    * @type {Array<string>}
    * @memberof AdminUpdateArticleRequest

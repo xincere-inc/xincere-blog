@@ -2416,11 +2416,6 @@ paths:
                   enum: [DRAFT, PUBLISHED, ARCHIVED]
                   description: The publication status of the article.
                   example: PUBLISHED
-                authorId:
-                  type: integer
-                  description: The ID of the author (optional).
-                  example: 1
-                  nullable: true
                 tags:
                   type: array
                   items:
