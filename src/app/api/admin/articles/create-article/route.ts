@@ -37,10 +37,24 @@ export async function POST(
       );
     }
 
+    // Always use the first author
+    const defaultAuthor = await prisma.author.findFirst();
+    if (!defaultAuthor) {
+      return NextResponse.json(
+        {
+          error:
+            'No author found. Please create an author before creating articles.',
+        },
+        { status: 500 }
+      );
+    }
+
+    // Create the article with the first author
     const createdArticle = await prisma.article.create({
       data: {
         ...articleData,
         slug,
+        authorId: defaultAuthor.id,
       },
     });
 
@@ -50,10 +64,8 @@ export async function POST(
         select: { id: true, name: true },
       });
 
-      const existingTagNames = existingTags.map((t) => t.name);
-      const newTagNames = tags.filter(
-        (name) => !existingTagNames.includes(name)
-      );
+      const existingTagNames = new Set(existingTags.map((t) => t.name));
+      const newTagNames = tags.filter((name) => !existingTagNames.has(name));
 
       if (newTagNames.length > 0) {
         const newTags = await prisma.$transaction(

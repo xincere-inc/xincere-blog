@@ -54,15 +54,23 @@ export async function POST(
         author: {
           select: {
             id: true,
-            email: true,
-            firstName: true,
-            lastName: true,
+            name: true,
           },
         },
         category: {
           select: {
             id: true,
             name: true,
+          },
+        },
+        tags: {
+          include: {
+            tag: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
       },
@@ -79,19 +87,24 @@ export async function POST(
       title: article.title,
       slug: article.slug,
       summary: article.summary ?? '',
+      content: article.content ?? '',
+      markdownContent: article.markdownContent ?? '',
       thumbnailUrl: article.thumbnailUrl ?? '',
       status: article.status,
       createdAt: article.createdAt.toISOString(),
       updatedAt: article.updatedAt.toISOString(),
       author: {
         id: article.author.id,
-        name: `${article.author.firstName} ${article.author.lastName}`,
-        email: article.author.email,
+        name: `${article.author.name}`,
       },
       category: {
         id: article.category.id,
         name: article.category.name,
       },
+      tags: article.tags.map((t) => ({
+        id: t.tag.id,
+        name: t.tag.name,
+      })),
     }));
 
     return NextResponse.json(

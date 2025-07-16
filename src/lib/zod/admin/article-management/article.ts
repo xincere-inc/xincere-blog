@@ -22,7 +22,6 @@ export const adminCreateArticleSchema = z.object({
       message: "Status must be one of 'DRAFT', 'PUBLISHED', or 'ARCHIVED'",
     }),
   }),
-  authorId: z.string().uuid('Author ID must be a valid UUID'),
   categoryId: z.number().int('Category ID must be an integer'),
   tags: z.array(z.string()).optional(),
 });
@@ -55,7 +54,6 @@ export const adminUpdateArticleSchema = z.object({
       }),
     })
     .optional(),
-  authorId: z.string().uuid('Author ID must be a valid UUID').optional(),
   categoryId: z.number().int('Category ID must be an integer').optional(),
   tags: z.array(z.string()).optional(),
 });

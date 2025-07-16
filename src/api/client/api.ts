@@ -42,6 +42,128 @@ import {
 /**
  *
  * @export
+ * @interface AdminCreateArticle201Response
+ */
+export interface AdminCreateArticle201Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateArticle201Response
+   */
+  message?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminCreateArticle400Response
+ */
+export interface AdminCreateArticle400Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateArticle400Response
+   */
+  error?: string;
+  /**
+   *
+   * @type {Array<AdminCreateArticle400ResponseErrorsInner>}
+   * @memberof AdminCreateArticle400Response
+   */
+  errors?: Array<AdminCreateArticle400ResponseErrorsInner>;
+}
+/**
+ *
+ * @export
+ * @interface AdminCreateArticle400ResponseErrorsInner
+ */
+export interface AdminCreateArticle400ResponseErrorsInner {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateArticle400ResponseErrorsInner
+   */
+  path?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminCreateArticle400ResponseErrorsInner
+   */
+  message?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminCreateArticleRequest
+ */
+export interface AdminCreateArticleRequest {
+  /**
+   * The title of the article.
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  title: string;
+  /**
+   * The unique slug for the article.
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  slug: string;
+  /**
+   * A brief summary of the article.
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  summary: string;
+  /**
+   * The HTML content of the article.
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  content: string;
+  /**
+   * The markdown content of the article.
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  markdownContent: string;
+  /**
+   * The ID of the category.
+   * @type {number}
+   * @memberof AdminCreateArticleRequest
+   */
+  categoryId: number;
+  /**
+   * The URL of the article\'s thumbnail image (optional).
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  thumbnailUrl?: string | null;
+  /**
+   * The publication status of the article.
+   * @type {string}
+   * @memberof AdminCreateArticleRequest
+   */
+  status?: AdminCreateArticleRequestStatusEnum;
+  /**
+   * List of tag names to associate with the article (optional).
+   * @type {Array<string>}
+   * @memberof AdminCreateArticleRequest
+   */
+  tags?: Array<string>;
+}
+
+export const AdminCreateArticleRequestStatusEnum = {
+  Draft: 'DRAFT',
+  Published: 'PUBLISHED',
+  Archived: 'ARCHIVED',
+} as const;
+
+export type AdminCreateArticleRequestStatusEnum =
+  (typeof AdminCreateArticleRequestStatusEnum)[keyof typeof AdminCreateArticleRequestStatusEnum];
+
+/**
+ *
+ * @export
  * @interface AdminCreateCategory201Response
  */
 export interface AdminCreateCategory201Response {
@@ -314,6 +436,51 @@ export type AdminCreateUserRequestGenderEnum =
 /**
  *
  * @export
+ * @interface AdminDeleteArticles200Response
+ */
+export interface AdminDeleteArticles200Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminDeleteArticles200Response
+   */
+  message?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminDeleteArticles200Response
+   */
+  count?: number;
+}
+/**
+ *
+ * @export
+ * @interface AdminDeleteArticles404Response
+ */
+export interface AdminDeleteArticles404Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminDeleteArticles404Response
+   */
+  message?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminDeleteArticlesRequest
+ */
+export interface AdminDeleteArticlesRequest {
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof AdminDeleteArticlesRequest
+   */
+  articleIds: Array<number>;
+}
+/**
+ *
+ * @export
  * @interface AdminDeleteCategoriesRequest
  */
 export interface AdminDeleteCategoriesRequest {
@@ -336,6 +503,239 @@ export interface AdminDeleteUsersRequest {
    * @memberof AdminDeleteUsersRequest
    */
   ids: Array<string>;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetArticles200Response
+ */
+export interface AdminGetArticles200Response {
+  /**
+   *
+   * @type {Array<AdminGetArticles200ResponseDataInner>}
+   * @memberof AdminGetArticles200Response
+   */
+  data?: Array<AdminGetArticles200ResponseDataInner>;
+  /**
+   *
+   * @type {AdminGetArticles200ResponsePagination}
+   * @memberof AdminGetArticles200Response
+   */
+  pagination?: AdminGetArticles200ResponsePagination;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetArticles200ResponseDataInner
+ */
+export interface AdminGetArticles200ResponseDataInner {
+  /**
+   * The unique identifier for the article.
+   * @type {number}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  id?: number;
+  /**
+   * The title of the article.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  title?: string;
+  /**
+   * The unique slug for the article.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  slug?: string;
+  /**
+   * A brief summary of the article.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  summary?: string;
+  /**
+   * The HTML content of the article.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  content?: string;
+  /**
+   * The markdown content of the article.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  markdownContent?: string;
+  /**
+   * The URL of the article\'s thumbnail image.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  thumbnailUrl?: string;
+  /**
+   * The publication status of the article.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  status?: AdminGetArticles200ResponseDataInnerStatusEnum;
+  /**
+   * The date and time when the article was created.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  createdAt?: string;
+  /**
+   * The date and time when the article was last updated.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  updatedAt?: string;
+  /**
+   *
+   * @type {AdminGetArticles200ResponseDataInnerAuthor}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  author?: AdminGetArticles200ResponseDataInnerAuthor;
+  /**
+   *
+   * @type {AdminGetArticles200ResponseDataInnerCategory}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  category?: AdminGetArticles200ResponseDataInnerCategory;
+  /**
+   * List of tags associated with the article.
+   * @type {Array<AdminGetArticles200ResponseDataInnerTagsInner>}
+   * @memberof AdminGetArticles200ResponseDataInner
+   */
+  tags?: Array<AdminGetArticles200ResponseDataInnerTagsInner>;
+}
+
+export const AdminGetArticles200ResponseDataInnerStatusEnum = {
+  Draft: 'DRAFT',
+  Published: 'PUBLISHED',
+  Archived: 'ARCHIVED',
+} as const;
+
+export type AdminGetArticles200ResponseDataInnerStatusEnum =
+  (typeof AdminGetArticles200ResponseDataInnerStatusEnum)[keyof typeof AdminGetArticles200ResponseDataInnerStatusEnum];
+
+/**
+ *
+ * @export
+ * @interface AdminGetArticles200ResponseDataInnerAuthor
+ */
+export interface AdminGetArticles200ResponseDataInnerAuthor {
+  /**
+   * The unique identifier for the author.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInnerAuthor
+   */
+  id?: string;
+  /**
+   * The name of the author.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInnerAuthor
+   */
+  name?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetArticles200ResponseDataInnerCategory
+ */
+export interface AdminGetArticles200ResponseDataInnerCategory {
+  /**
+   * The unique identifier for the category.
+   * @type {number}
+   * @memberof AdminGetArticles200ResponseDataInnerCategory
+   */
+  id?: number;
+  /**
+   * The name of the category.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInnerCategory
+   */
+  name?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetArticles200ResponseDataInnerTagsInner
+ */
+export interface AdminGetArticles200ResponseDataInnerTagsInner {
+  /**
+   * The unique identifier for the tag.
+   * @type {number}
+   * @memberof AdminGetArticles200ResponseDataInnerTagsInner
+   */
+  id?: number;
+  /**
+   * The name of the tag.
+   * @type {string}
+   * @memberof AdminGetArticles200ResponseDataInnerTagsInner
+   */
+  name?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetArticles200ResponsePagination
+ */
+export interface AdminGetArticles200ResponsePagination {
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetArticles200ResponsePagination
+   */
+  page?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetArticles200ResponsePagination
+   */
+  limit?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetArticles200ResponsePagination
+   */
+  showPerPage?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetArticles200ResponsePagination
+   */
+  totalArticles?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AdminGetArticles200ResponsePagination
+   */
+  totalPages?: number;
+}
+/**
+ *
+ * @export
+ * @interface AdminGetArticlesRequest
+ */
+export interface AdminGetArticlesRequest {
+  /**
+   * The page number for pagination.
+   * @type {number}
+   * @memberof AdminGetArticlesRequest
+   */
+  page?: number;
+  /**
+   * The number of articles to return per page.
+   * @type {number}
+   * @memberof AdminGetArticlesRequest
+   */
+  limit?: number;
+  /**
+   * Optional search term to filter articles by title, slug, summary, content, or status.
+   * @type {string}
+   * @memberof AdminGetArticlesRequest
+   */
+  search?: string;
 }
 /**
  *
@@ -789,6 +1189,102 @@ export interface AdminGetUsersRequest {
    */
   search?: string;
 }
+/**
+ *
+ * @export
+ * @interface AdminUpdateArticle200Response
+ */
+export interface AdminUpdateArticle200Response {
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUpdateArticle200Response
+   */
+  message?: string;
+}
+/**
+ *
+ * @export
+ * @interface AdminUpdateArticleRequest
+ */
+export interface AdminUpdateArticleRequest {
+  /**
+   * The ID of the article to update.
+   * @type {number}
+   * @memberof AdminUpdateArticleRequest
+   */
+  id: number;
+  /**
+   * The title of the article.
+   * @type {string}
+   * @memberof AdminUpdateArticleRequest
+   */
+  title?: string;
+  /**
+   * The unique slug for the article.
+   * @type {string}
+   * @memberof AdminUpdateArticleRequest
+   */
+  slug?: string;
+  /**
+   * A brief summary of the article.
+   * @type {string}
+   * @memberof AdminUpdateArticleRequest
+   */
+  summary?: string;
+  /**
+   * The HTML content of the article.
+   * @type {string}
+   * @memberof AdminUpdateArticleRequest
+   */
+  content?: string;
+  /**
+   * The markdown content of the article.
+   * @type {string}
+   * @memberof AdminUpdateArticleRequest
+   */
+  markdownContent?: string;
+  /**
+   * The ID of the category.
+   * @type {number}
+   * @memberof AdminUpdateArticleRequest
+   */
+  categoryId?: number;
+  /**
+   * The URL of the article\'s thumbnail image (optional).
+   * @type {string}
+   * @memberof AdminUpdateArticleRequest
+   */
+  thumbnailUrl?: string | null;
+  /**
+   * The publication status of the article.
+   * @type {string}
+   * @memberof AdminUpdateArticleRequest
+   */
+  status?: AdminUpdateArticleRequestStatusEnum;
+  /**
+   * The ID of the author (optional).
+   * @type {number}
+   * @memberof AdminUpdateArticleRequest
+   */
+  authorId?: number | null;
+  /**
+   * List of tag names to associate with the article (optional). All tag associations will be replaced.
+   * @type {Array<string>}
+   * @memberof AdminUpdateArticleRequest
+   */
+  tags?: Array<string>;
+}
+
+export const AdminUpdateArticleRequestStatusEnum = {
+  Draft: 'DRAFT',
+  Published: 'PUBLISHED',
+  Archived: 'ARCHIVED',
+} as const;
+
+export type AdminUpdateArticleRequestStatusEnum =
+  (typeof AdminUpdateArticleRequestStatusEnum)[keyof typeof AdminUpdateArticleRequestStatusEnum];
+
 /**
  *
  * @export
@@ -1850,6 +2346,64 @@ export const AdminApiAxiosParamCreator = function (
 ) {
   return {
     /**
+     * Creates a new article with a unique slug. Tags will be created if they do not exist and linked to the article. The first author in the database will be assigned.
+     * @summary Create a new article
+     * @param {AdminCreateArticleRequest} adminCreateArticleRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminCreateArticle: async (
+      adminCreateArticleRequest: AdminCreateArticleRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminCreateArticleRequest' is not null or undefined
+      assertParamExists(
+        'adminCreateArticle',
+        'adminCreateArticleRequest',
+        adminCreateArticleRequest
+      );
+      const localVarPath = `/api/admin/articles/create-article`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminCreateArticleRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
      * Creates a new category with a unique name and slug.
      * @summary Create a new category
      * @param {AdminCreateCategoryRequest} adminCreateCategoryRequest
@@ -2010,6 +2564,64 @@ export const AdminApiAxiosParamCreator = function (
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
         adminCreateUserRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Deletes articles by their IDs (soft delete, sets deletedAt). Also removes associated tags.
+     * @summary Delete articles by IDs (soft delete)
+     * @param {AdminDeleteArticlesRequest} adminDeleteArticlesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminDeleteArticles: async (
+      adminDeleteArticlesRequest: AdminDeleteArticlesRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminDeleteArticlesRequest' is not null or undefined
+      assertParamExists(
+        'adminDeleteArticles',
+        'adminDeleteArticlesRequest',
+        adminDeleteArticlesRequest
+      );
+      const localVarPath = `/api/admin/articles/delete-article`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'DELETE',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminDeleteArticlesRequest,
         localVarRequestOptions,
         configuration
       );
@@ -2238,6 +2850,64 @@ export const AdminApiAxiosParamCreator = function (
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
         adminDeleteUsersRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Retrieves articles from the database with pagination and optional search using request body parameters.
+     * @summary Fetch articles with pagination and search
+     * @param {AdminGetArticlesRequest} adminGetArticlesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminGetArticles: async (
+      adminGetArticlesRequest: AdminGetArticlesRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminGetArticlesRequest' is not null or undefined
+      assertParamExists(
+        'adminGetArticles',
+        'adminGetArticlesRequest',
+        adminGetArticlesRequest
+      );
+      const localVarPath = `/api/admin/articles/get-article`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminGetArticlesRequest,
         localVarRequestOptions,
         configuration
       );
@@ -2497,6 +3167,64 @@ export const AdminApiAxiosParamCreator = function (
       };
     },
     /**
+     * Updates details of an existing article based on the provided article ID. Tags will be created if they do not exist and linked to the article. All tag associations will be replaced.
+     * @summary Update article details
+     * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUpdateArticle: async (
+      adminUpdateArticleRequest: AdminUpdateArticleRequest,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'adminUpdateArticleRequest' is not null or undefined
+      assertParamExists(
+        'adminUpdateArticle',
+        'adminUpdateArticleRequest',
+        adminUpdateArticleRequest
+      );
+      const localVarPath = `/api/admin/articles/update-article`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'PUT',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication jwt required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        adminUpdateArticleRequest,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
      * Updates details of an existing category based on the provided category ID.
      * @summary Update category details
      * @param {AdminUpdateCategoryRequest} adminUpdateCategoryRequest
@@ -2735,6 +3463,40 @@ export const AdminApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = AdminApiAxiosParamCreator(configuration);
   return {
     /**
+     * Creates a new article with a unique slug. Tags will be created if they do not exist and linked to the article. The first author in the database will be assigned.
+     * @summary Create a new article
+     * @param {AdminCreateArticleRequest} adminCreateArticleRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminCreateArticle(
+      adminCreateArticleRequest: AdminCreateArticleRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminCreateArticle201Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminCreateArticle(
+          adminCreateArticleRequest,
+          options
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminCreateArticle']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
      * Creates a new category with a unique name and slug.
      * @summary Create a new category
      * @param {AdminCreateCategoryRequest} adminCreateCategoryRequest
@@ -2821,6 +3583,40 @@ export const AdminApiFp = function (configuration?: Configuration) {
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
         operationServerMap['AdminApi.adminCreateUser']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Deletes articles by their IDs (soft delete, sets deletedAt). Also removes associated tags.
+     * @summary Delete articles by IDs (soft delete)
+     * @param {AdminDeleteArticlesRequest} adminDeleteArticlesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminDeleteArticles(
+      adminDeleteArticlesRequest: AdminDeleteArticlesRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminDeleteArticles200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminDeleteArticles(
+          adminDeleteArticlesRequest,
+          options
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminDeleteArticles']?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -2944,6 +3740,40 @@ export const AdminApiFp = function (configuration?: Configuration) {
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
         operationServerMap['AdminApi.adminDeleteUsers']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     * Retrieves articles from the database with pagination and optional search using request body parameters.
+     * @summary Fetch articles with pagination and search
+     * @param {AdminGetArticlesRequest} adminGetArticlesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminGetArticles(
+      adminGetArticlesRequest: AdminGetArticlesRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminGetArticles200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminGetArticles(
+          adminGetArticlesRequest,
+          options
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminGetArticles']?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -3107,6 +3937,40 @@ export const AdminApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
+     * Updates details of an existing article based on the provided article ID. Tags will be created if they do not exist and linked to the article. All tag associations will be replaced.
+     * @summary Update article details
+     * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminUpdateArticle(
+      adminUpdateArticleRequest: AdminUpdateArticleRequest,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<AdminUpdateArticle200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminUpdateArticle(
+          adminUpdateArticleRequest,
+          options
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap['AdminApi.adminUpdateArticle']?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
      * Updates details of an existing category based on the provided category ID.
      * @summary Update category details
      * @param {AdminUpdateCategoryRequest} adminUpdateCategoryRequest
@@ -3255,6 +4119,21 @@ export const AdminApiFactory = function (
   const localVarFp = AdminApiFp(configuration);
   return {
     /**
+     * Creates a new article with a unique slug. Tags will be created if they do not exist and linked to the article. The first author in the database will be assigned.
+     * @summary Create a new article
+     * @param {AdminCreateArticleRequest} adminCreateArticleRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminCreateArticle(
+      adminCreateArticleRequest: AdminCreateArticleRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminCreateArticle201Response> {
+      return localVarFp
+        .adminCreateArticle(adminCreateArticleRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * Creates a new category with a unique name and slug.
      * @summary Create a new category
      * @param {AdminCreateCategoryRequest} adminCreateCategoryRequest
@@ -3297,6 +4176,21 @@ export const AdminApiFactory = function (
     ): AxiosPromise<Created> {
       return localVarFp
         .adminCreateUser(adminCreateUserRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     * Deletes articles by their IDs (soft delete, sets deletedAt). Also removes associated tags.
+     * @summary Delete articles by IDs (soft delete)
+     * @param {AdminDeleteArticlesRequest} adminDeleteArticlesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminDeleteArticles(
+      adminDeleteArticlesRequest: AdminDeleteArticlesRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminDeleteArticles200Response> {
+      return localVarFp
+        .adminDeleteArticles(adminDeleteArticlesRequest, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -3357,6 +4251,21 @@ export const AdminApiFactory = function (
     ): AxiosPromise<Success> {
       return localVarFp
         .adminDeleteUsers(adminDeleteUsersRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     * Retrieves articles from the database with pagination and optional search using request body parameters.
+     * @summary Fetch articles with pagination and search
+     * @param {AdminGetArticlesRequest} adminGetArticlesRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminGetArticles(
+      adminGetArticlesRequest: AdminGetArticlesRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminGetArticles200Response> {
+      return localVarFp
+        .adminGetArticles(adminGetArticlesRequest, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -3432,6 +4341,21 @@ export const AdminApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     * Updates details of an existing article based on the provided article ID. Tags will be created if they do not exist and linked to the article. All tag associations will be replaced.
+     * @summary Update article details
+     * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUpdateArticle(
+      adminUpdateArticleRequest: AdminUpdateArticleRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AdminUpdateArticle200Response> {
+      return localVarFp
+        .adminUpdateArticle(adminUpdateArticleRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * Updates details of an existing category based on the provided category ID.
      * @summary Update category details
      * @param {AdminUpdateCategoryRequest} adminUpdateCategoryRequest
@@ -3502,6 +4426,23 @@ export const AdminApiFactory = function (
  */
 export class AdminApi extends BaseAPI {
   /**
+   * Creates a new article with a unique slug. Tags will be created if they do not exist and linked to the article. The first author in the database will be assigned.
+   * @summary Create a new article
+   * @param {AdminCreateArticleRequest} adminCreateArticleRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminCreateArticle(
+    adminCreateArticleRequest: AdminCreateArticleRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminCreateArticle(adminCreateArticleRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
    * Creates a new category with a unique name and slug.
    * @summary Create a new category
    * @param {AdminCreateCategoryRequest} adminCreateCategoryRequest
@@ -3549,6 +4490,23 @@ export class AdminApi extends BaseAPI {
   ) {
     return AdminApiFp(this.configuration)
       .adminCreateUser(adminCreateUserRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Deletes articles by their IDs (soft delete, sets deletedAt). Also removes associated tags.
+   * @summary Delete articles by IDs (soft delete)
+   * @param {AdminDeleteArticlesRequest} adminDeleteArticlesRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminDeleteArticles(
+    adminDeleteArticlesRequest: AdminDeleteArticlesRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminDeleteArticles(adminDeleteArticlesRequest, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -3617,6 +4575,23 @@ export class AdminApi extends BaseAPI {
   ) {
     return AdminApiFp(this.configuration)
       .adminDeleteUsers(adminDeleteUsersRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Retrieves articles from the database with pagination and optional search using request body parameters.
+   * @summary Fetch articles with pagination and search
+   * @param {AdminGetArticlesRequest} adminGetArticlesRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminGetArticles(
+    adminGetArticlesRequest: AdminGetArticlesRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminGetArticles(adminGetArticlesRequest, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -3697,6 +4672,23 @@ export class AdminApi extends BaseAPI {
   ) {
     return AdminApiFp(this.configuration)
       .adminGetUsers(adminGetUsersRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Updates details of an existing article based on the provided article ID. Tags will be created if they do not exist and linked to the article. All tag associations will be replaced.
+   * @summary Update article details
+   * @param {AdminUpdateArticleRequest} adminUpdateArticleRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminUpdateArticle(
+    adminUpdateArticleRequest: AdminUpdateArticleRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminUpdateArticle(adminUpdateArticleRequest, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
