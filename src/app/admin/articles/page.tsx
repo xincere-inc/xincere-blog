@@ -171,7 +171,6 @@ export default function ArticleTable() {
     if (article?.id) {
       setLoading(true);
       try {
-        // TODO: update supporting factory
         const response = await ApiAdminArticles.adminUpdateArticle({
           id: article.id,
           ...values,
