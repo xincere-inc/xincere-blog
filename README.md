@@ -2,7 +2,7 @@
 
 [![Node Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)
 
-This is a **Next.js** fullstack application using **PostgreSQL** as the database and containerized with **Docker** for both development and production environments.
+This is a **Next.js** fullstack application using **PostgreSQL(Supabase)** as the database and containerized with **Docker** for both development and production environments.
 
 ## Table of Contents
 
@@ -21,7 +21,7 @@ This is a **Next.js** fullstack application using **PostgreSQL** as the database
 ## Tech Stack
 
 - **Next.js** for server-side rendering (SSR) and static site generation (SSG).
-- **PostgreSQL** as the relational database.
+- **PostgreSQL(Supabase)** as the relational database.
 - **Docker** for containerization.
 - **Prisma** ORM for type-safe database interactions.
 - **TypeScript** for static typing.
@@ -60,7 +60,8 @@ Ensure the following are installed on your system:
    Create a `.env.local` file in the root directory with the following content:
 
    ```env
-   DATABASE_URL=postgresql://postgres:password@localhost:5432/xincere_blog
+   DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres
+   DIRECT_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres
    NODE_ENV=development
    NEXT_PUBLIC_API_URL=https://localhost:3000
    NEXTAUTH_SECRET=your-secret-key
@@ -69,18 +70,19 @@ Ensure the following are installed on your system:
    SMTP_PASSWORD=
    ```
 
-   - `DATABASE_URL`: PostgreSQL connection string.
+   - `DATABASE_URL`: PostgreSQL(Supabase) connection string.
    - `NODE_ENV`: `development` or `production`.
    - `NEXT_PUBLIC_API_URL`: Base URL of the running application or API.
    - `NEXTAUTH_SECRET`: Secret key for `next-auth`.
    - `SMTP_USERNAME`: Secret key for `smtp`.
    - `SMTP_PASSWORD`: Secret key for `smtp`.
 
-   ## Running Database Setup Locally
+   ## Running Database(Supabase) Setup Locally
 
 4. **To apply database setup locally:**
    ```bash
-   # Make sure your Dockerized database is running first!
+   # Make sure your database(Supabase) is running first!
+   # npx supabase start
    npm run db:migrate:local
    ```
 
@@ -94,15 +96,18 @@ Start the application in development mode:
 
 ```bash
 docker-compose up --build
+npx supabase start
 npm run dev
 ```
 
 - Access the app at [https://localhost:3000](https://localhost:3000)
+- Access the Supabase studio at [http://localhost:54323](http://localhost:54323)
 
 Stop the containers:
 
 ```bash
 docker-compose down
+npx supabase stop
 ```
 
 ### Production
