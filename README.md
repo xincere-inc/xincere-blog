@@ -44,9 +44,9 @@ Ensure the following are installed on your system:
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/xincere-inc/nextjs-fullstack-base
+   git clone https://github.com/xincere-inc/xincere-blog
 
-   cd nextjs-fullstack-base
+   cd xincere-blog
    ```
 
 2. **Install Dependencies:**
@@ -60,7 +60,7 @@ Ensure the following are installed on your system:
    Create a `.env.local` file in the root directory with the following content:
 
    ```env
-   DATABASE_URL=postgresql://postgres:password@localhost:5432/nextjs_app
+   DATABASE_URL=postgresql://postgres:password@localhost:5432/xincere_blog
    NODE_ENV=development
    NEXT_PUBLIC_API_URL=http://localhost:3000
    NEXTAUTH_SECRET=your-secret-key
@@ -76,11 +76,12 @@ Ensure the following are installed on your system:
    - `SMTP_USERNAME`: Secret key for `smtp`.
    - `SMTP_PASSWORD`: Secret key for `smtp`.
 
-   ## Running Database Migrations Locally
+   ## Running Database Setup Locally
 
-4. **To apply database migrations locally:**
+4. **To apply database setup locally:**
    ```bash
-   npx prisma migrate dev
+   # Make sure your Dockerized database is running first!
+   npm run db:migrate:local
    ```
 
 ---
@@ -93,6 +94,7 @@ Start the application in development mode:
 
 ```bash
 docker-compose up --build
+npm run dev
 ```
 
 - Access the app at [http://localhost:3000](http://localhost:3000)
