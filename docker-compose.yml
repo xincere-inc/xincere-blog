@@ -1,18 +1,5 @@
 version: '3.8'
 services:
-  db:
-    image: postgres
-    container_name: my_postgres
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: xincere_blog
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
-
   minio:
     image: minio/minio
     container_name: minio
@@ -54,5 +41,4 @@ services:
       "
 
 volumes:
-  pg_data:
   minio_data:
