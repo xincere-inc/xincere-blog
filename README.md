@@ -62,7 +62,7 @@ Ensure the following are installed on your system:
    ```env
    DATABASE_URL=postgresql://postgres:password@localhost:5432/xincere_blog
    NODE_ENV=development
-   NEXT_PUBLIC_API_URL=http://localhost:3000
+   NEXT_PUBLIC_API_URL=https://localhost:3000
    NEXTAUTH_SECRET=your-secret-key
 
    SMTP_USERNAME=
@@ -97,7 +97,7 @@ docker-compose up --build
 npm run dev
 ```
 
-- Access the app at [http://localhost:3000](http://localhost:3000)
+- Access the app at [https://localhost:3000](https://localhost:3000)
 
 Stop the containers:
 
@@ -192,14 +192,14 @@ This project uses GitHub Actions for CI/CD. The workflow file is located at .git
 To access the admin page, follow these steps:
 
 1. **Access the sign-in page:**
-   Navigate to [http://localhost:3000/signin](http://localhost:3000/signin)
+   Navigate to [https://localhost:3000/signin](https://localhost:3000/signin)
 
 2. **Login with admin credentials:**
    - Email: `admin@example.com`
    - Password: `admin12345`
 
 3. **Access the admin dashboard:**
-   Navigate to [http://localhost:3000/admin](http://localhost:3000/admin)
+   Navigate to [https://localhost:3000/admin](https://localhost:3000/admin)
 
 ---
 
