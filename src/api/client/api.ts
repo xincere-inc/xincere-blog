@@ -1251,6 +1251,12 @@ export interface AdminUpdateArticleRequest {
    */
   categoryId?: number;
   /**
+   * The ID of the author.
+   * @type {string}
+   * @memberof AdminUpdateArticleRequest
+   */
+  authorId?: string;
+  /**
    * The URL of the article\'s thumbnail image (optional).
    * @type {string}
    * @memberof AdminUpdateArticleRequest

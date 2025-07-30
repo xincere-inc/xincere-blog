@@ -35,7 +35,7 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
   const hasLowerCase = /[a-z]/.test(value);
   const hasNumber = /\d/.test(value);
   const hasSpecialChar = /[@$!%*?&#]/.test(value);
-  const isMinLength = value.length >= 8;
+  const isMinLength = value?.length >= 8;
 
   return (
     <div className="mb-3">
