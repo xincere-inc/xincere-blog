@@ -53,6 +53,7 @@ const credentialsProvider = CredentialsProvider({
     return {
       id: user.id,
       email: user.email,
+      name: `${user.firstName} ${user.lastName ?? ''}`.trim(),
       firstName: user.firstName,
       lastName: user.lastName ?? '',
       role: user.role,

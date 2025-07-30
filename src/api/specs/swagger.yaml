@@ -2406,6 +2406,10 @@ paths:
                   type: integer
                   description: The ID of the category.
                   example: 1
+                authorId:
+                  type: string
+                  description: The ID of the author.
+                  example: 1
                 thumbnailUrl:
                   type: string
                   description: The URL of the article's thumbnail image (optional).

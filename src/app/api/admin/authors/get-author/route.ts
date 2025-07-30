@@ -1,6 +1,6 @@
 import {
-  AdminGetAuthorsRequest,
-  AdminGetAuthors200Response,
+  AdminGetUsersRequest,
+  AdminGetUsers200Response,
   InternalServerError,
   UnAuthorizedError,
   ValidationError,
@@ -15,7 +15,7 @@ export async function POST(
   req: Request
 ): Promise<
   NextResponse<
-    | AdminGetAuthors200Response
+    | AdminGetUsers200Response
     | ValidationError
     | InternalServerError
     | UnAuthorizedError
@@ -25,7 +25,7 @@ export async function POST(
     const adminAuthError = await authorizeAdmin();
     if (adminAuthError) return adminAuthError;
 
-    const body: AdminGetAuthorsRequest = await req.json();
+    const body: AdminGetUsersRequest = await req.json();
     const parsedBody = await paginationWithSearchSchema.parseAsync(body);
     const { page, limit, search } = parsedBody;
 

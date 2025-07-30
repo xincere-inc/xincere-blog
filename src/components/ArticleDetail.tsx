@@ -4,6 +4,7 @@ import Breadcrumb from '@/components/Breadcrumb';
 import AuthorCard from '@/components/AuthorCard';
 import ContactCTA from '@/components/ContactCTA';
 import ArticleCard from '@/components/ArticleIndexCard';
+import { ApiArticle } from '@/types/article';
 
 const ArticleDetail = ({
   breadcrumbItems,
@@ -26,7 +27,7 @@ const ArticleDetail = ({
     };
   };
   articleContent: { body: string; tags: string[] };
-  relatedArticles: { imageUrl: string; altText: string; title: string }[];
+  relatedArticles: ApiArticle[];
   comments: { name: string; date: string; text: string; isAuthor?: boolean }[];
 }) => {
   return (
@@ -90,7 +91,7 @@ const ArticleDetail = ({
             <h3 className="text-xl font-bold mb-4">関連記事</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {relatedArticles.map((article, index) => (
-                <ArticleCard key={index} {...article} />
+                <ArticleCard key={index} article={article} />
               ))}
             </div>
           </div>

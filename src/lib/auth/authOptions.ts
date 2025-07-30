@@ -30,4 +30,5 @@ export const authOptions = {
   pages: {
     signIn: '/', // Corrected typo in path
   },
+  trustHost: true,
 };

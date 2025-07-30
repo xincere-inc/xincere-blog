@@ -1,6 +1,7 @@
 import { Providers } from '@/providers/provider';
 import type { Metadata } from 'next';
 import '../globals.css';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -12,5 +13,11 @@ export default function AuthLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <Providers>{children}</Providers>;
+  return (
+    <Providers>
+      <Suspense fallback={<div>Loading authentication content...</div>}>
+        {children}
+      </Suspense>
+    </Providers>
+  );
 }

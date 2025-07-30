@@ -1,7 +1,6 @@
 'use client';
 import ApiAuth from '@/api/ApiAuth';
 import { RegisterRequest } from '@/api/client';
-import ApiAuth from '@/api/ApiAuth';
 import InputField from '@/components/inputs/InputField';
 import PasswordField from '@/components/inputs/PasswordField';
 import Image from 'next/image';
