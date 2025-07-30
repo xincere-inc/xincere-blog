@@ -82,7 +82,7 @@ Ensure the following are installed on your system:
 4. **To apply database setup locally:**
    ```bash
    # Make sure your database(Supabase) is running first!
-   # npx supabase start
+   # npm run supabase:start
    npm run db:migrate:local
    ```
 
@@ -96,7 +96,7 @@ Start the application in development mode:
 
 ```bash
 docker-compose up --build
-npx supabase start
+npm run supabase:start
 npm run dev
 ```
 
@@ -107,7 +107,7 @@ Stop the containers:
 
 ```bash
 docker-compose down
-npx supabase stop
+npm run supabase:stop
 ```
 
 ### Production
