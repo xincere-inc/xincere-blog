@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "next dev --turbopack --experimental-https",
     "build": "next build",
-    "build:ci": "npx prisma generate && next build",
+    "build:ci": "npx prisma generate && npx prisma migrate deploy && next build",
     "start": "next start",
     "lint": "eslint --ext .ts,.js,.tsx . && prettier --check \"./**/*.{ts,js,tsx}\"",
     "lint:fix": "eslint --ext .ts,.js,.tsx . --fix && prettier --write \"./**/*.{ts,js,tsx,scss}\"",
