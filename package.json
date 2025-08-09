@@ -42,6 +42,7 @@
     "@ant-design/nextjs-registry": "^1.0.2",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@aws-sdk/client-s3": "^3.844.0",
+    "@faker-js/faker": "^9.8.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
@@ -87,7 +88,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@faker-js/faker": "^9.8.0",
     "@mermaid-js/mermaid-cli": "^11.4.2",
     "@openapitools/openapi-generator-cli": "^2.20.2",
     "@types/bcrypt": "^5.0.2",
