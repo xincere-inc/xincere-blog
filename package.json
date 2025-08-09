@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "next dev --turbopack --experimental-https",
     "build": "next build",
-    "build:ci": "npx prisma generate && npx prisma migrate deploy && next build",
+    "build:ci": "npx prisma generate --generator client && npx prisma migrate deploy && next build",
     "start": "next start",
     "lint": "eslint --ext .ts,.js,.tsx . && prettier --check \"./**/*.{ts,js,tsx}\"",
     "lint:fix": "eslint --ext .ts,.js,.tsx . --fix && prettier --write \"./**/*.{ts,js,tsx,scss}\"",
@@ -28,7 +28,7 @@
     "db:studio": "DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres npx prisma studio",
     "db:reset": "DATABASE_URL='DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres' sh -c 'npx prisma migrate reset --skip-generate && npx prisma db seed'",
     "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client",
-    "prepare": "husky",
+    "prepare": "if [ \"$CI\" != \"true\" ]; then husky install; fi",
     "test": "jest"
   },
   "lint-staged": {

@@ -14,9 +14,12 @@ export default auth(async (req) => {
   // Check if the user is authenticated (req.auth will be populated after NextAuth is invoked)
   const isAuthenticated = !!req.auth;
 
-  const isPublicRoute = PUBLIC_ROUTES.some((route) =>
-    nextUrl.pathname.includes(route)
-  );
+  const isPublicRoute = PUBLIC_ROUTES.some((route) => {
+    if (route === '/') {
+      return nextUrl.pathname === '/';
+    }
+    return nextUrl.pathname.startsWith(route);
+  });
 
   // Check if the route is allow access with and without authentication
   const isOpenRoutes = ACCESS_ALL.some((route) =>
