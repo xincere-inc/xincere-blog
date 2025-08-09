@@ -28,7 +28,7 @@
     "db:studio": "DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres npx prisma studio",
     "db:reset": "DATABASE_URL='DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres' sh -c 'npx prisma migrate reset --skip-generate && npx prisma db seed'",
     "generate:client": "openapi-generator-cli generate -g typescript-axios -i ./src/api/specs/swagger.yaml -o ./src/api/client",
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi",
+    "prepare": "if [ \"$CI\" != \"true\" ]; then husky install; fi",
     "test": "jest"
   },
   "lint-staged": {
